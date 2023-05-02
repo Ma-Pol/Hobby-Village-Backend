@@ -28,7 +28,7 @@ public class AdminUsersController {
 		return userCount;
 	}
 
-	@GetMapping("/lists")
+	@GetMapping("")
 	public List<AdminUsersDTO> getUserList(@RequestParam(value = "sort", required = true) String sort,
 			@RequestParam(value = "pages", required = true) int pages,
 			@RequestParam(value = "condition", required = false) String condition,
