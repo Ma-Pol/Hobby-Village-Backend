@@ -13,9 +13,7 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 		this.mapper = mapper;
 	}
 
-	@Override
-	public int getProductCount(String filter) {
-
+	private String filtering(String filter) {
 		if (filter.equals("none")) {
 			filter = "prodIsRental IN (0, 1)";
 		} else if (filter.equals("rented")) {
@@ -23,34 +21,27 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 		} else {
 			filter = "prodIsRental = 0";
 		}
+
+		return filter;
+	}
+
+	@Override
+	public int getProductCount(String filter) {
+		filter = filtering(filter);
 
 		return mapper.getProductCount(filter);
 	}
 
 	@Override
 	public int getSearchProductCount(String filter, String condition, String keyword) {
-
-		if (filter.equals("none")) {
-			filter = "prodIsRental IN (0, 1)";
-		} else if (filter.equals("rented")) {
-			filter = "prodIsRental = 1";
-		} else {
-			filter = "prodIsRental = 0";
-		}
+		filter = filtering(filter);
 
 		return mapper.getSearchProductCount(filter, condition, keyword);
 	}
 
 	@Override
 	public List<AdminProductsDTO> getProductList(String filter, String sort, int pageNum) {
-
-		if (filter.equals("none")) {
-			filter = "prodIsRental IN (0, 1)";
-		} else if (filter.equals("rented")) {
-			filter = "prodIsRental = 1";
-		} else {
-			filter = "prodIsRental = 0";
-		}
+		filter = filtering(filter);
 
 		return mapper.getProductList(filter, sort, pageNum);
 	}
@@ -58,14 +49,7 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 	@Override
 	public List<AdminProductsDTO> getSearchProductList(String filter, String condition, String keyword, String sort,
 			int pageNum) {
-
-		if (filter.equals("none")) {
-			filter = "prodIsRental IN (0, 1)";
-		} else if (filter.equals("rented")) {
-			filter = "prodIsRental = 1";
-		} else {
-			filter = "prodIsRental = 0";
-		}
+		filter = filtering(filter);
 
 		return mapper.getSearchProductList(filter, condition, keyword, sort, pageNum);
 	}
