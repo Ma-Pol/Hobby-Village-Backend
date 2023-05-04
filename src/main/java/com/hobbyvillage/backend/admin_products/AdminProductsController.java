@@ -20,7 +20,8 @@ public class AdminProductsController {
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		int productCount;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			productCount = adminProductsServiceImpl.getProductCount(filter);
 		} else {
 			productCount = adminProductsServiceImpl.getSearchProductCount(filter, condition, keyword);
@@ -38,7 +39,8 @@ public class AdminProductsController {
 		List<AdminProductsDTO> productList;
 		int pageNum = (pages - 1) * 10;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			productList = adminProductsServiceImpl.getProductList(filter, sort, pageNum);
 		} else {
 			productList = adminProductsServiceImpl.getSearchProductList(filter, condition, keyword, sort, pageNum);
