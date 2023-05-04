@@ -21,7 +21,8 @@ public class AdminRequestsController {
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		int requestCount;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			requestCount = adminRequestsServiceImpl.getRequestCount(filter, category);
 		} else {
 			requestCount = adminRequestsServiceImpl.getSearchRequestCount(filter, category, condition, keyword);
@@ -39,7 +40,8 @@ public class AdminRequestsController {
 		List<AdminRequestsDTO> requestList;
 		int pageNum = (pages - 1) * 10;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			requestList = adminRequestsServiceImpl.getRequestList(filter, category, sort, pageNum);
 		} else {
 			requestList = adminRequestsServiceImpl.getSearchRequestList(filter, category, condition, keyword, sort,
