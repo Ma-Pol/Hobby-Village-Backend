@@ -13,6 +13,7 @@ public class AdminCouponsServiceImpl implements AdminCouponsService {
 		this.mapper = mapper;
 	}
 
+	// 필터 조건에 따른 쿼리문 설정 메서드
 	private String filtering(String filter) {
 		if (filter.equals("none")) {
 			filter = "couponCode IS NOT NULL";
@@ -25,28 +26,28 @@ public class AdminCouponsServiceImpl implements AdminCouponsService {
 		return filter;
 	}
 
-	@Override
+	@Override // 미검색 상태에서 쿠폰 개수 조회
 	public int getCouponCount(String filter) {
 		filter = filtering(filter);
 
 		return mapper.getCouponCount(filter);
 	}
 
-	@Override
+	@Override // 검색 상태에서 쿠폰 개수 조회
 	public int getSearchCouponCount(String filter, String condition, String keyword) {
 		filter = filtering(filter);
 
 		return mapper.getSearchCouponCount(filter, condition, keyword);
 	}
 
-	@Override
+	@Override // 미검색 상태에서 쿠폰 목록 조회
 	public List<AdminCouponsDTO> getCouponList(String filter, String sort, int pageNum) {
 		filter = filtering(filter);
 
 		return mapper.getCouponList(filter, sort, pageNum);
 	}
 
-	@Override
+	@Override // 검색 상태에서 쿠폰 목록 조회
 	public List<AdminCouponsDTO> getSearchCouponList(String filter, String condition, String keyword, String sort,
 			int pageNum) {
 		filter = filtering(filter);
@@ -54,7 +55,7 @@ public class AdminCouponsServiceImpl implements AdminCouponsService {
 		return mapper.getSearchCouponList(filter, condition, keyword, sort, pageNum);
 	}
 
-	@Override
+	@Override // 쿠폰 삭제
 	public void deleteCoupon(int couponCode) {
 		mapper.deleteCoupon(couponCode);
 	}

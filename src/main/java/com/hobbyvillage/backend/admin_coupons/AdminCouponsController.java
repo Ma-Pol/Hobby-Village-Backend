@@ -20,7 +20,8 @@ public class AdminCouponsController {
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		int couponCount;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			couponCount = adminCouponsServiceImpl.getCouponCount(filter);
 		} else {
 			couponCount = adminCouponsServiceImpl.getSearchCouponCount(filter, condition, keyword);
@@ -38,7 +39,8 @@ public class AdminCouponsController {
 		List<AdminCouponsDTO> couponList;
 		int pageNum = (pages - 1) * 10;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			couponList = adminCouponsServiceImpl.getCouponList(filter, sort, pageNum);
 		} else {
 			couponList = adminCouponsServiceImpl.getSearchCouponList(filter, condition, keyword, sort, pageNum);
