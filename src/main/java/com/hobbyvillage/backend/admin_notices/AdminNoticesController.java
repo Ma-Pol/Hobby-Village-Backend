@@ -19,6 +19,7 @@ public class AdminNoticesController {
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		int noticeCount;
 
+		// 검색 여부 확인
 		if (keyword == null) {
 			noticeCount = adminNoticesServiceImpl.getNoticeCount(filter);
 		} else {
@@ -36,6 +37,7 @@ public class AdminNoticesController {
 		List<AdminNoticesDTO> noticeList;
 		int pageNum = (pages - 1) * 10;
 
+		// 검색 여부 확인
 		if (keyword == null) {
 			noticeList = adminNoticesServiceImpl.getNoticeList(filter, sort, pageNum);
 		} else {
