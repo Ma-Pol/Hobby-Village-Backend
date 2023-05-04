@@ -12,28 +12,28 @@ public class AdminUsersServiceImpl implements AdminUsersService {
 	public AdminUsersServiceImpl(AdminUsersMapper mapper) {
 		this.mapper = mapper;
 	}
-	
-	@Override
+
+	@Override // 미검색 상태에서 회원 수 조회
 	public int getUserCount() {
 		return mapper.getUserCount();
 	}
-	
-	@Override
+
+	@Override // 검색 상태에서 회원 수 조회
 	public int getSearchUserCount(String condition, String keyword) {
 		return mapper.getSearchUserCount(condition, keyword);
 	}
-	
-	@Override
+
+	@Override // 미검색 상태에서 회원 목록 조회
 	public List<AdminUsersDTO> getUserList(String sort, int pageNum) {
 		return mapper.getUserList(sort, pageNum);
 	}
-	
-	@Override
+
+	@Override // 검색 상태에서 회원 목록 조회
 	public List<AdminUsersDTO> getSearchUserList(String condition, String keyword, String sort, int pageNum) {
 		return mapper.getSearchUserList(condition, keyword, sort, pageNum);
 	}
-	
-	@Override
+
+	@Override // 회원 삭제
 	public void deleteUser(int userCode) {
 		mapper.deleteUser(userCode);
 	}

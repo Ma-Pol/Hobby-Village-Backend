@@ -18,13 +18,14 @@ public class AdminUsersController {
 	public int getUserCount(@RequestParam(value = "condition", required = false) String condition,
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		int userCount;
-		
-		if (condition == null) {
+
+		// 검색 여부 확인
+		if (keyword == null) {
 			userCount = adminUsersServiceImpl.getUserCount();
 		} else {
 			userCount = adminUsersServiceImpl.getSearchUserCount(condition, keyword);
 		}
-		
+
 		return userCount;
 	}
 
@@ -35,8 +36,9 @@ public class AdminUsersController {
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		List<AdminUsersDTO> userList;
 		int pageNum = (pages - 1) * 10;
-		
-		if (condition == null) {
+
+		// 검색 여부 확인
+		if (keyword == null) {
 			userList = adminUsersServiceImpl.getUserList(sort, pageNum);
 		} else {
 			userList = adminUsersServiceImpl.getSearchUserList(condition, keyword, sort, pageNum);
@@ -44,7 +46,7 @@ public class AdminUsersController {
 
 		return userList;
 	}
-	
+
 	@DeleteMapping("/delete")
 	public void deleteUser(@RequestParam(value = "userCode", required = true) int userCode) {
 		adminUsersServiceImpl.deleteUser(userCode);
