@@ -20,7 +20,8 @@ public class AdminReviewsController {
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		int reviewCount;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			reviewCount = adminReviewsServiceImpl.getReviewCount(filter);
 		} else {
 			reviewCount = adminReviewsServiceImpl.getSearchReviewCount(filter, condition, keyword);
@@ -38,7 +39,8 @@ public class AdminReviewsController {
 		List<AdminReviewsDTO> reviewList;
 		int pageNum = (pages - 1) * 10;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			reviewList = adminReviewsServiceImpl.getReviewList(filter, sort, pageNum);
 		} else {
 			reviewList = adminReviewsServiceImpl.getSearchReviewList(filter, condition, keyword, sort, pageNum);

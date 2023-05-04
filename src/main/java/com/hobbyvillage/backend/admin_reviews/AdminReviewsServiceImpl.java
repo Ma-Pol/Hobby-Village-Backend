@@ -13,6 +13,7 @@ public class AdminReviewsServiceImpl implements AdminReviewsService {
 		this.mapper = mapper;
 	}
 
+	// 필터 조건에 따른 쿼리문 설정 메서드
 	private String filtering(String filter) {
 		if (filter.equals("none")) {
 			filter = "revwReport >= 0";
@@ -23,28 +24,28 @@ public class AdminReviewsServiceImpl implements AdminReviewsService {
 		return filter;
 	}
 
-	@Override
+	@Override // 미검색 상태에서 리뷰 개수 조회
 	public int getReviewCount(String filter) {
 		filter = filtering(filter);
 
 		return mapper.getReviewCount(filter);
 	}
 
-	@Override
+	@Override // 검색 상태에서 리뷰 개수 조회
 	public int getSearchReviewCount(String filter, String condition, String keyword) {
 		filter = filtering(filter);
 
 		return mapper.getSearchReviewCount(filter, condition, keyword);
 	}
 
-	@Override
+	@Override // 미검색 상태에서 리뷰 목록 조회
 	public List<AdminReviewsDTO> getReviewList(String filter, String sort, int pageNum) {
 		filter = filtering(filter);
 
 		return mapper.getReviewList(filter, sort, pageNum);
 	}
 
-	@Override
+	@Override // 검색 상태에서 리뷰 목록 조회
 	public List<AdminReviewsDTO> getSearchReviewList(String filter, String condition, String keyword, String sort,
 			int pageNum) {
 		filter = filtering(filter);
