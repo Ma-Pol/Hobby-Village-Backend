@@ -13,19 +13,26 @@ public class AdminFaqsServiceImpl implements AdminFaqsService {
 		this.mapper = mapper;
 	}
 
+	// 필터 조건에 따른 쿼리문 설정 메서드
 	private String filtering(String filter) {
 		if (filter.equals("none")) {
 			filter = "faqCategory IS NOT NULL";
+
 		} else if (filter.equals("product")) {
 			filter = "faqCategory = '상품 문의'";
+
 		} else if (filter.equals("login-about")) {
 			filter = "faqCategory = '로그인/정보'";
+
 		} else if (filter.equals("sell-consign")) {
 			filter = "faqCategory = '판매/위탁'";
+
 		} else if (filter.equals("payment")) {
 			filter = "faqCategory = '결제'";
+
 		} else if (filter.equals("shipping")) {
 			filter = "faqCategory = '배송 문의'";
+
 		} else {
 			filter = "faqCategory = '기타'";
 		}
@@ -33,28 +40,28 @@ public class AdminFaqsServiceImpl implements AdminFaqsService {
 		return filter;
 	}
 
-	@Override
+	@Override // 미검색 상태에서 FAQ 개수 조회
 	public int getFaqCount(String filter) {
 		filter = filtering(filter);
 
 		return mapper.getFaqCount(filter);
 	}
 
-	@Override
+	@Override // 검색 상태에서 FAQ 개수 조회
 	public int getSearchFaqCount(String filter, String keyword) {
 		filter = filtering(filter);
 
 		return mapper.getSearchFaqCount(filter, keyword);
 	}
 
-	@Override
+	@Override // 미검색 상태에서 FAQ 목록 조회
 	public List<AdminFaqsDTO> getFaqList(String filter, String sort, int pageNum) {
 		filter = filtering(filter);
 
 		return mapper.getFaqList(filter, sort, pageNum);
 	}
 
-	@Override
+	@Override // 검색 상태에서 FAQ 목록 조회
 	public List<AdminFaqsDTO> getSearchFaqList(String filter, String keyword, String sort, int pageNum) {
 		filter = filtering(filter);
 

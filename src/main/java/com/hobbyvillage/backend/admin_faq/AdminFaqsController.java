@@ -19,6 +19,7 @@ public class AdminFaqsController {
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		int faqCount;
 
+		// 검색 여부 확인
 		if (keyword == null) {
 			faqCount = adminFaqsServiceImpl.getFaqCount(filter);
 		} else {
@@ -36,6 +37,7 @@ public class AdminFaqsController {
 		List<AdminFaqsDTO> faqList;
 		int pageNum = (pages - 1) * 10;
 
+		// 검색 여부 확인
 		if (keyword == null) {
 			faqList = adminFaqsServiceImpl.getFaqList(filter, sort, pageNum);
 		} else {
