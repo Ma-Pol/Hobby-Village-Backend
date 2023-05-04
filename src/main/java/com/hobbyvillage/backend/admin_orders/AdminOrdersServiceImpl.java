@@ -13,10 +13,11 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		this.mapper = mapper;
 	}
 
-	@Override
+	@Override // 미검색 상태에서 주문 개수 조회
 	public int getOrderCount(String sort) {
 		int orderCount;
 
+		// 반납기한 정렬 여부 확인(반납기한이 설정되지 않은 데이터 제외 처리)
 		if (sort.equals("-deadline")) {
 			orderCount = mapper.getDeliveriedOrderCount();
 		} else {
@@ -26,10 +27,11 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		return orderCount;
 	}
 
-	@Override
+	@Override // 검색 상태에서 주문 개수 조회
 	public int getSearchOrderCount(String sort, String condition, String keyword) {
 		int orderCount;
 
+		// 반납기한 정렬 여부 확인(반납기한이 설정되지 않은 데이터 제외 처리)
 		if (sort.equals("-deadline")) {
 			orderCount = mapper.getSearchDeliveriedOrderCount(condition, keyword);
 		} else {
@@ -39,10 +41,11 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		return orderCount;
 	}
 
-	@Override
+	@Override // 미검색 상태에서 주문 목록 조회
 	public List<AdminOrdersDTO> getOrderList(String sort, int pageNum) {
 		List<AdminOrdersDTO> orderList;
 
+		// 반납기한 정렬 여부 확인(반납기한이 설정되지 않은 데이터 제외 처리)
 		if (sort.equals("-deadline")) {
 			orderList = mapper.getDeliveriedOrderList(sort, pageNum);
 		} else {
@@ -52,10 +55,11 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		return orderList;
 	}
 
-	@Override
+	@Override // 검색 상태에서 주문 목록 조회
 	public List<AdminOrdersDTO> getSearchOrderList(String condition, String keyword, String sort, int pageNum) {
 		List<AdminOrdersDTO> orderList;
 
+		// 반납기한 정렬 여부 확인(반납기한이 설정되지 않은 데이터 제외 처리)
 		if (sort.equals("-deadline")) {
 			orderList = mapper.getSearchDeliveriedOrderList(condition, keyword, sort, pageNum);
 		} else {

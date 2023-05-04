@@ -20,7 +20,8 @@ public class AdminOrdersController {
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		int orderCount;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			orderCount = adminOrdersServiceImpl.getOrderCount(sort);
 		} else {
 			orderCount = adminOrdersServiceImpl.getSearchOrderCount(sort, condition, keyword);
@@ -37,7 +38,8 @@ public class AdminOrdersController {
 		List<AdminOrdersDTO> orderList;
 		int pageNum = (pages - 1) * 10;
 
-		if (condition == null) {
+		// 검색 여부 확인
+		if (keyword == null) {
 			orderList = adminOrdersServiceImpl.getOrderList(sort, pageNum);
 		} else {
 			orderList = adminOrdersServiceImpl.getSearchOrderList(condition, keyword, sort, pageNum);
