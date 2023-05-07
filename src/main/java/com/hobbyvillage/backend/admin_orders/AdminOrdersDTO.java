@@ -10,18 +10,12 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class AdminOrdersDTO {
-	private Integer odrCode;
-	private Integer odrNumber;
+	private String odrNumber;
 	private String prodCode;
-	private String odrEmail;
-	private String odrPayment;
-	private Integer odrZipCode;
-	private String odrAddress1;
-	private String odrAddress2;
-	private Date odrDate;
 	private Date deliDate;
 	private Integer rentalPeriod;
 	private Date deadline;
 	private String odrState;
 	private Integer userCode;
+	private String nickname;
 }
