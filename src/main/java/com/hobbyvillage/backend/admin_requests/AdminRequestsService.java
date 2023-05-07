@@ -7,4 +7,10 @@ public interface AdminRequestsService {
 	int getSearchRequestCount(String filter, String category, String condition, String keyword);
 	List<AdminRequestsDTO> getRequestList(String filter, String category, String sort, int pageNum);
 	List<AdminRequestsDTO> getSearchRequestList(String filter, String category, String condition, String keyword, String sort, int pageNum);
+	AdminRequestsDetailsDTO getRequestDetail(int reqCode);
+	List<String> getRequestFileList(int reqCode);
+	int updateRequestProgress(int reqCode, String reqProgress);
+	int rejectRequestProgress(int reqCode);
+	int cancelRequestProgress(int reqCode);
+	int rejectCancelRequestProgress(int reqCode);
 }
