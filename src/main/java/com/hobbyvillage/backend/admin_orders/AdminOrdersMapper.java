@@ -7,19 +7,22 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface AdminOrdersMapper {
 	// 페이지네이션 용 주문 상품 수 조회: 최근 주문/오래된 주문 순
-	@Select("SELECT COUNT(*) FROM orderProducts;")
+	@Select("SELECT COUNT(*) FROM orderProducts op;")
 	int getAllOrderCount();
 
 	// 페이지네이션 용 주문 수 조회: 반납 기한 순
-	@Select("SELECT COUNT(*) FROM orderProducts WHERE deadline != '1000-01-01';")
+	@Select("SELECT COUNT(*) FROM orderProducts op WHERE deadline != '1000-01-01';")
 	int getDeliveriedOrderCount();
 
 	// 검색 시 페이지네이션 용 주문 수 조회: 최근 주문/오래된 주문 순
-	@Select("SELECT COUNT(*) FROM orderProducts WHERE ${condition} LIKE '%${keyword}%';")
+	@Select("SELECT COUNT(*) FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber "
+			+ "INNER JOIN users u ON o.odrEmail = u.email WHERE ${condition} LIKE '%${keyword}%';")
 	int getSearchAllOrderCount(@Param("condition") String condition, @Param("keyword") String keyword);
 
 	// 검색 시 페이지네이션 용 주문 수 조회: 반납 기한 순
-	@Select("SELECT COUNT(*) FROM orderProducts WHERE deadline != '1000-01-01' AND ${condition} LIKE '%${keyword}%';")
+	@Select("SELECT COUNT(*) FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber "
+			+ "INNER JOIN users u ON o.odrEmail = u.email WHERE deadline != '1000-01-01' "
+			+ "AND ${condition} LIKE '%${keyword}%';")
 	int getSearchDeliveriedOrderCount(@Param("condition") String condition, @Param("keyword") String keyword);
 
 	// 주문 목록 조회: 최근 주문/오래된 주문 순
