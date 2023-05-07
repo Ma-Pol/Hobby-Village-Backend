@@ -69,22 +69,22 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		return orderList;
 	}
 
-	@Override
+	@Override // 주문 상세 조회
 	public AdminOrdersDetailDTO getOrderDetail(String odrNumber) {
 		return mapper.getOrderDetail(odrNumber);
 	}
 
-	@Override
+	@Override // 각 주문 별 상품 목록 조회
 	public List<AdminOrdersProductsDTO> getOrderedProductList(String odrNumber) {
 		return mapper.getOrderedProductList(odrNumber);
 	}
 
-	@Override
+	@Override // 주문자 주소 수정
 	public int modifyOrderAddress(AdminOrdersDetailDTO addressData) {
 		return mapper.modifyOrderAddress(addressData);
 	}
 
-	@Override
+	@Override // 반납 완료 처리
 	public int returnProduct(int opCode, String prodCode) {
 		int result = 0;
 		int returningCheck = mapper.returningCheck(opCode);

@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class AdminOrdersDTO {
+	private Integer opCode;
 	private String odrNumber;
 	private String prodCode;
 	private Date deliDate;

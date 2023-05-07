@@ -15,6 +15,7 @@ public class AdminOrdersController {
 		this.adminOrdersServiceImpl = adminOrdersServiceImpl;
 	}
 
+	// 주문 개수 조회
 	@GetMapping("/count")
 	public int getOrderCount(@RequestParam(value = "sort", required = true) String sort,
 			@RequestParam(value = "condition", required = false) String condition,
@@ -31,6 +32,7 @@ public class AdminOrdersController {
 		return orderCount;
 	}
 
+	// 주문 목록 조회
 	@GetMapping("")
 	public List<AdminOrdersDTO> getOrderList(@RequestParam(value = "sort", required = true) String sort,
 			@RequestParam(value = "pages", required = true) int pages,
@@ -49,22 +51,26 @@ public class AdminOrdersController {
 		return orderList;
 	}
 
+	// 주문 상세 조회
 	@GetMapping("/orderDetails/{odrNumber}")
 	AdminOrdersDetailDTO getOrderDetail(@PathVariable(value = "odrNumber", required = true) String odrNumber) {
 		return adminOrdersServiceImpl.getOrderDetail(odrNumber);
 	}
 
+	// 각 주문 별 상품 목록 조회
 	@GetMapping("/productLists/{odrNumber}")
 	List<AdminOrdersProductsDTO> getOrderedProductList(
 			@PathVariable(value = "odrNumber", required = true) String odrNumber) {
 		return adminOrdersServiceImpl.getOrderedProductList(odrNumber);
 	}
 
+	// 주문자 주소 수정
 	@PatchMapping("/modify")
 	public int modifyOrderAddress(@RequestBody AdminOrdersDetailDTO addressData) {
 		return adminOrdersServiceImpl.modifyOrderAddress(addressData);
 	}
 
+	// 반납 완료 처리
 	@PatchMapping("/return")
 	public int returnProduct(@RequestBody Map<String, String> codeData) {
 		int opCode = Integer.parseInt(codeData.get("opCode"));
