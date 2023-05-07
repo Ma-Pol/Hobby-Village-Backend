@@ -7,4 +7,8 @@ public interface AdminOrdersService {
 	int getSearchOrderCount(String sort, String condition, String keyword);
 	List<AdminOrdersDTO> getOrderList(String sort, int pageNum);
 	List<AdminOrdersDTO> getSearchOrderList(String condition, String keyword, String sort, int pageNum);
+	AdminOrdersDetailDTO getOrderDetail(String odrNumber);
+	List<AdminOrdersProductsDTO> getOrderedProductList(String odrNumber);
+	int modifyOrderAddress(AdminOrdersDetailDTO addressData);
+	int returnProduct(int opCode, String prodCode);
 }
