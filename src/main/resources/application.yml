@@ -8,10 +8,3 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 1024MB
-#     JpaRepository 사용
-      spring:
-        jpa:
-          show-sql: true
-        h2:
-          console:
-            enabled: true

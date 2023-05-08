@@ -24,4 +24,7 @@ public interface AdminNoticesMapper {
 			+ "(notTitle LIKE '%${keyword}%' OR notContent LIKE '%${keyword}%') ORDER BY ${sort} LIMIT #{pageNum}, 10;")
 	List<AdminNoticesDTO> getSearchNoticeList(@Param("filter") String filter, @Param("keyword") String keyword,
 			@Param("sort") String sort, @Param("pageNum") int pageNum);
+
+	@Select("SELECT * FROM notices WHERE notCode = #{notCode};")
+	AdminNoticesDTO getNoticeDetail(@Param("notCode") int notCode);
 }
