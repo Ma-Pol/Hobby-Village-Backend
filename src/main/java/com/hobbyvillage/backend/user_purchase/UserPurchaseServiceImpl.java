@@ -28,4 +28,9 @@ public class UserPurchaseServiceImpl implements UserPruchaseService {
 		return mapper.getAddressList(email);
 	}
 
+	@Override
+	public List<UserPurchaseCouponDTO> getCouponList(String email) {
+		return mapper.getCouponList(email);
+	}
+
 }

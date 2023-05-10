@@ -14,4 +14,8 @@ public interface UserPurchaseMapper {
 
 	@Select("SELECT * FROM userAddress WHERE email = #{email} ORDER BY -isDefault, addressCode;")
 	List<UserPurchaseAddressDTO> getAddressList(@Param("email") String email);
+	
+	@Select("SELECT * FROM userCoupon uc INNER JOIN coupons c ON uc.couponCode = c.couponCode "
+			+ "WHERE uc.email = #{email} AND deadline > now();")
+	List<UserPurchaseCouponDTO> getCouponList(@Param("email") String email);
 }

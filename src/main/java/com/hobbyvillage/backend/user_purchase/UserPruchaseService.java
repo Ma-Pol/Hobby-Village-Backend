@@ -6,4 +6,5 @@ public interface UserPruchaseService {
 	int getProductState(String prodCode);
 	UserPurchaseUserDTO getUserInfo(String email);
 	List<UserPurchaseAddressDTO> getAddressList(String email);
+	List<UserPurchaseCouponDTO> getCouponList(String email);
 }

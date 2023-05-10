@@ -8,6 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class UserPurchaseUserDTO {
+	private String email;
 	private String name;
 	private String phone;
+	private Integer savedMoney;
 }
