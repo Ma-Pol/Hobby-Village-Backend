@@ -8,4 +8,5 @@ public interface AdminNoticesService {
 	List<AdminNoticesDTO> getNoticeList(String filter, String sort, int pageNum);
 	List<AdminNoticesDTO> getSearchNoticeList(String filter, String keyword, String sort, int pageNum);
 	AdminNoticesDTO getNoticeDetail(int notCode);
+	int createNotice(AdminNoticesDTO notice);
 }

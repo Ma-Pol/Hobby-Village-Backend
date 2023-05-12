@@ -2,6 +2,7 @@ package com.hobbyvillage.backend.admin_notices;
 
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -61,4 +62,6 @@ public class AdminNoticesServiceImpl implements AdminNoticesService {
 		return mapper.getNoticeDetail(notCode);
 	}
 
+	@Override
+	public int createNotice(AdminNoticesDTO notice) { return mapper.createNotice(notice); }
 }

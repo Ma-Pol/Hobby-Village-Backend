@@ -52,4 +52,11 @@ public class AdminNoticesController {
 	public AdminNoticesDTO getNoticeDetail(@PathVariable(value = "notCode", required = true) int notCode) {
 		return adminNoticesServiceImpl.getNoticeDetail(notCode);
 	}
+
+	@PostMapping("/noticeCreate")
+	public int createNotice(@RequestBody AdminNoticesDTO notice) {
+		return adminNoticesServiceImpl.createNotice(notice);
+	}
+
+
 }
