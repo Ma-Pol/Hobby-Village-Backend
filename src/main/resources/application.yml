@@ -8,3 +8,6 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 1024MB
+import-base-url: https://api.iamport.kr
+api-key: 1017411523622421
+api-secret-key: NgvjEdkIbeqFAF5O5FDj3DPTUKbsM5iT47vxJb8yfVH8xiGw1QcJoVWwBW0Dlt5u4jmILUKZydJlV1l7
