@@ -57,11 +57,17 @@ public class AdminNoticesServiceImpl implements AdminNoticesService {
 		return mapper.getSearchNoticeList(filter, keyword, sort, pageNum);
 	}
 
+	// 공지사항 상세 조회
 	@Override
 	public AdminNoticesDTO getNoticeDetail(int notCode) {
 		return mapper.getNoticeDetail(notCode);
 	}
 
+	// 공지사항 등록
 	@Override
 	public int createNotice(AdminNoticesDTO notice) { return mapper.createNotice(notice); }
+
+	// 공지사항 삭제
+	@Override
+	public int deleteNotice(int notCode){ return mapper.deleteNotice(notCode); }
 }
