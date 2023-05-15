@@ -114,18 +114,36 @@ public interface AdminOrdersMapper {
 	// 주문 취소 처리 과정: 같은 주문 내에서 취소 처리 완료 상태가 아닌 상품 개수 확인
 	@Select("SELECT COUNT(*) FROM orderProducts WHERE odrNumber = #{odrNumber} AND odrState != '취소 처리 완료';")
 	int checkOdrCount(@Param("odrNumber") String odrNumber);
-	
-	
+
+	// 주문 취소 처리 과정: imp_uid 조회
+	@Select("SELECT imp_uid FROM orders WHERE odrNumber = #{odrNumber};")
+	String getImpUid(@Param("odrNumber") String odrNumber);
+
 	// 주문 취소 처리 과정: 유저 적립금 환급
 	@Update("UPDATE users SET savedMoney = savedMoney + #{returnSavedMoney} WHERE email = #{odrEmail};")
-	int returnSavedMoney(@Param("odrEmail") String odrEmail, @Param("returnSavedMoney") int returnSavedMoney);
-	
+	void returnSavedMoney(@Param("odrEmail") String odrEmail, @Param("returnSavedMoney") int returnSavedMoney);
+
+	// 주문 취소 처리 과정: 취소된 금액 반영
+	@Update("UPDATE orders SET cancelPrice = cancelPrice + #{amount} WHERE odrNumber = #{odrNumber};")
+	int cancelPriceChange(@Param("odrNumber") String odrNumber, @Param("amount") int amount);
+
+	// 주문 취소 처리 과정: 환급된 적립금 반영
+	@Update("UPDATE orders SET cancelSavedMoney = cancelSavedMoney + #{returnSavedMoney} WHERE odrNumber = #{odrNumber};")
+	int cancelSavedMoneyChange(@Param("odrNumber") String odrNumber, @Param("returnSavedMoney") int returnSavedMoney);
+
 	// 주문 취소 처리 과정: 취소 처리 완료 처리 (취소 요청 -> 취소 처리 완료)
 	@Update("UPDATE orderProducts SET odrState = '취소 처리 완료' WHERE opCode = #{opCode};")
-	void cancelComplate(@Param("opCode") int opCode);
-	
+	void cnclReqTocnclComp(@Param("opCode") int opCode);
 
 	// 반납 완료 처리 과정: (상품 가격 * (총 대여 기간 / 7)) * 5 / 100 만큼 지급 (실 결제 금액과는 별개)
 	@Update("UPDATE users SET savedMoney = savedMoney + #{savedMoney} WHERE email = #{email};")
 	int giveSavedMoney(@Param("email") String email, @Param("savedMoney") int savedMoney);
+
+	// Scheduled: 상품의 배송 상태 파악을 위해 courierCompany와 trackingNumber 목록 조회
+	@Select("SELECT opCode, courierCompany, trackingNumber FROM orderProducts WHERE odrState = '배송 중';")
+	List<AdminOrdersTrackingDTO> getTrackingData();
+
+	// Scheduled: 상품이 배송 왼료되었을 때 주문 상태를 '배송 완료'로 변경
+	@Update("UPDATE orderProducts SET odrState = '배송 완료' WHERE opCode = #{opCode};")
+	void deliveryCompleted(@Param("opCode") int opCode);
 }

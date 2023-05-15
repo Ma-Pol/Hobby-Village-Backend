@@ -1,8 +1,10 @@
 package com.hobbyvillage.backend.admin_orders;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface AdminOrdersService {
+	String getImportToken() throws IOException;
 	int getOrderCount(String sort, String filter);
 	int getSearchOrderCount(String sort, String condition, String keyword, String filter);
 	List<AdminOrdersDTO> getOrderList(String sort, String filter, int pageNum);
@@ -13,6 +15,7 @@ public interface AdminOrdersService {
 	int payCompToPreDeli(String odrNumber);
 	int preDeliToShipping(int opCode, String courierCompany, String trackingNumber);
 	String checkOdrState(int opCode);
-	int cancelOrder(AdminOrdersCancelOrderDTO data);
+	int cancelOrder(AdminOrdersCancelOrderDTO data, String token) throws IOException;
 	int returningToReturned(int opCode, String prodCode, int prodPrice, int rentalPeriod, String email);
+	boolean trackingResult(AdminOrdersTrackingDTO trackingData) throws IOException;
 }

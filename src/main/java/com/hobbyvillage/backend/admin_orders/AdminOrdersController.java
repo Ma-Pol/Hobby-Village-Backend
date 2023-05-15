@@ -1,5 +1,6 @@
 package com.hobbyvillage.backend.admin_orders;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -95,17 +96,12 @@ public class AdminOrdersController {
 	public String checkOdrState(@PathVariable(value = "opCode", required = true) int opCode) {
 		return adminOrdersServiceImpl.checkOdrState(opCode);
 	}
-	
+
 	// 주문 취소 처리 과정 2: 실제 주문 취소
 	@PostMapping("/cancelOrder")
-	public int cancelOrder(@RequestBody AdminOrdersCancelOrderDTO data) {
-		
-	}
-	
-	// 주문 취소 처리 과정 3: 취소 후처리
-	@PatchMapping("/cancelOrderAfter")
-	public int cancelOrderAfter(@RequestBody AdminOrdersCancelOrderDTO data) {
-		
+	public void cancelOrder(@RequestBody AdminOrdersCancelOrderDTO data) throws IOException {
+		String token = adminOrdersServiceImpl.getImportToken();
+		adminOrdersServiceImpl.cancelOrder(data, token);
 	}
 
 	// 반납 완료 처리 (반납 중 -> 반납 완료)
