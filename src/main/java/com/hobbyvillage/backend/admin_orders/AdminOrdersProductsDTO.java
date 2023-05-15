@@ -8,9 +8,10 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class AdminOrdersProductsDTO {
 	private Integer opCode;
+	private String courierCompany;
+	private String trackingNumber;
 	private String prodCode;
 	private Date deliDate;
 	private Integer rentalPeriod;

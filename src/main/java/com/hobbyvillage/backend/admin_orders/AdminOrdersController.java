@@ -18,15 +18,16 @@ public class AdminOrdersController {
 	// 주문 개수 조회
 	@GetMapping("/count")
 	public int getOrderCount(@RequestParam(value = "sort", required = true) String sort,
+			@RequestParam(value = "filter", required = true) String filter,
 			@RequestParam(value = "condition", required = false) String condition,
 			@RequestParam(value = "keyword", required = false) String keyword) {
 		int orderCount;
 
 		// 검색 여부 확인
 		if (keyword == null) {
-			orderCount = adminOrdersServiceImpl.getOrderCount(sort);
+			orderCount = adminOrdersServiceImpl.getOrderCount(sort, filter);
 		} else {
-			orderCount = adminOrdersServiceImpl.getSearchOrderCount(sort, condition, keyword);
+			orderCount = adminOrdersServiceImpl.getSearchOrderCount(sort, condition, keyword, filter);
 		}
 
 		return orderCount;
@@ -35,6 +36,7 @@ public class AdminOrdersController {
 	// 주문 목록 조회
 	@GetMapping("")
 	public List<AdminOrdersDTO> getOrderList(@RequestParam(value = "sort", required = true) String sort,
+			@RequestParam(value = "filter", required = true) String filter,
 			@RequestParam(value = "pages", required = true) int pages,
 			@RequestParam(value = "condition", required = false) String condition,
 			@RequestParam(value = "keyword", required = false) String keyword) {
@@ -43,9 +45,9 @@ public class AdminOrdersController {
 
 		// 검색 여부 확인
 		if (keyword == null) {
-			orderList = adminOrdersServiceImpl.getOrderList(sort, pageNum);
+			orderList = adminOrdersServiceImpl.getOrderList(sort, filter, pageNum);
 		} else {
-			orderList = adminOrdersServiceImpl.getSearchOrderList(condition, keyword, sort, pageNum);
+			orderList = adminOrdersServiceImpl.getSearchOrderList(condition, keyword, sort, filter.trim(), pageNum);
 		}
 
 		return orderList;
@@ -70,12 +72,51 @@ public class AdminOrdersController {
 		return adminOrdersServiceImpl.modifyOrderAddress(addressData);
 	}
 
-	// 반납 완료 처리
-	@PatchMapping("/return")
-	public int returnProduct(@RequestBody Map<String, String> codeData) {
-		int opCode = Integer.parseInt(codeData.get("opCode"));
-		String prodCode = codeData.get("prodCode");
+	// 주문 확인 처리 (결제 완료 -> 배송 준비 중)
+	@PatchMapping("/odrState/preparing-for-delivery")
+	public int payCompToPreDeli(@RequestBody Map<String, String> stateMap) {
+		String odrNumber = stateMap.get("odrNumber");
 
-		return adminOrdersServiceImpl.returnProduct(opCode, prodCode);
+		return adminOrdersServiceImpl.payCompToPreDeli(odrNumber);
+	}
+
+	// 운송 정보 등록 처리 (배송 준비 중 -> 배송 중)
+	@PatchMapping("/odrState/shipping")
+	public int preDeliToShipping(@RequestBody AdminOrdersProductsDTO data) {
+		int opCode = data.getOpCode();
+		String courierCompany = data.getCourierCompany();
+		String trackingNumber = data.getTrackingNumber();
+
+		return adminOrdersServiceImpl.preDeliToShipping(opCode, courierCompany, trackingNumber);
+	}
+
+	// 주문 취소 처리 과정 1: 주문 상품 상태 확인
+	@GetMapping("/odrState/{opCode}")
+	public String checkOdrState(@PathVariable(value = "opCode", required = true) int opCode) {
+		return adminOrdersServiceImpl.checkOdrState(opCode);
+	}
+	
+	// 주문 취소 처리 과정 2: 실제 주문 취소
+	@PostMapping("/cancelOrder")
+	public int cancelOrder(@RequestBody AdminOrdersCancelOrderDTO data) {
+		
+	}
+	
+	// 주문 취소 처리 과정 3: 취소 후처리
+	@PatchMapping("/cancelOrderAfter")
+	public int cancelOrderAfter(@RequestBody AdminOrdersCancelOrderDTO data) {
+		
+	}
+
+	// 반납 완료 처리 (반납 중 -> 반납 완료)
+	@PatchMapping("/returned")
+	public int returningToReturned(@RequestBody Map<String, String> data) {
+		int opCode = Integer.parseInt(data.get("opCode"));
+		String prodCode = data.get("prodCode");
+		int prodPrice = Integer.parseInt(data.get("prodPrice"));
+		int rentalPeriod = Integer.parseInt(data.get("rentalPeriod"));
+		String email = data.get("odrEmail");
+
+		return adminOrdersServiceImpl.returningToReturned(opCode, prodCode, prodPrice, rentalPeriod, email);
 	}
 }

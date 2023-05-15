@@ -8,11 +8,15 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class AdminOrdersDetailDTO {
-	private String odrNumber;
 	private String odrPayment;
+	private Integer exactPrice;
+	private Integer usedSavedMoney;
+	private Integer cancelPrice;
+	private Integer cancelSavedMoney;
 	private String odrEmail;
+	private String odrPhone;
+	private String receiver;
 	private Integer odrZipCode;
 	private String odrAddress1;
 	private String odrAddress2;
