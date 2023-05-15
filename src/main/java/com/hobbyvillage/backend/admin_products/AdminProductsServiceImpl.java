@@ -54,5 +54,12 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 
 		return mapper.getSearchProductList(filter, condition, keyword, sort, pageNum);
 	}
+	
+	@Override // 상품 상세 조회 -- 리뷰 테이블에서 리뷰 평균 가져오는 법 ??
+	public AdminProductsDTO getProductDetail(String prodCode) {
+		AdminProductsDTO product = new AdminProductsDTO();
+		product = mapper.getProductDetail(prodCode);
+		return product;
+	}
 
 }

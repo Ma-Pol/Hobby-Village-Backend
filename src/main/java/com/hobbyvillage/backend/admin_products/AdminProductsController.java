@@ -2,7 +2,11 @@ package com.hobbyvillage.backend.admin_products;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/m/products")
@@ -47,5 +51,10 @@ public class AdminProductsController {
 		}
 
 		return productList;
+	}
+	
+	@GetMapping("/getProductDetail")
+	public AdminProductsDTO getProductDetail(@RequestParam String prodCode) {
+		return adminProductsServiceImpl.getProductDetail(prodCode);
 	}
 }
