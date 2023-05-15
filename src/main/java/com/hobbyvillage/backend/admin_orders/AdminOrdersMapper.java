@@ -140,10 +140,26 @@ public interface AdminOrdersMapper {
 	int giveSavedMoney(@Param("email") String email, @Param("savedMoney") int savedMoney);
 
 	// Scheduled: 상품의 배송 상태 파악을 위해 courierCompany와 trackingNumber 목록 조회
-	@Select("SELECT opCode, courierCompany, trackingNumber FROM orderProducts WHERE odrState = '배송 중';")
+	@Select("SELECT op.opCode, op.courierCompany, op.trackingNumber, o.odrPhone "
+			+ "FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber "
+			+ "WHERE odrState = '배송 중';")
 	List<AdminOrdersTrackingDTO> getTrackingData();
 
-	// Scheduled: 상품이 배송 왼료되었을 때 주문 상태를 '배송 완료'로 변경
-	@Update("UPDATE orderProducts SET odrState = '배송 완료' WHERE opCode = #{opCode};")
+	// Scheduled: 상품이 배송 왼료되었을 때 odrState, deliDate, deadline 변경
+	@Update("UPDATE orderProducts SET odrState = '배송 준비 중', deliDate = now(), "
+			+ "deadline = DATE_ADD(DATE_ADD(deadline, INTERVAL rentalPeriod DAY), INTERVAL 7 DAY) "
+			+ "WHERE opCode = #{opCode};")
 	void deliveryCompleted(@Param("opCode") int opCode);
+	
+	// Scheduled: 상품이 배송 완료되었을 때 문자 전송을 위한 상품 명 조회
+	@Select("SELECT op.deadline, p.prodName FROM orderProducts op INNER JOIN products p "
+			+ "ON op.prodCode = p.prodCode WHERE op.opCode = #{opCode};")
+	AdminOrdersTrackingDTO getProdNameAndDeadline(@Param("opCode") int opCode);
+	
+	// Scheduled: 배송 완료된 상품 중 반납되지 않은 상품의 deadline 조회 (반납 독촉 문자용)
+	@Select("SELECT p.prodName, o.odrPhone, DATEDIFF(op.deadline, NOW()) AS datediff, op.deadline "
+			+ "FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber "
+			+ "INNER JOIN products p ON op.prodCode = p.prodCode "
+			+ "WHERE deadline != '1000-01-01' AND odrState = '배송 완료';")
+	List<AdminOrdersTrackingDTO> getDeadlineAndPhone();
 }

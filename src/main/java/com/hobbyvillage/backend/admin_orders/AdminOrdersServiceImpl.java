@@ -3,11 +3,18 @@ package com.hobbyvillage.backend.admin_orders;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.naming.java.javaURLContextFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,6 +23,11 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @EnableScheduling
 @Service
@@ -37,6 +49,12 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 
 	@Value("${sweettracker-api-key}")
 	private String sweettracker_api_Key;
+
+	@Value("${solapi-api-key}")
+	private String solapi_api_key;
+
+	@Value("${solapi-secret-key}")
+	private String solapi_secret_key;
 
 	public AdminOrdersServiceImpl(AdminOrdersMapper mapper) {
 		this.mapper = mapper;
@@ -441,31 +459,80 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		return result;
 	}
 
-	@Scheduled(fixedDelay = 4500000) // 1시간 15분마다 실행
-	public void deliveryTracking() { // 상품 배송 상태 파악
+	// 1시간 15분마다 상품의 배송 상태를 파악
+	@Scheduled(fixedDelay = 4500000)
+	private void deliveryTracking() {
+		LocalDateTime now = LocalDateTime.now();
 		List<AdminOrdersTrackingDTO> trackingList = mapper.getTrackingData();
 
+		System.out.println(now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초")));
+		System.out.println("===================================================");
 		for (AdminOrdersTrackingDTO trackingData : trackingList) {
 			try {
 				// true 가 출력되면 배송 완료
 				boolean isComplete = trackingResult(trackingData);
 
 				if (isComplete) {
-					// 배송 중 -> 배송 완료 변경
+					// 주문 상태 및 deliDate, deadline 변경
 					mapper.deliveryCompleted(trackingData.getOpCode());
+
+					// 여기서 문자메세지 발송 준비
+					AdminOrdersTrackingDTO smsData = mapper.getProdNameAndDeadline(trackingData.getOpCode());
+					String phone = trackingData.getOdrPhone();
+					String prodName = smsData.getProdName();
+					Date deadline = smsData.getDeadline();
+
+					String message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 이/가 배송지에 도착했음을 알립니다.\n\n["
+							+ prodName + "] 을/를 통해 즐거운 취미 생활을 즐기시기를 바랍니다.\n\n반납 기한: [" + deadline + "]";
+
+					sendMessage(message, phone);
 				}
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
-		System.out.println("테스트!!");
+		System.out.println("===================================================\n");
 	}
 
-	@Override
+	// 매일 오후 12시 30분마다 상품 반납일을 체크 후 자동 메세지 전송
+	@Scheduled(cron = "0 30 12 * * *")
+	private void deadlineCheck() {
+		List<AdminOrdersTrackingDTO> dataList = mapper.getDeadlineAndPhone();
+
+		for (AdminOrdersTrackingDTO data : dataList) {
+			String prodName = data.getProdName();
+			String phone = data.getOdrPhone();
+			Date deadline = data.getDeadline();
+			String message = "";
+
+			if (data.getDatediff() == 7) {
+				message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 의 대여 기간이 만료되었습니다.\n\n[" + prodName
+						+ "] 을/를 통해 즐거운 취미 생활을 즐기셨기를 바랍니다.\n\n반납 기한 내에 취미빌리지 사이트에서 해당 상품의 반납 신청을 완료해주시기 바랍니다."
+						+ "\n\n반납 신청 위치: 마이 페이지 > 주문 목록\n\n반납 기한: [" + deadline + "]";
+				sendMessage(message, phone);
+
+			} else if (data.getDatediff() == 3) {
+				message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 의 반납 기한이 3일 남았습니다.\n\n"
+						+ "반납 기한 내에 취미빌리지 사이트에서 해당 상품의 반납 신청을 완료해주시기 바랍니다.\n\n반납 신청 위치: 마이 페이지 > 주문 목록" + "\n\n반납 기한: ["
+						+ deadline + "]";
+				sendMessage(message, phone);
+			} else if (data.getDatediff() == 1) {
+				message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 의 반납 기한이 하루 남았습니다.\n\n"
+						+ "반납 기한 내에 취미빌리지 사이트에서 해당 상품의 반납 신청을 완료해주시기 바랍니다.\n\n반납 신청 위치: 마이 페이지 > 주문 목록" + "\n\n반납 기한: ["
+						+ deadline + "]";
+				sendMessage(message, phone);
+			} else if (data.getDatediff() == 0) {
+				message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 의 반납 기한 당일입니다.\n\n"
+						+ "취미빌리지 사이트에서 해당 상품의 반납 신청을 완료해주시기 바랍니다.\n\n반납 신청 위치: 마이 페이지 > 주문 목록\n\n반납 기한: [" + deadline
+						+ "]";
+				sendMessage(message, phone);
+			}
+		}
+	}
+
+	@Override // 배송 추적 메서드
 	public boolean trackingResult(AdminOrdersTrackingDTO trackingData) throws IOException {
-		int opCode = trackingData.getOpCode();
 		String courierCompany = trackingData.getCourierCompany();
 		String trackingNumber = trackingData.getTrackingNumber();
 
@@ -490,6 +557,8 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 
 		String code = (String) response.get("code");
 		if (code != null) {
+			String msg = (String) response.get("msg");
+			System.out.println(msg);
 			return false;
 		}
 
@@ -499,6 +568,27 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		con.disconnect();
 
 		return complete;
+	}
+
+	@Override // 자동 문자 전송 메서드
+	public void sendMessage(String message, String phone) {
+		DefaultMessageService messageSender = NurigoApp.INSTANCE.initialize(solapi_api_key, solapi_secret_key,
+				"https://api.solapi.com");
+
+		System.out.println("테스트");
+		Message msg = new Message();
+		msg.setFrom("01026336485");
+		msg.setTo("01026336485");
+		msg.setText(message);
+
+		try {
+			messageSender.send(msg);
+		} catch (NurigoMessageNotReceivedException e) {
+			System.out.println(e.getFailedMessageList());
+			System.out.println(e.getMessage());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 }

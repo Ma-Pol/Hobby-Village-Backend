@@ -1,6 +1,7 @@
 package com.hobbyvillage.backend.admin_orders;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 public interface AdminOrdersService {
@@ -18,4 +19,5 @@ public interface AdminOrdersService {
 	int cancelOrder(AdminOrdersCancelOrderDTO data, String token) throws IOException;
 	int returningToReturned(int opCode, String prodCode, int prodPrice, int rentalPeriod, String email);
 	boolean trackingResult(AdminOrdersTrackingDTO trackingData) throws IOException;
+	void sendMessage(String message, String phone);
 }
