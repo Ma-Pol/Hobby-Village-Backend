@@ -8,3 +8,10 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 1024MB
+import-base-url: https://api.iamport.kr
+api-key: 1017411523622421
+api-secret-key: NgvjEdkIbeqFAF5O5FDj3DPTUKbsM5iT47vxJb8yfVH8xiGw1QcJoVWwBW0Dlt5u4jmILUKZydJlV1l7
+sweettracker-base-url: http://info.sweettracker.co.kr
+sweettracker-api-key: FFa0ThZAJJcxP2gykTuPIA
+solapi-api-key: NCSGOGLLTPZ4RBQ3
+solapi-secret-key: 70FS9NIR7JSX5GTHZIFVVINCYOU61QOP
