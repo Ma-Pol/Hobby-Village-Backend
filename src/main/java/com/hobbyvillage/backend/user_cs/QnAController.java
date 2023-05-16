@@ -63,4 +63,9 @@ public class QnAController {
 	public String getAnswerDetail(@PathVariable int qstCode) {
 		return qnAServiceImpl.getAnswerDetail(qstCode);
 	}
+
+	@PostMapping("/create")
+	public int insertQuestion(@RequestBody QuestionDTO question) {
+		return qnAServiceImpl.insertQuestion(question);
+	}
 }

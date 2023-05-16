@@ -43,4 +43,13 @@ public interface QnAMapper {
 	// 답변 상세 조회
 	@Select("SELECT aswContent FROM answers WHERE qstCode = #{qstCode};")
 	String getAnswerDetail(@Param("qstCode") int qstCode);
+
+	// 작성자 닉네임 확인
+	@Select("SELECT nickname FROM users WHERE email = #{email};")
+	String getNickname(@Param("email") String email);
+
+	// 질문 등록
+	@Insert("INSERT INTO questions(qstCategory, qstTitle, qstContent, qstWriter, qstState) VALUES"
+			+ "(#{qstCategory}, #{qstTitle}, #{qstContent}, #{qstWriter}, 0);")
+	int insertQuestion(QuestionDTO question);
 }

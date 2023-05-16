@@ -16,4 +16,6 @@ public class QuestionDTO {
 	private String qstCategory;
 	private Date qstDate;
 	private Integer qstState;
+	private String email;
+	private String qstWriter;
 }

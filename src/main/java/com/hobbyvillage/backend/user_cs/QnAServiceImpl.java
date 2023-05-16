@@ -82,4 +82,12 @@ public class QnAServiceImpl implements QnAService {
 		return mapper.getAnswerDetail(qstCode);
 	}
 
+	@Override
+	public int insertQuestion(QuestionDTO question) {
+		String nickname = mapper.getNickname(question.getEmail());
+		question.setQstWriter(nickname);
+
+		return mapper.insertQuestion(question);
+	}
+
 }

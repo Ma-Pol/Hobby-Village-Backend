@@ -10,4 +10,5 @@ public interface QnAService {
 	int writerCheck(String email, int qstCode);
 	QuestionDTO getQuestionDetail(int qstCode);
 	String getAnswerDetail(int qstCode);
+	int insertQuestion(QuestionDTO question);
 }
