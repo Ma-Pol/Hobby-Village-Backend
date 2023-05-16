@@ -66,4 +66,9 @@ public class AdminNoticesController {
 		return adminNoticesServiceImpl.deleteNotice(notCode);
 	}
 
+	// 공지사항 수정
+	@PatchMapping("/noticeModify/{notCode}")
+	public int modifyNotice(@PathVariable int notCode, @RequestBody AdminNoticesDTO notice){
+		return adminNoticesServiceImpl.modifyNotice(notCode, notice);
+	}
 }

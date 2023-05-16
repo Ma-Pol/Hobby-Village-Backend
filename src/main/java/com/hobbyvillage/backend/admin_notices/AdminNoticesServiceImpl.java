@@ -70,4 +70,11 @@ public class AdminNoticesServiceImpl implements AdminNoticesService {
 	// 공지사항 삭제
 	@Override
 	public int deleteNotice(int notCode){ return mapper.deleteNotice(notCode); }
+
+	// 공지사항 수정
+	@Override
+	public int modifyNotice(int notCode, AdminNoticesDTO notice){
+		notice.setNotCode(notCode);
+		return mapper.modifyNotice(notice);
+	}
 }

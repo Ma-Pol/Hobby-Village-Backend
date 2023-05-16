@@ -1,5 +1,7 @@
 package com.hobbyvillage.backend.admin_notices;
 
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+
 import java.util.List;
 
 public interface AdminNoticesService {
@@ -10,4 +12,5 @@ public interface AdminNoticesService {
 	AdminNoticesDTO getNoticeDetail(int notCode);
 	int createNotice(AdminNoticesDTO notice);
 	int deleteNotice(int notCode);
+	int modifyNotice(int notCode, AdminNoticesDTO notice);
 }

@@ -39,4 +39,9 @@ public interface AdminNoticesMapper {
 	@Delete("DELETE FROM notices WHERE notCode=#{notCode} ")
 	int deleteNotice(@Param("notCode") int notCode);
 
+	@Update("UPDATE notices " +
+			"SET notTitle = #{notTitle}, notCategory = #{notCategory}, notContent = #{notContent} " +
+			"WHERE notCode = #{notCode} ")
+	int modifyNotice(AdminNoticesDTO notice);
+
 }
