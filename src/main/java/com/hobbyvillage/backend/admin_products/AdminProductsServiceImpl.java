@@ -55,11 +55,68 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 		return mapper.getSearchProductList(filter, condition, keyword, sort, pageNum);
 	}
 	
-	@Override // 상품 상세 조회 -- 리뷰 테이블에서 리뷰 평균 가져오는 법 ??
+
+	@Override // 상품 상세 조회 - 리뷰 있음 
+	public AdminProductsDTO getProductDetailWR(String prodCode) {
+		AdminProductsDTO product = mapper.getProductDetailWR(prodCode);
+		return product;
+	}
+
+	@Override // 상품 상세 조회 - 리뷰 없음 
 	public AdminProductsDTO getProductDetail(String prodCode) {
 		AdminProductsDTO product = new AdminProductsDTO();
 		product = mapper.getProductDetail(prodCode);
 		return product;
 	}
+
+	@Override // 상품 상세 조회 - 이미지
+	public List<String> getProdPictures(String prodCode) {
+		List<String> images = mapper.getProdPictures(prodCode);
+		return images;
+	}
+
+	@Override // 상품 상세 조회 - 연관검색어
+	public List<String> getProdTag(String prodCode) {
+		List<String> tags = mapper.getProdTag(prodCode);
+		return tags;
+	}
+
+	@Override // 브랜드 목록 조회 
+	public List<String> getBrandList() {
+		List<String> brands = mapper.getBrandList();
+		return brands;
+	}
+
+	@Override // 카테고리 목록 조회 
+	public List<String> getCategoryList() {
+		List<String> categories = mapper.getCategoryList();
+		return categories;
+	}
+
+	@Override // 상품 등록 
+	public boolean addProduct(AdminProductsDTO products) {
+		return mapper.addProduct(products);
+	}
+	
+//	@Override // 상품 등록 - 이미지 
+//	public boolean addProductPictures(AdminProductsDTO prodPictures) {
+//		return mapper.addProductPictures(prodPictures);
+//	}
+
+	@Override // 상품 등록 - 연관검색어 
+	public void addProductTags(AdminProductsDTO prodTags) {
+		List<String> tags = prodTags.getProdTag();
+		String prodCode = prodTags.getProdCode();
+		for (String tag : tags) {			
+			mapper.addProductTags(prodCode, tag);
+		}
+	}
+
+	@Override // 상품 수정 
+	public boolean modifyProduct(AdminProductsDTO products) {
+		return mapper.modifyProduct(products);
+	}
+	
+	
 
 }
