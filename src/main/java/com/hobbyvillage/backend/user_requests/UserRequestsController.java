@@ -31,9 +31,11 @@ public class UserRequestsController {
 
 			// 값이 없는 이미지가 아닌 경우(정상적인 이미지인 경우)
 			if (!image.isEmpty()) {
+				// 저장할 파일명 설정(UUID를 사용해 파일명 중복을 피함)
+				String storedFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
 
-				// 파일 저장 위치 + 저장할 파일명 설정(UUID를 사용해 파일명 중복을 피함)
-				File fileName = new File(uploadPath, UUID.randomUUID().toString() + "_" + image.getOriginalFilename());
+				// 파일 저장 위치 + 파일명 설정
+				File fileName = new File(uploadPath, storedFileName);
 
 				// 파일 저장
 				image.transferTo(fileName);
