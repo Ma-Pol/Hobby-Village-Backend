@@ -51,7 +51,7 @@ public interface AdminOrdersMapper {
 	// 검색 시 주문 목록 조회: 반납 기한 순
 	@Select("SELECT op.opCode, op.odrNumber, op.prodCode, op.deliDate, op.rentalPeriod, op.deadline, op.odrState, u.userCode, u.nickname "
 			+ "FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber INNER JOIN users u ON o.odrEmail = u.email "
-			+ "WHERE deadline != '1000-01-01' AND ${filter} AND ${condition} LIKE '%${keyword}%' ORDER BY ${sort} LIMIT #{pageNum}, 10;")
+			+ "WHERE deadline != '1000-01-01' AND op.odrState != '반납 완료' AND ${filter} AND ${condition} LIKE '%${keyword}%' ORDER BY ${sort} LIMIT #{pageNum}, 10;")
 	List<AdminOrdersDTO> getSearchDeliveriedOrderList(@Param("condition") String condition,
 			@Param("keyword") String keyword, @Param("sort") String sort, @Param("filter") String filter,
 			@Param("pageNum") int pageNum);
