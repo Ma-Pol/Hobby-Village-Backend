@@ -3,8 +3,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/hobbyvillage?serverTimezone=Asia/Seoul
     username: root
-    password: 123456
+    password: 12345678
   servlet:
     multipart:
-      max-file-size: 100MB
+      max-file-size: 200MB
       max-request-size: 1024MB

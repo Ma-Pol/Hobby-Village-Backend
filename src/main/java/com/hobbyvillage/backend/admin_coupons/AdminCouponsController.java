@@ -53,4 +53,20 @@ public class AdminCouponsController {
 	public void deleteCoupon(@RequestParam(value = "couponCode", required = true) int couponCode) {
 		adminCouponsServiceImpl.deleteCoupon(couponCode);
 	}
+	
+	@PostMapping("/addCouponPer")
+	public void addCouponPer(@RequestBody AdminCouponsDTO coupon) {
+		adminCouponsServiceImpl.addCouponPer(coupon);
+	}
+
+	@PostMapping("/addCouponFix")
+	public void addCouponFix(@RequestBody AdminCouponsDTO coupon) {
+		adminCouponsServiceImpl.addCouponFix(coupon);
+	}
+	
+	@GetMapping("/getCouponDetails")
+	public AdminCouponsDTO getCouponDetails(@RequestParam int couponCode) {
+		return adminCouponsServiceImpl.getCouponDetails(couponCode);
+	}
+	
 }
