@@ -60,15 +60,11 @@ public class AdminCouponsServiceImpl implements AdminCouponsService {
 		mapper.deleteCoupon(couponCode);
 	}
 	
-	@Override // 쿠폰 등록 - 퍼센트 
-	public void addCouponPer(AdminCouponsDTO coupon) {
-		mapper.addCouponPer(coupon);
+	@Override // 쿠폰 등록
+	public void addCoupon(AdminCouponsDTO coupon) {
+		mapper.addCoupon(coupon);
 	}
 
-	@Override // 쿠폰 등록 - 고정 금액 
-	public void addCouponFix(AdminCouponsDTO coupon) {
-		mapper.addCouponFix(coupon);
-	}
 
 	@Override // 쿠폰 상세 보기 
 	public AdminCouponsDTO getCouponDetails(int couponCode) {

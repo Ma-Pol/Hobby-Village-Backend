@@ -31,20 +31,14 @@ public interface AdminCouponsMapper {
 	// 쿠폰 삭제
 	@Delete("DELETE FROM coupons WHERE couponCode = #{couponCode}")
 	void deleteCoupon(@Param("couponCode") int couponCode);
-	
-	// 쿠폰 신규 등록 (퍼센트 할인인 경우)
+
+	// 쿠폰 신규 등록
 	@Insert("INSERT INTO coupons (couponName, discountPer, discountFix, deadline) "
 			+ "VALUES (#{couponName}, #{discountPer}, #{discountFix}, #{deadline});")
-	void addCouponPer(AdminCouponsDTO coupon);
-	
-	// 쿠폰 신규 등록 (금액 할인인 경우)
-	@Insert("INSERT INTO coupons (couponName, discountPer, discountFix, deadline) "
-			+ "VALUES (#{couponName}, #{discountPer}, #{discountFix}, #{deadline});")
-	void addCouponFix(AdminCouponsDTO coupon);
-	
-	// 쿠폰 내용 상세보기 
+	void addCoupon(AdminCouponsDTO coupon);
+
+	// 쿠폰 내용 상세보기
 	@Select("SELECT * FROM coupons WHERE couponCode = #{couponCode};")
 	AdminCouponsDTO getCouponDetails(@Param("couponCode") int couponCode);
-	
-}
 
+}
