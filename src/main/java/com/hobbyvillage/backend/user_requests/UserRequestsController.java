@@ -2,6 +2,7 @@ package com.hobbyvillage.backend.user_requests;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,19 @@ public class UserRequestsController {
 		this.userReqeustsServiceImpl = userReqeustsServiceImpl;
 	}
 
+	@GetMapping("/categories")
+	public List<String> getCategories() {
+		return userReqeustsServiceImpl.getCategories();
+	}
+
+	// 신청 내용 저장 및 reqCode 조회
+	@PostMapping("/create")
+	public int createReqeust(@RequestBody UserRequestsDTO request) {
+		return userReqeustsServiceImpl.createRequest(request);
+	}
+
 	// 이미지 파일 받아와서 서버에 저장하기
-	@PostMapping("/upload/{reqCode}")
+	@PostMapping("/upload/img/{reqCode}")
 	public int imageUpload(@PathVariable(value = "reqCode", required = true) int reqCode,
 			@RequestParam(value = "uploadImg", required = true) MultipartFile[] uploadImg) throws IOException {
 		String uploadPath = UploadDir.uploadDir + "\\Uploaded\\RequestsFile";
@@ -41,6 +53,7 @@ public class UserRequestsController {
 				image.transferTo(fileName);
 
 				// DB에 파일명을 저장할 경우 이곳에서 처리하기
+				userReqeustsServiceImpl.insertFileName(reqCode, storedFileName);
 
 				result += 1;
 			}
