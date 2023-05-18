@@ -49,4 +49,32 @@ public class AdminQuestionsController {
 		return questionList;
 	}
 
+	@GetMapping("/count/{qstCode}")
+	public int checkQuestion(@PathVariable(value = "qstCode", required = true) String qstCode) {
+		int result = 0;
+
+		// qstCode가 숫자인지 확인
+		if (qstCode.matches("-?\\d+")) {
+			int qstCodeInt = Integer.parseInt(qstCode);
+			result = adminQuestionsServiceImpl.checkQuestion(qstCodeInt);
+		}
+
+		return result;
+	}
+
+	@GetMapping("/{qstCode}")
+	public AdminQustionsDTO getQuestionDetail(@PathVariable(value = "qstCode", required = true) int qstCode) {
+		return adminQuestionsServiceImpl.getQuestionDetail(qstCode);
+	}
+
+	@GetMapping("/answer/{qstCode}")
+	public String getAnswer(@PathVariable(value = "qstCode", required = true) int qstCode) {
+		return adminQuestionsServiceImpl.getAnswer(qstCode);
+	}
+
+	@DeleteMapping("/{qstCode}")
+	public int deleteQuestion(@PathVariable(value = "qstCode", required = true) int qstCode) {
+		return adminQuestionsServiceImpl.deleteQuestion(qstCode);
+	}
+
 }

@@ -28,4 +28,20 @@ public interface AdminQuestionsMapper {
 			+ "WHERE ${filter} AND ${condition} LIKE '%${keyword}%' ORDER BY ${sort} LIMIT #{pageNum}, 10;")
 	List<AdminQustionsDTO> getSearchQuestionList(@Param("filter") String filter, @Param("condition") String condition,
 			@Param("keyword") String keyword, @Param("sort") String sort, @Param("pageNum") int pageNum);
+
+	// 질문 상세 조회 1: 해당 질문코드의 존재 여부 확인
+	@Select("SELECT COUNT(*) FROM questions WHERE qstCode = #{qstCode};")
+	int checkQuestion(@Param("qstCode") int qstCode);
+
+	// 질문 상세 조회 2: 질문 내용 조회
+	@Select("SELECT qstCategory, qstTitle, qstContent, qstState FROM questions WHERE qstCode = #{qstCode};")
+	AdminQustionsDTO getQuestionDetail(@Param("qstCode") int qstCode);
+
+	// 답변 상세 조회
+	@Select("SELECT aswContent FROM answers WHERE qstCode = #{qstCode};")
+	String getAnswer(@Param("qstCode") int qstCode);
+
+	// 질문 삭제
+	@Delete("DELETE FROM questions WHERE qstCode = #{qstCode};")
+	int deleteQuestion(@Param("qstCode") int qstCode);
 }

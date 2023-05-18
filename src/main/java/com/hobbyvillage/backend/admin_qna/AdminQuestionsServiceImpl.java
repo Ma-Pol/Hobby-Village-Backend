@@ -69,4 +69,24 @@ public class AdminQuestionsServiceImpl implements AdminQuestionsService {
 		return mapper.getSearchQuestionList(filter, condition, keyword, sort, pageNum);
 	}
 
+	@Override
+	public int checkQuestion(int qstCode) {
+		return mapper.checkQuestion(qstCode);
+	}
+
+	@Override
+	public AdminQustionsDTO getQuestionDetail(int qstCode) {
+		return mapper.getQuestionDetail(qstCode);
+	}
+
+	@Override
+	public String getAnswer(int qstCode) {
+		return mapper.getAnswer(qstCode);
+	}
+
+	@Override
+	public int deleteQuestion(int qstCode) {
+		return mapper.deleteQuestion(qstCode);
+	}
+
 }
