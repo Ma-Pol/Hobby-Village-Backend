@@ -71,8 +71,7 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 
 	@Override // 상품 상세 조회 - 이미지
 	public List<String> getProdPictures(String prodCode) {
-		List<String> images = mapper.getProdPictures(prodCode);
-		return images;
+		return mapper.getProdPictures(prodCode);
 	}
 
 	@Override // 상품 상세 조회 - 연관검색어
@@ -98,10 +97,10 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 		return mapper.addProduct(products);
 	}
 	
-//	@Override // 상품 등록 - 이미지 
-//	public boolean addProductPictures(AdminProductsDTO prodPictures) {
-//		return mapper.addProductPictures(prodPictures);
-//	}
+	@Override // 상품 등록 - 이미지 파일명 
+	public void addPicture(String prodCode, String prodPicture) {
+		mapper.addPicture(prodCode, prodPicture);
+	}
 
 	@Override // 상품 등록 - 연관검색어 
 	public void addProductTags(AdminProductsDTO prodTags) {
@@ -115,6 +114,11 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 	@Override // 상품 수정 
 	public boolean modifyProduct(AdminProductsDTO products) {
 		return mapper.modifyProduct(products);
+	}
+
+	@Override
+	public boolean deleteProduct(String prodCode) {
+		return mapper.deleteProduct(prodCode);
 	}
 	
 	

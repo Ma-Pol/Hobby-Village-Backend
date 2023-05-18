@@ -14,9 +14,10 @@ public interface AdminProductsService {
 	List<String> getBrandList();
 	List<String> getCategoryList();
 	public boolean addProduct(AdminProductsDTO products);
-//	public boolean addProductPictures(AdminProductsDTO prodPictures);
+	void addPicture(String prodCode, String prodPicture);
 	public void addProductTags(AdminProductsDTO prodTags);
 	public boolean modifyProduct(AdminProductsDTO products);
+	public boolean deleteProduct(String prodCode);
 	
 }
 
