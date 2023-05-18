@@ -1,6 +1,7 @@
 package com.hobbyvillage.backend.admin_qna;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +48,50 @@ public class AdminQuestionsController {
 		}
 
 		return questionList;
+	}
+
+	@GetMapping("/check/{qstCode}")
+	public int checkQuestion(@PathVariable(value = "qstCode", required = true) String qstCode) {
+		int result = 0;
+
+		// qstCode가 숫자인지 확인
+		if (qstCode.matches("-?\\d+")) {
+			int qstCodeInt = Integer.parseInt(qstCode);
+			result = adminQuestionsServiceImpl.checkQuestion(qstCodeInt);
+		}
+
+		return result;
+	}
+
+	@GetMapping("/{qstCode}")
+	public AdminQustionsDTO getQuestionDetail(@PathVariable(value = "qstCode", required = true) int qstCode) {
+		return adminQuestionsServiceImpl.getQuestionDetail(qstCode);
+	}
+
+	@GetMapping("/answer/{qstCode}")
+	public String getAnswer(@PathVariable(value = "qstCode", required = true) int qstCode) {
+		return adminQuestionsServiceImpl.getAnswer(qstCode);
+	}
+
+	@DeleteMapping("/{qstCode}")
+	public int deleteQuestion(@PathVariable(value = "qstCode", required = true) int qstCode) {
+		return adminQuestionsServiceImpl.deleteQuestion(qstCode);
+	}
+
+	@PostMapping("/create")
+	public int createAnswer(@RequestBody Map<String, String> answerData) {
+		int qstCode = Integer.parseInt(answerData.get("qstCode"));
+		String aswContent = answerData.get("aswContent");
+
+		return adminQuestionsServiceImpl.createAnswer(qstCode, aswContent);
+	}
+
+	@PatchMapping("/modify")
+	public int modifyAnswer(@RequestBody Map<String, String> answerData) {
+		int qstCode = Integer.parseInt(answerData.get("qstCode"));
+		String aswContent = answerData.get("aswContent");
+
+		return adminQuestionsServiceImpl.modifyAnswer(qstCode, aswContent);
 	}
 
 }

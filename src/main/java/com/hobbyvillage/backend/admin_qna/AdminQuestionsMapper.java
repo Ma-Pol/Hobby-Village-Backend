@@ -28,4 +28,32 @@ public interface AdminQuestionsMapper {
 			+ "WHERE ${filter} AND ${condition} LIKE '%${keyword}%' ORDER BY ${sort} LIMIT #{pageNum}, 10;")
 	List<AdminQustionsDTO> getSearchQuestionList(@Param("filter") String filter, @Param("condition") String condition,
 			@Param("keyword") String keyword, @Param("sort") String sort, @Param("pageNum") int pageNum);
+
+	// 질문 상세 조회 1: 해당 질문코드의 존재 여부 확인
+	@Select("SELECT COUNT(*) FROM questions WHERE qstCode = #{qstCode};")
+	int checkQuestion(@Param("qstCode") int qstCode);
+
+	// 질문 상세 조회 2: 질문 내용 조회
+	@Select("SELECT qstCategory, qstTitle, qstContent, qstState FROM questions WHERE qstCode = #{qstCode};")
+	AdminQustionsDTO getQuestionDetail(@Param("qstCode") int qstCode);
+
+	// 답변 상세 조회
+	@Select("SELECT aswContent FROM answers WHERE qstCode = #{qstCode};")
+	String getAnswer(@Param("qstCode") int qstCode);
+
+	// 질문 삭제
+	@Delete("DELETE FROM questions WHERE qstCode = #{qstCode};")
+	int deleteQuestion(@Param("qstCode") int qstCode);
+
+	// 답변 등록 1: 답변 테이블에 등록
+	@Insert("INSERT INTO answers(qstCode, aswContent) VALUES(#{qstCode}, #{aswContent});")
+	int createAnswer(@Param("qstCode") int qstCode, @Param("aswContent") String aswContent);
+
+	// 답변 등록 2: 질문의 답변 상태 변경
+	@Update("UPDATE questions SET qstState = 1 WHERE qstCode = #{qstCode};")
+	int changeQuestionState(@Param("qstCode") int qstCode);
+
+	// 답변 수정
+	@Update("UPDATE answers SET aswContent = #{aswContent} WHERE qstCode = #{qstCode};")
+	int modifyAnswer(@Param("qstCode") int qstCode, @Param("aswContent") String aswContent);
 }

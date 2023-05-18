@@ -11,11 +11,11 @@ import lombok.*;
 @ToString
 public class AdminQustionsDTO {
 	private Integer qstCode;
-	private String qstCategory;
 	private String qstTitle;
 	private String qstContent;
-	private String qstWriter;
+	private String qstCategory;
 	private Date qstDate;
 	private Integer qstState;
 	private Integer userCode;
+	private String qstWriter;
 }
