@@ -7,4 +7,5 @@ public interface AdminNoticesService {
 	int getSearchNoticeCount(String filter, String keyword);
 	List<AdminNoticesDTO> getNoticeList(String filter, String sort, int pageNum);
 	List<AdminNoticesDTO> getSearchNoticeList(String filter, String keyword, String sort, int pageNum);
+	AdminNoticesDTO getNoticeDetail(int notCode);
 }

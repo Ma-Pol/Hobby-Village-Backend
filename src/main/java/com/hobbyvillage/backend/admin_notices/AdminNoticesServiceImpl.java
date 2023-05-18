@@ -56,4 +56,9 @@ public class AdminNoticesServiceImpl implements AdminNoticesService {
 		return mapper.getSearchNoticeList(filter, keyword, sort, pageNum);
 	}
 
+	@Override
+	public AdminNoticesDTO getNoticeDetail(int notCode) {
+		return mapper.getNoticeDetail(notCode);
+	}
+
 }

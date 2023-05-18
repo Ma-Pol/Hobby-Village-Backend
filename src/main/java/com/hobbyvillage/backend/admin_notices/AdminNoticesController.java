@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/m/notices")
 public class AdminNoticesController {
@@ -47,4 +48,8 @@ public class AdminNoticesController {
 		return noticeList;
 	}
 
+	@GetMapping("/noticeDetails/{notCode}")
+	public AdminNoticesDTO getNoticeDetail(@PathVariable(value = "notCode", required = true) int notCode) {
+		return adminNoticesServiceImpl.getNoticeDetail(notCode);
+	}
 }
