@@ -48,8 +48,27 @@ public class AdminNoticesController {
 		return noticeList;
 	}
 
+	// 공지사항 상세 조회
 	@GetMapping("/noticeDetails/{notCode}")
 	public AdminNoticesDTO getNoticeDetail(@PathVariable(value = "notCode", required = true) int notCode) {
 		return adminNoticesServiceImpl.getNoticeDetail(notCode);
+	}
+
+	// 공지사항 등록
+	@PostMapping("/noticeCreate")
+	public int createNotice(@RequestBody AdminNoticesDTO notice) {
+		return adminNoticesServiceImpl.createNotice(notice);
+	}
+
+	// 공지사항 삭제
+	@DeleteMapping("/noticeDelete/{notCode}")
+	public int deleteNotice(@PathVariable int notCode){
+		return adminNoticesServiceImpl.deleteNotice(notCode);
+	}
+
+	// 공지사항 수정
+	@PatchMapping("/noticeModify/{notCode}")
+	public int modifyNotice(@PathVariable int notCode, @RequestBody AdminNoticesDTO notice){
+		return adminNoticesServiceImpl.modifyNotice(notCode, notice);
 	}
 }

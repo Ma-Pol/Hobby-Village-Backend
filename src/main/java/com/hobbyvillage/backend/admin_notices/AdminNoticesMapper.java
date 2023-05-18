@@ -3,6 +3,7 @@ package com.hobbyvillage.backend.admin_notices;
 import java.util.List;
 
 import org.apache.ibatis.annotations.*;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 @Mapper
 public interface AdminNoticesMapper {
@@ -25,6 +26,22 @@ public interface AdminNoticesMapper {
 	List<AdminNoticesDTO> getSearchNoticeList(@Param("filter") String filter, @Param("keyword") String keyword,
 			@Param("sort") String sort, @Param("pageNum") int pageNum);
 
+	// 공지사항 상세 조회
 	@Select("SELECT * FROM notices WHERE notCode = #{notCode};")
 	AdminNoticesDTO getNoticeDetail(@Param("notCode") int notCode);
+
+	// 공지사항 등록
+	@Insert("INSERT INTO notices (notTitle, notCategory, notContent) " +
+			"VALUES (#{notTitle}, #{notCategory}, #{notContent});")
+	int createNotice(AdminNoticesDTO notice);
+
+	// 공지사항 삭제
+	@Delete("DELETE FROM notices WHERE notCode=#{notCode} ")
+	int deleteNotice(@Param("notCode") int notCode);
+
+	@Update("UPDATE notices " +
+			"SET notTitle = #{notTitle}, notCategory = #{notCategory}, notContent = #{notContent} " +
+			"WHERE notCode = #{notCode} ")
+	int modifyNotice(AdminNoticesDTO notice);
+
 }
