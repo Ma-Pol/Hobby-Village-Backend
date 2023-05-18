@@ -44,4 +44,16 @@ public interface AdminQuestionsMapper {
 	// 질문 삭제
 	@Delete("DELETE FROM questions WHERE qstCode = #{qstCode};")
 	int deleteQuestion(@Param("qstCode") int qstCode);
+
+	// 답변 등록 1: 답변 테이블에 등록
+	@Insert("INSERT INTO answers(qstCode, aswContent) VALUES(#{qstCode}, #{aswContent});")
+	int createAnswer(@Param("qstCode") int qstCode, @Param("aswContent") String aswContent);
+
+	// 답변 등록 2: 질문의 답변 상태 변경
+	@Update("UPDATE questions SET qstState = 1 WHERE qstCode = #{qstCode};")
+	int changeQuestionState(@Param("qstCode") int qstCode);
+
+	// 답변 수정
+	@Update("UPDATE answers SET aswContent = #{aswContent} WHERE qstCode = #{qstCode};")
+	int modifyAnswer(@Param("qstCode") int qstCode, @Param("aswContent") String aswContent);
 }

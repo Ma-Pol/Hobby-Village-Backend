@@ -89,4 +89,20 @@ public class AdminQuestionsServiceImpl implements AdminQuestionsService {
 		return mapper.deleteQuestion(qstCode);
 	}
 
+	@Override
+	public int createAnswer(int qstCode, String aswContent) {
+		int result = mapper.createAnswer(qstCode, aswContent);
+
+		if (result == 1) {
+			result = mapper.changeQuestionState(qstCode);
+		}
+
+		return result;
+	}
+
+	@Override
+	public int modifyAnswer(int qstCode, String aswContent) {
+		return mapper.modifyAnswer(qstCode, aswContent);
+	}
+
 }

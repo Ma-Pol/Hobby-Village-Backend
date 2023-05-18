@@ -11,4 +11,6 @@ public interface AdminQuestionsService {
 	AdminQustionsDTO getQuestionDetail(int qstCode);
 	String getAnswer(int qstCode);
 	int deleteQuestion(int qstCode);
+	int createAnswer(int qstCode, String aswContent);
+	int modifyAnswer(int qstCode, String aswContent);
 }

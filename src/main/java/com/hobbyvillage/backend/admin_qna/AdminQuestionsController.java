@@ -1,6 +1,7 @@
 package com.hobbyvillage.backend.admin_qna;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +50,7 @@ public class AdminQuestionsController {
 		return questionList;
 	}
 
-	@GetMapping("/count/{qstCode}")
+	@GetMapping("/check/{qstCode}")
 	public int checkQuestion(@PathVariable(value = "qstCode", required = true) String qstCode) {
 		int result = 0;
 
@@ -75,6 +76,22 @@ public class AdminQuestionsController {
 	@DeleteMapping("/{qstCode}")
 	public int deleteQuestion(@PathVariable(value = "qstCode", required = true) int qstCode) {
 		return adminQuestionsServiceImpl.deleteQuestion(qstCode);
+	}
+
+	@PostMapping("/create")
+	public int createAnswer(@RequestBody Map<String, String> answerData) {
+		int qstCode = Integer.parseInt(answerData.get("qstCode"));
+		String aswContent = answerData.get("aswContent");
+
+		return adminQuestionsServiceImpl.createAnswer(qstCode, aswContent);
+	}
+
+	@PatchMapping("/modify")
+	public int modifyAnswer(@RequestBody Map<String, String> answerData) {
+		int qstCode = Integer.parseInt(answerData.get("qstCode"));
+		String aswContent = answerData.get("aswContent");
+
+		return adminQuestionsServiceImpl.modifyAnswer(qstCode, aswContent);
 	}
 
 }
