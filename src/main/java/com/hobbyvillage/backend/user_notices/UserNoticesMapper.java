@@ -28,4 +28,8 @@ public interface UserNoticesMapper {
 	// 공지사항 상세 조회
 	@Select("SELECT * FROM notices WHERE notCode = #{notCode};")
 	UserNoticesDTO getNoticeDetail(@Param("notCode") int notCode);
+
+	// 공지사항 조회수 증가
+	@Update("UPDATE notices SET notView = notView + 1 WHERE notCode = #{notCode} ")
+	int updateNoticeView(@Param("notCode") int notCode);
 }

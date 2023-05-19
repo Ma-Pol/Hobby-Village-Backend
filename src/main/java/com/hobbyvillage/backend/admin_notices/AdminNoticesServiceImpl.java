@@ -65,7 +65,20 @@ public class AdminNoticesServiceImpl implements AdminNoticesService {
 
 	// 공지사항 등록
 	@Override
-	public int createNotice(AdminNoticesDTO notice) { return mapper.createNotice(notice); }
+	public int createNotice(AdminNoticesDTO notice) {
+		int Check = mapper.createNotice(notice);
+		int Result = 0;
+		if(Check == 1){
+			Result = mapper.getNotCode(notice);
+		}
+		return Result;
+	}
+
+	// 공지사항 첨부파일 업로드
+	@Override
+	public void createNoticeFile(int notCode, String originalName, String savedName){
+		mapper.createNoticeFile(notCode, originalName, savedName);
+	}
 
 	// 공지사항 삭제
 	@Override

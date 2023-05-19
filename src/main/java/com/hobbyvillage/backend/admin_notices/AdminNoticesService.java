@@ -13,4 +13,5 @@ public interface AdminNoticesService {
 	int createNotice(AdminNoticesDTO notice);
 	int deleteNotice(int notCode);
 	int modifyNotice(int notCode, AdminNoticesDTO notice);
+	void createNoticeFile(int notCode, String originalName, String savedName);
 }

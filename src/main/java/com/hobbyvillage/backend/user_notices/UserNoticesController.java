@@ -1,5 +1,6 @@
 package com.hobbyvillage.backend.user_notices;
 
+import com.hobbyvillage.backend.admin_notices.AdminNoticesDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,5 +53,11 @@ public class UserNoticesController {
 	@GetMapping("/noticeDetails/{notCode}")
 	public UserNoticesDTO getNoticeDetail(@PathVariable(value = "notCode", required = true) int notCode) {
 		return userNoticesServiceImpl.getNoticeDetail(notCode);
+	}
+
+	// 공지사항 조회수 증가
+	@PostMapping("/noticeUpdateView/{notCode}")
+	public int read(@PathVariable int notCode) {
+		return userNoticesServiceImpl.updateNoticeView(notCode);
 	}
 }

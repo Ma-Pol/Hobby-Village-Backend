@@ -61,4 +61,10 @@ public class UserNoticesServiceImpl implements UserNoticesService {
 	public UserNoticesDTO getNoticeDetail(int notCode) {
 		return mapper.getNoticeDetail(notCode);
 	}
+
+	// 공지사항 조회수 증가
+	@Override
+	public int updateNoticeView(int notCode){
+		return mapper.updateNoticeView(notCode);
+	}
 }

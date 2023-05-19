@@ -8,4 +8,5 @@ public interface UserNoticesService {
 	List<UserNoticesDTO> getNoticeList(String filter, String sort, int pageNum);
 	List<UserNoticesDTO> getSearchNoticeList(String filter, String keyword, String sort, int pageNum);
 	UserNoticesDTO getNoticeDetail(int notCode);
+	int updateNoticeView(int notCode);
 }

@@ -35,10 +35,20 @@ public interface AdminNoticesMapper {
 			"VALUES (#{notTitle}, #{notCategory}, #{notContent});")
 	int createNotice(AdminNoticesDTO notice);
 
+	// 공지사항 코드 받아오기
+	@Select("SELECT notCode FROM notices WHERE notTitle = #{notTitle} AND notCategory = #{notCategory} AND notContent = #{notContent}")
+	int getNotCode(AdminNoticesDTO notice);
+
+	// 공지사항 첨부파일 업로드
+	@Insert("INSERT INTO noticefiles (notCode, notFileOriName, notFileSavName) " +
+	"VALUES (#{notCode}, #{originalName}, #{savedName})")
+	void createNoticeFile(@Param("notCode") int notCode, @Param("originalName") String originalName, @Param("savedName") String savedName);
+
 	// 공지사항 삭제
 	@Delete("DELETE FROM notices WHERE notCode=#{notCode} ")
 	int deleteNotice(@Param("notCode") int notCode);
 
+	// 공지사항 수정
 	@Update("UPDATE notices " +
 			"SET notTitle = #{notTitle}, notCategory = #{notCategory}, notContent = #{notContent} " +
 			"WHERE notCode = #{notCode} ")
