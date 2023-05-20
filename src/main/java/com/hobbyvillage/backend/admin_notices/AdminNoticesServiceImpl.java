@@ -139,6 +139,7 @@ public class AdminNoticesServiceImpl implements AdminNoticesService {
 		String contentDisposition = "attachment; filename=\"" + secondEncodedFileName + "\"";
 
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition).body(resource);
+
 	}
 
 	// 공지사항 삭제
