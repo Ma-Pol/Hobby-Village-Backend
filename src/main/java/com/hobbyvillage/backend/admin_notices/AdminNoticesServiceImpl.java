@@ -130,6 +130,7 @@ public class AdminNoticesServiceImpl implements AdminNoticesService {
 	}
 
 	// 파일 다운로드
+	@Override
 	public ResponseEntity<UrlResource> fileDownload(String originalFileName, String storedFileName)
 			throws MalformedURLException, Exception {
 		UrlResource resource = new UrlResource("file:" + uploadPath + "/" + storedFileName);
