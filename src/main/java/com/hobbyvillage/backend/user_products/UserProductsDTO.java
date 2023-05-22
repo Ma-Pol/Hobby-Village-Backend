@@ -32,4 +32,5 @@ public class UserProductsDTO {
 	private Float revwRate;
 	private List<String> prodTag;
 	private List<String> prodPicture;
+	private String brand;
 }

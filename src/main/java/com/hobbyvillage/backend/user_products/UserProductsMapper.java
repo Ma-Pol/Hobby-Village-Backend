@@ -12,9 +12,13 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserProductsMapper {
 	
-	// 카테고리 목록 조회 v
+	// 카테고리 목록 조회
 	@Select("SELECT category FROM categories ORDER BY category ASC;")
 	List<String> getCategories();
+	
+	// 브랜드 목록 조회
+	@Select("SELECT brand FROM brands ORDER BY brand ASC;")
+	List<String> getBrands();
 	
 	// -------------------------------------
 	
@@ -31,6 +35,10 @@ public interface UserProductsMapper {
 	int getSearchProductCount(@Param("category") String category, @Param("sort") String sort,
 			@Param("keyword") String keyword);
 
+	// 상품 개수 조회 - 검색x (브랜드관)
+	@Select("SELECT COUNT(*) FROM products WHERE ${brand} AND ${sort};")
+	int getBrandProductCount(@Param("brand") String brand, @Param("sort") String sort);
+	
 	// -------------------------------------
 	
 	// 상품 목록 조회 - 검색x & 평점순
@@ -51,6 +59,26 @@ public interface UserProductsMapper {
 			+ "ORDER BY ${array} "
 			+ "LIMIT #{pageNum}, 12;")
 	List<UserProductsDTO> getProductList(@Param("category") String category, @Param("sort") String sort,
+			@Param("array") String array, @Param("pageNum") int pageNum);
+	
+	// 상품 목록 조회 - 검색x & 평점순 (브랜드관)
+	@Select("SELECT p.prodCode, p.prodName, p.prodPrice, p.prodDibs, p.prodIsRental, p.prodRegiDate, "
+			+ "AVG(r.revwRate) AS avgRate "
+			+ "FROM products p LEFT JOIN reviews r ON p.prodCode = r.prodCode "
+			+ "WHERE ${brand} AND ${sort} "
+			+ "GROUP BY p.prodCode "
+			+ "ORDER BY CASE WHEN avgRate IS NULL THEN 1 ELSE 0 END, -avgRate "
+			+ "LIMIT #{pageNum}, 12;")
+	List<UserProductsDTO> getBrandProductListRR(@Param("brand") String brand, @Param("sort") String sort, 
+			@Param("pageNum") int pageNum);
+	
+	// 상품 목록 조회 - 검색x & not 평점순 (브랜드관)
+	@Select("SELECT prodCode, prodName, prodPrice, prodDibs, prodIsRental, prodRegiDate "
+			+ "FROM products "
+			+ "WHERE ${brand} AND ${sort} "
+			+ "ORDER BY ${array} "
+			+ "LIMIT #{pageNum}, 12;")
+	List<UserProductsDTO> getBrandProductList(@Param("brand") String brand, @Param("sort") String sort,
 			@Param("array") String array, @Param("pageNum") int pageNum);
 	
 	// 상품 목록 조회 - 검색o & 평점순 

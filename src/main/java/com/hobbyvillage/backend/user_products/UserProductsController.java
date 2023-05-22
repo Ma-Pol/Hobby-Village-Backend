@@ -32,6 +32,12 @@ public class UserProductsController {
 		return service.getCategories();
 	}
 	
+	// 브랜드 목록 불러오기 
+	@GetMapping("/brands")
+	public List<String> getBrands() {
+		return service.getBrands();
+	}
+	
 	// ----------------------------
 	
 	// 상품 개수 조회 - if 검색 여부 
@@ -45,6 +51,12 @@ public class UserProductsController {
 		} else { // yes 검색 
 			return service.getSearchProductCount(category, sort, keyword);
 		}
+	}
+	
+	// 상품 개수 조회 (브랜드관)
+	@GetMapping("/brandProdCount")
+	public int getBrandProductCount(@RequestParam(value="brand", required=true) String brand, @RequestParam(value="sort", required=true) String sort) {
+		return service.getBrandProductCount(brand, sort);
 	}
 	
 	// ----------------------------
@@ -71,6 +83,22 @@ public class UserProductsController {
 			} else {
 				return service.getProductListS(category, sort, array, keyword, pageNum);
 			}
+		}
+	}
+	
+	@GetMapping("/brandProdList")
+	public List<UserProductsDTO> getBrandProductList(@RequestParam(value="brand", required=true) String brand,
+			@RequestParam(value="sort", required=true) String sort,
+			@RequestParam(value="array", required=false) String array,
+			@RequestParam(value="pages", required=true) int pages
+			) {
+		
+		int pageNum = (pages - 1) * 12;
+		
+		if(array.equals("revwRate")) { // yes 평점순 
+			return service.getBrandProductListRR(brand, sort, pageNum);
+		} else { // no 평점순 
+			return service.getBrandProductList(brand, sort, array, pageNum);
 		}
 	}
 	

@@ -23,6 +23,16 @@ public class UserProductsServiceImpl implements UserProductsService {
 		return category;
 	}
 	
+	// brand 필터링
+	private String brandFilter(String brand) {
+		if(brand.equals("all")) {
+			brand = "prodBrand IS NOT NULL";
+		} else {
+			brand = "prodBrand=\"" + brand + "\"";
+		}
+		return brand;
+	}
+	
 	// sort 필터링 (대여 여부)
 	private String sortFilter(String sort) {
 		if(sort.equals("all")) {
@@ -44,6 +54,16 @@ public class UserProductsServiceImpl implements UserProductsService {
 		}
 		return category;
 	}
+	
+	// brand 필터링 (평점순)
+		private String brandFilterRR(String brand) {
+			if(brand.equals("all")) {
+				brand = "p.prodBrand IS NOT NULL";
+			} else {
+				brand = "p.prodBrand=\"" + brand + "\"";
+			}
+			return brand;
+		}
 	
 	// sort 필터링 (대여 여부) (평점순)
 	private String sortFilterRR(String sort) {
@@ -78,7 +98,12 @@ public class UserProductsServiceImpl implements UserProductsService {
 	public List<String> getCategories() {
 		return mapper.getCategories();
 	}
-
+	
+	@Override // 브랜드 불러오기 
+	public List<String> getBrands() {
+		return mapper.getBrands();
+	}
+	
 	// ------------------------------------------
 	
 	@Override // 상품 개수 조회 - 검색x
@@ -95,7 +120,16 @@ public class UserProductsServiceImpl implements UserProductsService {
 		return mapper.getSearchProductCount(category, sort, keyword);
 	}
 	
+	@Override // 상품 개수 조회 - 검색x (브랜드관)
+	public int getBrandProductCount(String brand, String sort) {
+		brand = brandFilter(brand);
+		sort = sortFilter(sort);
+		return mapper.getBrandProductCount(brand, sort);
+	}
+	
 	// ------------------------------------------
+
+
 
 	@Override // 상품 목록 조회 - 검색x & 평점순
 	public List<UserProductsDTO> getProductListRR(String category, String sort, int pageNum) {
@@ -112,10 +146,25 @@ public class UserProductsServiceImpl implements UserProductsService {
 		return mapper.getProductList(category, sort, array, pageNum);
 	}
 	
+	@Override // 상품 목록 조회 - 검색x & 평점순 (브랜드관)
+	public List<UserProductsDTO> getBrandProductListRR(String brand, String sort, int pageNum) {
+		brand = brandFilterRR(brand);
+		sort = sortFilterRR(sort);
+		return mapper.getBrandProductListRR(brand, sort, pageNum);
+	}
+	
+	@Override // 상품 목록 조회 - 검색x & not 평점순 (브랜드관)
+	public List<UserProductsDTO> getBrandProductList(String brand, String sort, String array, int pageNum) {
+		brand = brandFilter(brand);
+		sort = sortFilter(sort);
+		array = arrayFilter(array);
+		return mapper.getBrandProductList(brand, sort, array, pageNum);
+	}
+
 	@Override // 상품 목록 조회 - 검색o & 평점순
 	public List<UserProductsDTO> getProductListSRR(String category, String sort, String keyword, int pageNum) {
-		category = categoryFilter(category);
-		sort = sortFilter(sort);
+		category = categoryFilterRR(category);
+		sort = sortFilterRR(sort);
 		return mapper.getProductListSRR(category, sort, keyword, pageNum);
 	}
 	
