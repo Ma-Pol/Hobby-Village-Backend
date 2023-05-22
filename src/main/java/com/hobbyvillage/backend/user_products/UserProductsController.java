@@ -1,60 +1,100 @@
 package com.hobbyvillage.backend.user_products;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hobbyvillage.backend.UploadDir;
+
 @RestController
 @RequestMapping("/products/lists")
 public class UserProductsController {
-	private UserProductsServiceImpl userProductsServiceImpl;
+	private UserProductsServiceImpl service;
 
-	public UserProductsController(UserProductsServiceImpl userProductsServiceImpl) {
-		this.userProductsServiceImpl = userProductsServiceImpl;
+	public UserProductsController(UserProductsServiceImpl service) {
+		this.service = service;
 	}
 	
-	@GetMapping("/")
-	public String[] getCategories() {
-		String[] categories = userProductsServiceImpl.getCategories();
-		return categories;
+	// 카테고리 목록 불러오기 
+	@GetMapping("/category")
+	public List<String> getCategories() {
+		return service.getCategories();
 	}
-
+	
+	// ----------------------------
+	
+	// 상품 개수 조회 - if 검색 여부 
 	@GetMapping("/count")
-	public int getProductCount(@RequestParam(value = "filter", required = true) String filter,
-			@RequestParam(value = "condition", required = false) String condition,
-			@RequestParam(value = "keyword", required = false) String keyword) {
-		int productCount;
-
-		// 검색 여부 확인
-		if (keyword == null) {
-			productCount = userProductsServiceImpl.getProductCount(filter);
-		} else {
-			productCount = userProductsServiceImpl.getSearchProductCount(filter, condition, keyword);
+	public int getProductCount(@RequestParam(value="category", required=true) String category,
+		@RequestParam(value="sort", required=true) String sort,
+		@RequestParam(value="keyword", required=false) String keyword) {
+		
+		if (keyword.equals("null")) { // no 검색 
+			return service.getProductCount(category, sort);
+		} else { // yes 검색 
+			return service.getSearchProductCount(category, sort, keyword);
 		}
-
-		return productCount;
 	}
-
+	
+	// ----------------------------
+	
+	// 상품 목록 조회 - 검색여부 구분(if 추가 필요) - 평점순과 기타정렬 구분 
 	@GetMapping("")
-	public List<UserProductsDTO> getProductList(@RequestParam(value = "filter", required = true) String filter,
-			@RequestParam(value = "sort", required = true) String sort,
-			@RequestParam(value = "pages", required = true) int pages,
-			@RequestParam(value = "condition", required = false) String condition,
-			@RequestParam(value = "keyword", required = false) String keyword) {
-		List<UserProductsDTO> productList;
-		int pageNum = (pages - 1) * 10;
-
-		// 검색 여부 확인
-		if (keyword == null) {
-			productList = userProductsServiceImpl.getProductList(filter, sort, pageNum);
+	public List<UserProductsDTO> getProductList(@RequestParam(value="category", required=true) String category,
+			@RequestParam(value="sort", required=true) String sort,
+			@RequestParam(value="array", required=false) String array,
+			@RequestParam(value="pages", required=true) int pages,
+			@RequestParam(value="keyword", required=false) String keyword) {
+		
+		int pageNum = (pages - 1) * 12;
+		
+		if(keyword.equals("null")) {
+			if(array.equals("revwRate")) { // yes 평점순 
+				return service.getProductListRR(category, sort, pageNum);
+			} else { // no 평점순 
+				return service.getProductList(category, sort, array, pageNum);
+			}
 		} else {
-			productList = userProductsServiceImpl.getSearchProductList(filter, condition, keyword, sort, pageNum);
+			if(array.equals("revwRate")) {
+				return service.getProductListSRR(category, sort, keyword, pageNum);
+			} else {
+				return service.getProductListS(category, sort, array, keyword, pageNum);
+			}
 		}
-
-		return productList;
 	}
-
+	
+	// ----------------------------
+	
+	@GetMapping("/getProdPictures") // 이미지 파일명 조회 
+	public List<String> getProdPictures(@RequestParam String prodCode) {
+		return service.getProdPictures(prodCode);
+	}
+	
+	// macOS 경로: //Uploaded//ProductsImage
+	// 윈도우 경로: \\Uploaded\\ProductsImage
+	@GetMapping("/upload/{fileName}") // 이미지 불러오기 
+	public ResponseEntity<byte[]> getReqeustFileData(
+			@PathVariable(value = "fileName", required = true) String fileName) {
+		File file = new File(UploadDir.uploadDir + "//Uploaded//ProductsImage", fileName);
+		ResponseEntity<byte[]> result = null;
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", Files.probeContentType(file.toPath()));
+			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

@@ -12,54 +12,127 @@ public class UserProductsServiceImpl implements UserProductsService {
 	public UserProductsServiceImpl(UserProductsMapper mapper) {
 		this.mapper = mapper;
 	}
-
-	// 필터 조건에 따른 쿼리문 설정 메서드
-	private String filtering(String filter) {
-		if (filter.equals("none")) {
-			filter = "prodIsRental IS NOT NULL";
-		} else if (filter.equals("rented")) {
-			filter = "prodIsRental = 1";
+	
+	// category 필터링
+	private String categoryFilter(String category) {
+		if(category.equals("all")) {
+			category = "prodCategory IS NOT NULL";
 		} else {
-			filter = "prodIsRental = 0";
+			category = "prodCategory=\"" + category + "\"";
 		}
-
-		return filter;
+		return category;
 	}
 	
+	// sort 필터링 (대여 여부)
+	private String sortFilter(String sort) {
+		if(sort.equals("all")) {
+			sort = "prodIsRental IS NOT NULL";
+		} else if(sort.equals("rented")) {
+			sort = "prodIsRental = 1";
+		} else {
+			sort = "prodIsRental = 0";
+		}
+		return sort;
+	}
 	
-	@Override
-	public String[] getCategories() {
+	// category 필터링 (평점순)
+	private String categoryFilterRR(String category) {
+		if(category.equals("all")) {
+			category = "p.prodCategory IS NOT NULL";
+		} else {
+			category = "p.prodCategory=\"" + category + "\"";
+		}
+		return category;
+	}
+	
+	// sort 필터링 (대여 여부) (평점순)
+	private String sortFilterRR(String sort) {
+		if(sort.equals("all")) {
+			sort = "p.prodIsRental IS NOT NULL";
+		} else if(sort.equals("rented")) {
+			sort = "p.prodIsRental = 1";
+		} else {
+			sort = "p.prodIsRental = 0";
+		}
+		return sort;
+	}
+	
+	// array 필터링 (정렬) -- cf.평점순엔 array 없음 
+	// 최신(regiDate)/인기(찜기준)/고가/저가
+	private String arrayFilter(String array) {
+		if(array.equals("recent")) {
+			array = "prodRegiDate DESC"; // 기본값: 최신순 정렬
+		} else if(array.equals("popular")) {
+			array = "prodDibs DESC"; // 인기순 
+		} else if(array.equals("expensive")) {
+			array = "prodPrice DESC"; // 가격높은순
+		} else {
+			array = "prodPrice ASC"; // 가격낮은순 
+		}
+		return array;
+	}
+
+	// ------------------------------------------
+
+	@Override // 카테고리 불러오기
+	public List<String> getCategories() {
 		return mapper.getCategories();
 	}
 
-	@Override // 미검색 상태에서 상품 개수 조회
-	public int getProductCount(String filter) {
-		filter = filtering(filter);
-
-		return mapper.getProductCount(filter);
+	// ------------------------------------------
+	
+	@Override // 상품 개수 조회 - 검색x
+	public int getProductCount(String category, String sort) {
+		category = categoryFilter(category);
+		sort = sortFilter(sort);
+		return mapper.getProductCount(category, sort);
 	}
-
-	@Override // 검색 상태에서 상품 개수 조회
-	public int getSearchProductCount(String filter, String condition, String keyword) {
-		filter = filtering(filter);
-
-		return mapper.getSearchProductCount(filter, condition, keyword);
+	
+	@Override // 상품 개수 조회 - 검색o
+	public int getSearchProductCount(String category, String sort, String keyword) {
+		category = categoryFilter(category);
+		sort = sortFilter(sort);
+		return mapper.getSearchProductCount(category, sort, keyword);
 	}
+	
+	// ------------------------------------------
 
-	@Override // 미검색 상태에서 상품 목록 조회
-	public List<UserProductsDTO> getProductList(String filter, String sort, int pageNum) {
-		filter = filtering(filter);
-
-		return mapper.getProductList(filter, sort, pageNum);
+	@Override // 상품 목록 조회 - 검색x & 평점순
+	public List<UserProductsDTO> getProductListRR(String category, String sort, int pageNum) {
+		category = categoryFilterRR(category);
+		sort = sortFilterRR(sort);
+		return mapper.getProductListRR(category, sort, pageNum);
 	}
-
-	@Override // 검색 상태에서 상품 목록 조회
-	public List<UserProductsDTO> getSearchProductList(String filter, String condition, String keyword, String sort,
+	
+	@Override // 상품 목록 조회 - 검색x & not 평점순
+	public List<UserProductsDTO> getProductList(String category, String sort, String array, int pageNum) {
+		category = categoryFilter(category);
+		sort = sortFilter(sort);
+		array = arrayFilter(array);
+		return mapper.getProductList(category, sort, array, pageNum);
+	}
+	
+	@Override // 상품 목록 조회 - 검색o & 평점순
+	public List<UserProductsDTO> getProductListSRR(String category, String sort, String keyword, int pageNum) {
+		category = categoryFilter(category);
+		sort = sortFilter(sort);
+		return mapper.getProductListSRR(category, sort, keyword, pageNum);
+	}
+	
+	@Override // 상품 목록 조회 - 검색o & not 평점순
+	public List<UserProductsDTO> getProductListS(String category, String sort, String array, String keyword,
 			int pageNum) {
-		filter = filtering(filter);
-
-		return mapper.getSearchProductList(filter, condition, keyword, sort, pageNum);
+		category = categoryFilter(category);
+		sort = sortFilter(sort);
+		array = arrayFilter(array);
+		return mapper.getProductListS(category, sort, array, keyword, pageNum);
 	}
 
+	// ------------------------------------------
+	
+	@Override // 상품 이미지 파일명 조회 
+	public List<String> getProdPictures(String prodCode) {
+		return mapper.getProdPictures(prodCode);
+	}
 
 }

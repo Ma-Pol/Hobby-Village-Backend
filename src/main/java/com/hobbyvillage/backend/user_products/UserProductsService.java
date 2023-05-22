@@ -3,10 +3,19 @@ package com.hobbyvillage.backend.user_products;
 import java.util.List;
 
 public interface UserProductsService {
-	int getProductCount(String filter);
-	int getSearchProductCount(String filter, String condition, String keyword);
-	List<UserProductsDTO> getProductList(String filter, String sort, int pageNum);
-	List<UserProductsDTO> getSearchProductList(String filter, String condition, String keyword, String sort,
-			int pageNum);
-	String[] getCategories();
+	List<String> getCategories();
+	// ----------------------------
+	int getProductCount(String category, String sort);
+	int getSearchProductCount(String category, String sort, String keyword);
+	// ----------------------------
+	// 상품 목록 조회 - 검색x & 평점순
+	List<UserProductsDTO> getProductListRR(String category, String sort, int pageNum);
+	// 상품 목록 조회 - 검색x & not 평점순
+	List<UserProductsDTO> getProductList(String category, String sort, String array, int pageNum);
+	// 상품 목록 조회 - 검색o & 평점순
+	List<UserProductsDTO> getProductListSRR(String category, String sort, String keyword, int pageNum);
+	// 상품 목록 조회 - 검색o & not 평점순
+	List<UserProductsDTO> getProductListS(String category, String sort, String array, String keyword, int pageNum);
+	// ----------------------------
+	List<String> getProdPictures(String prodCode);
 }

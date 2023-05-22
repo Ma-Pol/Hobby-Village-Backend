@@ -1,6 +1,7 @@
 package com.hobbyvillage.backend.user_products;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,4 +29,7 @@ public class UserProductsDTO {
 	private Integer prodShipping;
 	private Integer reqCode;
 	private Integer userCode;
+	private Float revwRate;
+	private List<String> prodTag;
+	private List<String> prodPicture;
 }
