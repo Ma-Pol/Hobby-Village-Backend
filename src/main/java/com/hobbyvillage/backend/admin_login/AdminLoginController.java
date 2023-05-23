@@ -1,22 +1,18 @@
 package com.hobbyvillage.backend.admin_login;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AdminLoginController {
 
-	private AdminLoginServiceImpl mService;
+	private AdminLoginServiceImpl adminLoginServiceImpl;
 
-	public AdminLoginController(AdminLoginServiceImpl mService) {
-		this.mService = mService;
+	public AdminLoginController(AdminLoginServiceImpl adminLoginServiceImpl) {
+		this.adminLoginServiceImpl = adminLoginServiceImpl;
 	}
-	
-	@RequestMapping("/m/login")
-	public int login(@RequestBody AdminLoginDTO admins) throws Exception {
-		int res = mService.login(admins);
 
-		return res;
+	@PostMapping("/m/loginCheck")
+	public String login(@RequestBody AdminLoginDTO admin) {
+		return adminLoginServiceImpl.adminLoginCheck(admin);
 	}
 }
