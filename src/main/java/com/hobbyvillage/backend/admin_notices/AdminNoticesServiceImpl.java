@@ -116,9 +116,9 @@ public class AdminNoticesServiceImpl implements AdminNoticesService {
 				String originalFileName = file.getOriginalFilename();
 				String storedFileName = UUID.randomUUID().toString() + "_" + originalFileName;
 
-				File filePath = new File(uploadPath, storedFileName);
+				File thisFile = new File(uploadPath, storedFileName);
 
-				file.transferTo(filePath);
+				file.transferTo(thisFile);
 
 				mapper.createFileName(notCode, originalFileName, storedFileName);
 
