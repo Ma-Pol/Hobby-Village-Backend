@@ -14,7 +14,7 @@ public interface UserMainMapper {
 	List<UserMainProductDTO> getPopularProductList();
 
 	// 인기순 정렬 상품 리스트 조회(브랜드관)
-	@Select("SELECT prodCode, prodName, prodPrice, prodDibs FROM products  WHERE prodBrand IS NOT NULL "
+	@Select("SELECT prodCode, prodBrand, prodName, prodPrice, prodDibs FROM products  WHERE prodBrand IS NOT NULL "
 			+ "ORDER BY -rentalCount LIMIT 8;")
 	List<UserMainProductDTO> getPopularBrandProductList();
 

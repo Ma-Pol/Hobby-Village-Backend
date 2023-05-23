@@ -48,17 +48,21 @@ public class UserMainController {
 	@GetMapping("/viewImage/{imageName}")
 	public ResponseEntity<byte[]> getReqeustFileData(
 			@PathVariable(value = "imageName", required = true) String imageName) {
-		File file = new File(UploadDir.uploadDir + "\\Uploaded\\ProductsImage", imageName);
 		ResponseEntity<byte[]> result = null;
 
-		try {
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Content-Type", Files.probeContentType(file.toPath()));
-			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		if (!imageName.equals("undefined")) {
 
+			File file = new File(UploadDir.uploadDir + "\\Uploaded\\ProductsImage", imageName);
+			result = null;
+
+			try {
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Content-Type", Files.probeContentType(file.toPath()));
+				result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return result;
 	}
 }
