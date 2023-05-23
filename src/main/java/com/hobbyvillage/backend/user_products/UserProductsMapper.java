@@ -62,7 +62,7 @@ public interface UserProductsMapper {
 			@Param("array") String array, @Param("pageNum") int pageNum);
 	
 	// 상품 목록 조회 - 검색x & 평점순 (브랜드관)
-	@Select("SELECT p.prodCode, p.prodName, p.prodPrice, p.prodDibs, p.prodIsRental, p.prodRegiDate, "
+	@Select("SELECT p.prodCode, p.prodName, p.prodPrice, p.prodDibs, p.prodIsRental, p.prodRegiDate, p.prodBrand, "
 			+ "AVG(r.revwRate) AS avgRate "
 			+ "FROM products p LEFT JOIN reviews r ON p.prodCode = r.prodCode "
 			+ "WHERE ${brand} AND ${sort} "
@@ -73,7 +73,7 @@ public interface UserProductsMapper {
 			@Param("pageNum") int pageNum);
 	
 	// 상품 목록 조회 - 검색x & not 평점순 (브랜드관)
-	@Select("SELECT prodCode, prodName, prodPrice, prodDibs, prodIsRental, prodRegiDate "
+	@Select("SELECT prodCode, prodName, prodPrice, prodDibs, prodIsRental, prodRegiDate, prodBrand "
 			+ "FROM products "
 			+ "WHERE ${brand} AND ${sort} "
 			+ "ORDER BY ${array} "
