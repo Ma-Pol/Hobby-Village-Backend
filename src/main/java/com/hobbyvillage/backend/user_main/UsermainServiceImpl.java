@@ -5,23 +5,27 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UsermainServiceImpl implements UsermainService {
-	
-	private UsermainMapper mapper;
-	
-	public UsermainServiceImpl(UsermainMapper mapper) {
+public class UserMainServiceImpl implements UserMainService {
+
+	private UserMainMapper mapper;
+
+	public UserMainServiceImpl(UserMainMapper mapper) {
 		this.mapper = mapper;
 	}
- 
-	// 인기 상품 조회
-	@Override
-	public List<UsermainDTO> mostpopularproducts() {
-		return mapper.mostpopularproducts();
+
+	@Override // 인기순 정렬 상품 리스트 조회
+	public List<UserMainProductDTO> getPopularProductList() {
+		return mapper.getPopularProductList();
 	}
-	// 인기 브랜드 조회
-	@Override
-	public List<UsermainDTO> mostpopularbrand() {
-		return mapper.mostpopularbrand();
+
+	@Override // 인기순 정렬 상품 리스트 조회(브랜드관)
+	public List<UserMainProductDTO> getPopularBrandProductList() {
+		return mapper.getPopularBrandProductList();
+	}
+
+	@Override // 상품 별 최상단 이미지 조회
+	public String getProductPicture(String prodCode) {
+		return mapper.getProductPicture(prodCode);
 	}
 
 }
