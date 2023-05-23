@@ -49,6 +49,24 @@ public class AdminCouponsController {
 		return couponList;
 	}
 
+	@GetMapping("/check/{couponCode}")
+	public int checkCouponCode(@PathVariable(value = "couponCode", required = true) String couponCode) {
+		int result = 0;
+
+		// couponCode가 숫자인지 확인
+		if (couponCode.matches("-?\\d+")) {
+			int couponCodeInt = Integer.parseInt(couponCode);
+			result = adminCouponsServiceImpl.checkCouponCode(couponCodeInt);
+		}
+
+		return result;
+	}
+
+	@GetMapping("/getCouponDetails")
+	public AdminCouponsDTO getCouponDetails(@RequestParam int couponCode) {
+		return adminCouponsServiceImpl.getCouponDetails(couponCode);
+	}
+
 	@DeleteMapping("/delete")
 	public void deleteCoupon(@RequestParam(value = "couponCode", required = true) int couponCode) {
 		adminCouponsServiceImpl.deleteCoupon(couponCode);
@@ -57,11 +75,6 @@ public class AdminCouponsController {
 	@PostMapping("/addCoupon")
 	public void addCoupon(@RequestBody AdminCouponsDTO coupon) {
 		adminCouponsServiceImpl.addCoupon(coupon);
-	}
-
-	@GetMapping("/getCouponDetails")
-	public AdminCouponsDTO getCouponDetails(@RequestParam int couponCode) {
-		return adminCouponsServiceImpl.getCouponDetails(couponCode);
 	}
 
 }

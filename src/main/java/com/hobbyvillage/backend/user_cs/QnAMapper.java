@@ -31,6 +31,9 @@ public interface QnAMapper {
 	List<QuestionDTO> getSearchQuestionList(@Param("filter") String fitler, @Param("email") String email,
 			@Param("keyword") String keyword, @Param("pageNum") int pageNum);
 
+	@Select("SELECT COUNT(*) FROM questions WHERE qstCode = #{qstCode};")
+	int checkQst(@Param("qstCode") int qstCode);
+
 	// 질문 작성자 확인
 	@Select("SELECT COUNT(*) FROM questions q INNER JOIN users u ON q.qstWriter = u.nickname "
 			+ "WHERE u.email = #{email} AND qstCode = #{qstCode};")

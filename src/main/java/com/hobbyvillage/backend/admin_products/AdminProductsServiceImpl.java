@@ -36,18 +36,6 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 		return filter;
 	}
 
-	// 상품 등록/수정 시 선택 브랜드 필터링
-	private AdminProductsDTO brandFiltering(AdminProductsDTO product) {
-		String prodBrand = product.getProdBrand();
-
-		if (prodBrand != null) {
-			prodBrand = "'" + prodBrand + "'";
-			product.setProdBrand(prodBrand);
-		}
-
-		return product;
-	}
-
 	@Override // 미검색 상태에서 상품 개수 조회
 	public int getProductCount(String filter) {
 		filter = filtering(filter);
@@ -77,16 +65,14 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 		return mapper.getSearchProductList(filter, condition, keyword, sort, pageNum);
 	}
 
+	@Override
+	public int checkProduct(String prodCode) {
+		return mapper.checkProductCount(prodCode);
+	}
+
 	@Override // 상품 상세 조회
 	public AdminProductsDTO getProductDetail(String prodCode) {
-		int check = mapper.checkProductCount(prodCode);
-		AdminProductsDTO result = null;
-
-		if (check != 0) {
-			result = mapper.getProductDetail(prodCode);
-		}
-
-		return result;
+		return mapper.getProductDetail(prodCode);
 	}
 
 	@Override // 상품 상세 조회 - 이미지

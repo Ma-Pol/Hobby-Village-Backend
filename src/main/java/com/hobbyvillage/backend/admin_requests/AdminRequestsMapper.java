@@ -32,6 +32,9 @@ public interface AdminRequestsMapper {
 			@Param("condition") String condition, @Param("keyword") String keyword, @Param("sort") String sort,
 			@Param("pageNum") int pageNum);
 
+	@Select("SELECT COUNT(*) FROM requests WHERE reqCode = #{reqCode};")
+	int checkReqeust(@Param("reqCode") int reqCode);
+
 	// 신청 상세 정보 조회
 	@Select("SELECT rq.reqCode, rq.reqSort, rq.reqEmail, rq.reqCategory, rq.reqTitle, rq.reqContent, rq.reqProgress, u.nickname "
 			+ "FROM requests rq INNER JOIN users u ON rq.reqEmail = u.email WHERE rq.reqCode = #{reqCode};")

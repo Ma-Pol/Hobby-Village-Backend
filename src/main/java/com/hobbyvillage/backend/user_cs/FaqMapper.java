@@ -26,6 +26,9 @@ public interface FaqMapper {
 	List<FaqDTO> getSearchFaqList(@Param("filter") String fitler, @Param("keyword") String keyword,
 			@Param("pageNum") int pageNum);
 
+	@Select("SELECT COUNT(*) FROM faqs WHERE faqCode = #{faqCode};")
+	int checkFaq(@Param("faqCode") int faqCode);
+
 	@Select("SELECT faqTitle, faqContent, faqCategory FROM faqs WHERE faqCode = #{faqCode}")
 	FaqDTO getFaqDetail(@Param("faqCode") Integer faqCode);
 }

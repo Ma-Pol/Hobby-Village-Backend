@@ -7,5 +7,6 @@ public interface FaqService {
 	int getSearchFaqCount(String filter, String keyword);
 	List<FaqDTO> getFaqList(String filter, int pageNum);
 	List<FaqDTO> getSearchFaqList(String filter, String keyword, int pageNum);
+	int checkFaq(int faqCode);
 	FaqDTO getFaqDetail(Integer faqCode);
 }

@@ -7,6 +7,7 @@ public interface QnAService {
 	int getSearchQuestionCount(String filter, String email, String keyword);
 	List<QuestionDTO> getQuestionList(String filter, String email, int pageNum);
 	List<QuestionDTO> getSearchQuestionList(String filter, String email, String keyword, int pageNum);
+	int checkQst(int qstCode);
 	int writerCheck(String email, int qstCode);
 	QuestionDTO getQuestionDetail(int qstCode);
 	String getAnswerDetail(int qstCode);

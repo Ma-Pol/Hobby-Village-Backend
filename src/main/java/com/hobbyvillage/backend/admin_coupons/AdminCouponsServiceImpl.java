@@ -55,22 +55,24 @@ public class AdminCouponsServiceImpl implements AdminCouponsService {
 		return mapper.getSearchCouponList(filter, condition, keyword, sort, pageNum);
 	}
 
+	@Override
+	public int checkCouponCode(int couponCode) {
+		return mapper.checkCouponCode(couponCode);
+	}
+
+	@Override // 쿠폰 상세 보기
+	public AdminCouponsDTO getCouponDetails(int couponCode) {
+		return mapper.getCouponDetails(couponCode);
+	}
+
 	@Override // 쿠폰 삭제
 	public void deleteCoupon(int couponCode) {
 		mapper.deleteCoupon(couponCode);
 	}
-	
+
 	@Override // 쿠폰 등록
 	public void addCoupon(AdminCouponsDTO coupon) {
 		mapper.addCoupon(coupon);
 	}
-
-
-	@Override // 쿠폰 상세 보기 
-	public AdminCouponsDTO getCouponDetails(int couponCode) {
-		return mapper.getCouponDetails(couponCode);
-	}
-	
-	
 
 }

@@ -28,6 +28,13 @@ public interface AdminCouponsMapper {
 	List<AdminCouponsDTO> getSearchCouponList(@Param("filter") String filter, @Param("condition") String condition,
 			@Param("keyword") String keyword, @Param("sort") String sort, @Param("pageNum") int pageNum);
 
+	@Select("SELECT COUNT(*) FROM coupons WHERE couponCode = #{couponCode};")
+	int checkCouponCode(@Param("couponCode") int couponCode);
+
+	// 쿠폰 내용 상세보기
+	@Select("SELECT * FROM coupons WHERE couponCode = #{couponCode};")
+	AdminCouponsDTO getCouponDetails(@Param("couponCode") int couponCode);
+
 	// 쿠폰 삭제
 	@Delete("DELETE FROM coupons WHERE couponCode = #{couponCode}")
 	void deleteCoupon(@Param("couponCode") int couponCode);
@@ -36,9 +43,5 @@ public interface AdminCouponsMapper {
 	@Insert("INSERT INTO coupons (couponName, discountPer, discountFix, deadline) "
 			+ "VALUES (#{couponName}, #{discountPer}, #{discountFix}, #{deadline});")
 	void addCoupon(AdminCouponsDTO coupon);
-
-	// 쿠폰 내용 상세보기
-	@Select("SELECT * FROM coupons WHERE couponCode = #{couponCode};")
-	AdminCouponsDTO getCouponDetails(@Param("couponCode") int couponCode);
 
 }

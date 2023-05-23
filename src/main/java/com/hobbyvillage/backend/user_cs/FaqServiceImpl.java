@@ -69,6 +69,11 @@ public class FaqServiceImpl implements FaqService {
 	}
 
 	@Override
+	public int checkFaq(int faqCode) {
+		return mapper.checkFaq(faqCode);
+	}
+
+	@Override
 	public FaqDTO getFaqDetail(Integer faqCode) {
 		return mapper.getFaqDetail(faqCode);
 	}

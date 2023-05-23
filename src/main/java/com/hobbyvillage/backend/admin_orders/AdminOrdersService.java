@@ -1,7 +1,6 @@
 package com.hobbyvillage.backend.admin_orders;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
 public interface AdminOrdersService {
@@ -10,6 +9,7 @@ public interface AdminOrdersService {
 	int getSearchOrderCount(String sort, String condition, String keyword, String filter);
 	List<AdminOrdersDTO> getOrderList(String sort, String filter, int pageNum);
 	List<AdminOrdersDTO> getSearchOrderList(String condition, String keyword, String sort, String filter, int pageNum);
+	int checkOdrNumber(String odrNumber);
 	AdminOrdersDetailDTO getOrderDetail(String odrNumber);
 	List<AdminOrdersProductsDTO> getOrderedProductList(String odrNumber);
 	int modifyOrderAddress(AdminOrdersDetailDTO addressData);

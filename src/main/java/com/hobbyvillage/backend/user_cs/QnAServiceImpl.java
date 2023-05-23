@@ -68,6 +68,11 @@ public class QnAServiceImpl implements QnAService {
 	}
 
 	@Override
+	public int checkQst(int qstCode) {
+		return mapper.checkQst(qstCode);
+	}
+
+	@Override
 	public int writerCheck(String email, int qstCode) {
 		return mapper.writerCheck(email, qstCode);
 	}

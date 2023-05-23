@@ -109,6 +109,11 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 		return mapper.getSearchRequestList(filter, category, condition, keyword, sort, pageNum);
 	}
 
+	@Override
+	public int checkReqeust(int reqCode) {
+		return mapper.checkReqeust(reqCode);
+	}
+
 	@Override // 신청 상세 정보 조회
 	public AdminRequestsDetailsDTO getRequestDetail(int reqCode) {
 		return mapper.getRequestDetail(reqCode);

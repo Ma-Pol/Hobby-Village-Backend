@@ -68,4 +68,39 @@ public class AdminFaqsServiceImpl implements AdminFaqsService {
 		return mapper.getSearchFaqList(filter, keyword, sort, pageNum);
 	}
 
+	@Override // 실재 FAQ 인지 확인
+	public int checkFaq(int faqCode) {
+		return mapper.checkFaq(faqCode);
+	}
+
+	@Override // FAQ 상세 조회
+	public AdminFaqsDTO getFaqDetail(int faqCode) {
+		return mapper.getFaqDetail(faqCode);
+	}
+
+	@Override // FAQ 삭제
+	public int deleteFaq(int faqCode) {
+		return mapper.deleteFaq(faqCode);
+	}
+
+	@Override // FAQ 등록
+	public int createFaq(AdminFaqsDTO faq) {
+		int result = -1;
+		int check = mapper.checkDuplication(faq);
+
+		if (check == 0) {
+			result = mapper.createFaq(faq);
+			if (result == 1) {
+				result = mapper.getFaqCode(faq);
+			}
+		}
+
+		return result;
+	}
+
+	@Override // FAQ 수정
+	public int modifyFaq(AdminFaqsDTO faq) {
+		return mapper.modifyFaq(faq);
+	}
+
 }

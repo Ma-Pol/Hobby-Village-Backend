@@ -10,6 +10,7 @@ public interface AdminProductsService {
 	int getSearchProductCount(String filter, String condition, String keyword);
 	List<AdminProductsDTO> getProductList(String filter, String sort, int pageNum);
 	List<AdminProductsDTO> getSearchProductList(String filter, String condition, String keyword, String sort, int pageNum);
+	int checkProduct(String prodCode);
 	AdminProductsDTO getProductDetail(String prodCode);
 	List<String> getProdPictures(String prodCode);
 	List<String> getProdTag(String prodCode);

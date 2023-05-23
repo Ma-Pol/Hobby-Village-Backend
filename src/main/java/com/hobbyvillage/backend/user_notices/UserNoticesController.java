@@ -76,9 +76,9 @@ public class UserNoticesController {
 	}
 
 	// 공지사항 조회수 증가
-	@PostMapping("/noticeUpdateView/{notCode}")
-	public int read(@PathVariable int notCode) {
-		return userNoticesServiceImpl.updateNoticeView(notCode);
+	@PatchMapping("/noticeUpdateView/{notCode}")
+	public void read(@PathVariable int notCode) {
+		userNoticesServiceImpl.updateNoticeView(notCode);
 	}
 
 	// 공지사항 파일 다운로드

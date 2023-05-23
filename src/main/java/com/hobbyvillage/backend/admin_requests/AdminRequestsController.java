@@ -61,6 +61,19 @@ public class AdminRequestsController {
 		return requestList;
 	}
 
+	@GetMapping("/check/{reqCode}")
+	public int checkReqeust(@PathVariable(value = "reqCode", required = true) String reqCode) {
+		int result = 0;
+
+		// reqCode가 숫자인지 확인
+		if (reqCode.matches("-?\\d+")) {
+			int reqCodeInt = Integer.parseInt(reqCode);
+			result = adminRequestsServiceImpl.checkReqeust(reqCodeInt);
+		}
+
+		return result;
+	}
+
 	// 신청 상세 정보 조회
 	@GetMapping("/requestDetails/{reqCode}")
 	public AdminRequestsDetailsDTO getRequestDetail(@PathVariable(value = "reqCode", required = true) int reqCode) {

@@ -54,6 +54,11 @@ public class AdminOrdersController {
 		return orderList;
 	}
 
+	@GetMapping("/check/{odrNumber}")
+	public int checkOdrNumber(@PathVariable(value = "odrNumber", required = true) String odrNumber) {
+		return adminOrdersServiceImpl.checkOdrNumber(odrNumber);
+	}
+
 	// 주문 상세 조회
 	@GetMapping("/orderDetails/{odrNumber}")
 	AdminOrdersDetailDTO getOrderDetail(@PathVariable(value = "odrNumber", required = true) String odrNumber) {

@@ -56,6 +56,9 @@ public interface AdminOrdersMapper {
 			@Param("keyword") String keyword, @Param("sort") String sort, @Param("filter") String filter,
 			@Param("pageNum") int pageNum);
 
+	@Select("SELECT COUNT(*) FROM orders WHERE odrNumber = #{odrNumber};")
+	int checkOdrNumber(@Param("odrNumber") String odrNumber);
+
 	// 주문 상세 조회 1: 기본 정보 조회
 	@Select("SELECT o.odrPayment, o.cancelPrice, o.cancelSavedMoney, o.odrEmail, o.odrPhone, o.receiver, "
 			+ "o.odrZipCode, o.odrAddress1, o.odrAddress2, o.odrDate, u.userCode FROM orders o "
@@ -141,8 +144,7 @@ public interface AdminOrdersMapper {
 
 	// Scheduled: 상품의 배송 상태 파악을 위해 courierCompany와 trackingNumber 목록 조회
 	@Select("SELECT op.opCode, op.courierCompany, op.trackingNumber, o.odrPhone "
-			+ "FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber "
-			+ "WHERE odrState = '배송 중';")
+			+ "FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber " + "WHERE odrState = '배송 중';")
 	List<AdminOrdersTrackingDTO> getTrackingData();
 
 	// Scheduled: 상품이 배송 왼료되었을 때 odrState, deliDate, deadline 변경
@@ -150,12 +152,12 @@ public interface AdminOrdersMapper {
 			+ "deadline = DATE_ADD(DATE_ADD(deadline, INTERVAL rentalPeriod DAY), INTERVAL 7 DAY) "
 			+ "WHERE opCode = #{opCode};")
 	void deliveryCompleted(@Param("opCode") int opCode);
-	
+
 	// Scheduled: 상품이 배송 완료되었을 때 문자 전송을 위한 상품 명 조회
 	@Select("SELECT op.deadline, p.prodName FROM orderProducts op INNER JOIN products p "
 			+ "ON op.prodCode = p.prodCode WHERE op.opCode = #{opCode};")
 	AdminOrdersTrackingDTO getProdNameAndDeadline(@Param("opCode") int opCode);
-	
+
 	// Scheduled: 배송 완료된 상품 중 반납되지 않은 상품의 deadline 조회 (반납 독촉 문자용)
 	@Select("SELECT p.prodName, o.odrPhone, DATEDIFF(op.deadline, NOW()) AS datediff, op.deadline "
 			+ "FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber "

@@ -48,6 +48,19 @@ public class QnAController {
 		return questionList;
 	}
 
+	@GetMapping("/check/{qstCode}")
+	public int checkQst(@PathVariable(value = "qstCode", required = true) String qstCode) {
+		int result = 0;
+
+		// qstCode가 숫자인지 확인
+		if (qstCode.matches("-?\\d+")) {
+			int qstCodeInt = Integer.parseInt(qstCode);
+			result = qnAServiceImpl.checkQst(qstCodeInt);
+		}
+
+		return result;
+	}
+
 	@GetMapping("/{email}/{qstCode}/writerCheck")
 	public int writerCheck(@PathVariable(value = "email", required = true) String email,
 			@PathVariable(value = "qstCode", required = true) int qstCode) {

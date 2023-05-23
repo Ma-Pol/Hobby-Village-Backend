@@ -57,6 +57,11 @@ public class AdminProductsController {
 		return productList;
 	}
 
+	@GetMapping("/check/{prodCode}")
+	public int checkProduct(@PathVariable(value = "prodCode", required = true) String prodCode) {
+		return adminProductsServiceImpl.checkProduct(prodCode);
+	}
+
 	@GetMapping("/productDetails/{prodCode}") // 상품 상세 조회
 	public AdminProductsDTO getProductDetail(@PathVariable(value = "prodCode", required = true) String prodCode) {
 		return adminProductsServiceImpl.getProductDetail(prodCode);

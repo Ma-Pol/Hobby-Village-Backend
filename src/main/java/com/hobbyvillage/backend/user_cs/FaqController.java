@@ -46,6 +46,19 @@ public class FaqController {
 		return faqList;
 	}
 
+	@GetMapping("/check/{faqCode}")
+	public int checkFaq(@PathVariable(value = "faqCode", required = true) String faqCode) {
+		int result = 0;
+
+		// faqCode가 숫자인지 확인
+		if (faqCode.matches("-?\\d+")) {
+			int faqCodeInt = Integer.parseInt(faqCode);
+			result = FaqServiceImpl.checkFaq(faqCodeInt);
+		}
+
+		return result;
+	}
+
 	@GetMapping("/{faqCode}")
 	public FaqDTO getFaqDetail(@PathVariable Integer faqCode) {
 		return FaqServiceImpl.getFaqDetail(faqCode);

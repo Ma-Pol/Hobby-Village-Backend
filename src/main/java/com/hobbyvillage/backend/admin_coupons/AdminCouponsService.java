@@ -7,7 +7,8 @@ public interface AdminCouponsService {
 	int getSearchCouponCount(String filter, String condition, String keyword);
 	List<AdminCouponsDTO> getCouponList(String filter, String sort, int pageNum);
 	List<AdminCouponsDTO> getSearchCouponList(String filter, String condition, String keyword, String sort, int pageNum);
+	int checkCouponCode(int couponCode);
+	AdminCouponsDTO getCouponDetails(int couponCode);
 	void deleteCoupon(int couponCode);
 	void addCoupon(AdminCouponsDTO coupon);
-	AdminCouponsDTO getCouponDetails(int couponCode);
 }

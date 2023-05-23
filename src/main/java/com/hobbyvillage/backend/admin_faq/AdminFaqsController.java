@@ -47,4 +47,40 @@ public class AdminFaqsController {
 		return faqList;
 	}
 
+	// 실재 FAQ인지 확인
+	@GetMapping("/check/{faqCode}")
+	public int checkFaq(@PathVariable(value = "faqCode", required = true) String faqCode) {
+		int result = 0;
+
+		if (faqCode.matches("-?\\d+")) {
+			int faqCodeInt = Integer.parseInt(faqCode);
+			result = adminFaqsServiceImpl.checkFaq(faqCodeInt);
+		}
+
+		return result;
+	}
+
+	// FAQ 상세 조회
+	@GetMapping("/faqDetails/{faqCode}")
+	public AdminFaqsDTO getFaqDetail(@PathVariable(value = "faqCode", required = true) int faqCode) {
+		return adminFaqsServiceImpl.getFaqDetail(faqCode);
+	}
+
+	// FAQ 삭제
+	@DeleteMapping("/delete/{faqCode}")
+	public int deleteFaq(@PathVariable(value = "faqCode", required = true) int faqCode) {
+		return adminFaqsServiceImpl.deleteFaq(faqCode);
+	}
+
+	// FAQ 등록
+	@PostMapping("/create")
+	public int createFaq(@RequestBody AdminFaqsDTO faq) {
+		return adminFaqsServiceImpl.createFaq(faq);
+	}
+
+	// FAQ 수정
+	@PatchMapping("/modify")
+	public int modifyFaq(@RequestBody AdminFaqsDTO faq) {
+		return adminFaqsServiceImpl.modifyFaq(faq);
+	}
 }

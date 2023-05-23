@@ -4,20 +4,15 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.apache.naming.java.javaURLContextFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.*;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -205,6 +200,11 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		}
 
 		return orderList;
+	}
+	
+	@Override
+	public int checkOdrNumber(String odrNumber) {
+		return mapper.checkOdrNumber(odrNumber);
 	}
 
 	@Override // 주문 상세 조회
