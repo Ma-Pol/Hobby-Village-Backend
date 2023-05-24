@@ -12,6 +12,7 @@ public class UserreviewsDTO {
 	private String revwTitle;
 	private Date revwRegiDate;
 	private int revwReport;
+	private String revwWriter;
 	private String prodCode;
 	private String prodName;
 	private String revwContent;

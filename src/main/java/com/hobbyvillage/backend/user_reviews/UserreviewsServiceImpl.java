@@ -24,5 +24,23 @@ public class UserreviewsServiceImpl implements UserreviewsService {
 	public UserreviewsDTO getreviewsdetails(String revwCode) {
 		return mapper.getreviewsdetails(revwCode);
 	}
+	
+	// 리뷰 수정
+	@Override
+	public int reviewsmodify(UserreviewsDTO userreviews) {
+		return mapper.reviewsmodify(userreviews);
+	}
+	
+	// 리뷰 작성 상품명 조회
+	@Override
+	public UserreviewsDTO getreviewsproducts(String prodCode) {
+		return mapper.getreviewsproducts(prodCode);
+	}
+		
+	// 리뷰 작성
+	@Override
+	public int reviewscreate(UserreviewsDTO userreviews) {
+		return mapper.reviewscreate(userreviews);
+	}
 
 }
