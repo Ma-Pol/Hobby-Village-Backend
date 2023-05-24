@@ -1,78 +1,92 @@
 package com.hobbyvillage.backend.user_users;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.*;
 
-import com.hobbyvillage.backend.admin_faq.AdminFAQDTO;
-
-
+import com.hobbyvillage.backend.UploadDir;
 
 @RestController
 public class MemberController {
 
-	private MemberServiceImpl mService;
+	private MemberServiceImpl memberServiceImpl;
 
-	public MemberController(MemberServiceImpl mService) {
-		this.mService = mService;
+	public MemberController(MemberServiceImpl memberServiceImpl) {
+		this.memberServiceImpl = memberServiceImpl;
 	}
-	
-	@RequestMapping("/login")
-	public int login(@RequestBody MemberDTO users) throws Exception {
-		int res = mService.login(users);
 
-		return res;
+	@PostMapping("/loginCheck")
+	public LoginDTO login(@RequestBody LoginDTO users) throws Exception {
+		return memberServiceImpl.login(users);
 	}
-	
+
+	@GetMapping("/profPicture/{profPicture}")
+	public ResponseEntity<byte[]> getReqeustFileData(
+			@PathVariable(value = "profPicture", required = true) String profPicture) {
+		File file = new File(UploadDir.uploadDir + "\\Uploaded\\UserProfileImage", profPicture);
+		ResponseEntity<byte[]> result = null;
+
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", Files.probeContentType(file.toPath()));
+			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
 	@RequestMapping("/users/register/nickname")
-	public boolean nicknameCheck(@RequestBody MemberDTO users) throws Exception {
-		int res = mService.nicknameCheck(users);
-		
-		if(res > 0) {
+	public boolean nicknameCheck(@RequestBody LoginDTO users) throws Exception {
+		int res = memberServiceImpl.nicknameCheck(users);
+
+		if (res > 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	@RequestMapping("/users/register/email")
-	public boolean emailCheck(@RequestBody MemberDTO users) throws Exception {
-		int res = mService.emailCheck(users);
-		
-		if(res > 0) {
+	public boolean emailCheck(@RequestBody LoginDTO users) throws Exception {
+		int res = memberServiceImpl.emailCheck(users);
+
+		if (res > 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	@RequestMapping("/signup")
-	public int signup(@RequestBody MemberDTO users) throws Exception {
-		int res = mService.signup(users);
+	public int signup(@RequestBody LoginDTO users) throws Exception {
+		int res = memberServiceImpl.signup(users);
 		return res;
 	}
-	
+
 	@RequestMapping("/users/{email}/modify")
-	public MemberDTO getUserDetail(@PathVariable(value = "email", required = true) String email) throws Exception {
-		MemberDTO UserDetail = mService.getUserDetail(email);
+	public LoginDTO getUserDetail(@PathVariable(value = "email", required = true) String email) throws Exception {
+		LoginDTO UserDetail = memberServiceImpl.getUserDetail(email);
 		return UserDetail;
 	}
-	
-	@PostMapping("/users/modify")
-	public int modifyMember(@RequestBody MemberDTO users) {
-		int res = mService.modifyMember(users);
-		return res;
-	}
-	
-	@PostMapping("/users/withdrawal")
-	public int deleteMember(@RequestBody MemberDTO users) {
-		int res = mService.deleteMember(users);
-		return res;
-	}
-	
 
-	
+	@PostMapping("/users/modify")
+	public int modifyMember(@RequestBody LoginDTO users) {
+		int res = memberServiceImpl.modifyMember(users);
+		return res;
+	}
+
+	@PostMapping("/users/withdrawal")
+	public int deleteMember(@RequestBody LoginDTO users) {
+		int res = memberServiceImpl.deleteMember(users);
+		return res;
+	}
+
 }

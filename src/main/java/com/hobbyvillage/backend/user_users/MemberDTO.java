@@ -1,10 +1,6 @@
 package com.hobbyvillage.backend.user_users;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
@@ -12,20 +8,17 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberDTO {
-
-	private int userCode;
+	private Integer userCode;
 	private String email;
 	private String password;
-    private String name;
-    private String nickname;
-    private String birthday;
-    private String phone;
-    private String profPicture;
-    private int addressCode;
-    private String zipCode;
-    private String address1;
-    private String address2;
-    private int isDefault;
-
-	
+	private String name;
+	private String nickname;
+	private String birthday;
+	private String phone;
+	private String profPicture;
+	private Integer addressCode;
+	private String zipCode;
+	private String address1;
+	private String address2;
+	private Integer isDefault;
 }
