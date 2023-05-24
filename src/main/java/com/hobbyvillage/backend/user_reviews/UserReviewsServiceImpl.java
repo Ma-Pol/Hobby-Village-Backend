@@ -1,0 +1,36 @@
+package com.hobbyvillage.backend.user_reviews;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserReviewsServiceImpl implements UserReviewsService {
+
+	private UserReviewsMapper mapper;
+	
+	public UserReviewsServiceImpl(UserReviewsMapper mapper) {
+		this.mapper = mapper;
+	}
+	
+	@Override
+	public int getProdRevwCount(String prodCode) {
+		return mapper.getProdRevwCount(prodCode);
+	}
+
+	@Override
+	public List<UserReviewsDTO> getProdRevwList(String prodCode) {
+		return mapper.getProdRevwList(prodCode);
+	}
+
+	@Override
+	public void reportReview(String email, String revwCode) {
+		mapper.reportReview(email, revwCode);
+	}
+
+	@Override
+	public List<String> getProdRevwPics(String revwCode) {
+		return mapper.getProdRevwPics(revwCode);
+	}
+
+}

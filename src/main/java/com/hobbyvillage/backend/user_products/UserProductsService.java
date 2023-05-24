@@ -23,5 +23,9 @@ public interface UserProductsService {
 	// 상품 목록 조회 - 검색o & not 평점순
 	List<UserProductsDTO> getProductListS(String category, String sort, String array, String keyword, int pageNum);
 	// ----------------------------
+	// 상품 상세 조회 
+	UserProductsDTO getProductDetail(String prodCode);
+	// ----------------------------
 	List<String> getProdPictures(String prodCode);
+	String getBrandImgName(String prodBrand);
 }

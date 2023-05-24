@@ -33,4 +33,5 @@ public class UserProductsDTO {
 	private List<String> prodTag;
 	private List<String> prodPicture;
 	private String brand;
+	private String brandLogo;
 }

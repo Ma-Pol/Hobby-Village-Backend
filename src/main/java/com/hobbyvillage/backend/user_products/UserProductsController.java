@@ -86,6 +86,7 @@ public class UserProductsController {
 		}
 	}
 	
+	// 상품 목록 조회 (브랜드관) 
 	@GetMapping("/brandProdList")
 	public List<UserProductsDTO> getBrandProductList(@RequestParam(value="brand", required=true) String brand,
 			@RequestParam(value="sort", required=true) String sort,
@@ -102,17 +103,28 @@ public class UserProductsController {
 		}
 	}
 	
+	// 상품 상세 조회 
+	@GetMapping("/getProductDetail")
+	public UserProductsDTO getProductDetail(@RequestParam(value="prodCode") String prodCode) {
+		return service.getProductDetail(prodCode);
+	}
+	
 	// ----------------------------
 	
 	@GetMapping("/getProdPictures") // 이미지 파일명 조회 
-	public List<String> getProdPictures(@RequestParam String prodCode) {
+	public List<String> getProdPictures(@RequestParam(value="prodCode") String prodCode) {
 		return service.getProdPictures(prodCode);
+	}
+	
+	@GetMapping("/getBrandImgName") // 브랜드 로고 파일명 조회 
+	public String getBrandImgName(@RequestParam(value="prodBrand") String prodBrand) {
+		return service.getBrandImgName(prodBrand);
 	}
 	
 	// macOS 경로: //Uploaded//ProductsImage
 	// 윈도우 경로: \\Uploaded\\ProductsImage
 	@GetMapping("/upload/{fileName}") // 이미지 불러오기 
-	public ResponseEntity<byte[]> getReqeustFileData(
+	public ResponseEntity<byte[]> requestProdPics(
 			@PathVariable(value = "fileName", required = true) String fileName) {
 		File file = new File(UploadDir.uploadDir + "//Uploaded//ProductsImage", fileName);
 		ResponseEntity<byte[]> result = null;
@@ -125,4 +137,5 @@ public class UserProductsController {
 		}
 		return result;
 	}
+
 }

@@ -177,11 +177,23 @@ public class UserProductsServiceImpl implements UserProductsService {
 		return mapper.getProductListS(category, sort, array, keyword, pageNum);
 	}
 
+	@Override // 상품 상세 조회 
+	public UserProductsDTO getProductDetail(String prodCode) {
+		return mapper.getProductDetail(prodCode);
+	}
+		
 	// ------------------------------------------
 	
 	@Override // 상품 이미지 파일명 조회 
 	public List<String> getProdPictures(String prodCode) {
 		return mapper.getProdPictures(prodCode);
 	}
+
+	@Override // 상품 브랜드 로고 파일명 조회 
+	public String getBrandImgName(String prodBrand) {
+		return mapper.getBrandImgName(prodBrand);
+	}
+
+	
 
 }

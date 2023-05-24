@@ -108,7 +108,18 @@ public interface UserProductsMapper {
 
 	// -------------------------------------
 	
+	// 상품 상세 조회
+	@Select("SELECT prodCode, prodCategory, prodBrand, prodName, prodContent, prodPrice, prodHost, prodRegiDate, prodDibs, prodIsRental "
+			+ "FROM products WHERE prodCode=#{prodCode};")
+	UserProductsDTO getProductDetail(@Param("prodCode") String prodCode);
+	
+	// -------------------------------------
+	
 	// 상품 이미지 파일명 조회 (개별 => 목록, 상세페이지 모두 활용가능)
 	@Select("SELECT prodPicture FROM productPictures WHERE prodCode=#{prodCode} ORDER BY prodPicture ASC;")
 	List<String> getProdPictures(@Param("prodCode") String prodCode);
+
+	// 상품 브랜드 파일명 조회
+	@Select("SELECT COALESCE(brandLogo, 'default.jpg') AS brandLogo FROM brands WHERE brand=${prodBrand};")
+	String getBrandImgName(@Param("prodBrand") String prodBrand);
 }
