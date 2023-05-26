@@ -1,5 +1,7 @@
 package com.hobbyvillage.backend.user_users;
 
+import java.sql.Date;
+
 import lombok.*;
 
 @Getter
@@ -13,12 +15,11 @@ public class MemberDTO {
 	private String password;
 	private String name;
 	private String nickname;
-	private String birthday;
+	private Date birthday;
 	private String phone;
 	private String profPicture;
 	private Integer addressCode;
 	private String zipCode;
 	private String address1;
 	private String address2;
-	private Integer isDefault;
 }
