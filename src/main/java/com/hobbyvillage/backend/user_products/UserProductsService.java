@@ -27,5 +27,5 @@ public interface UserProductsService {
 	UserProductsDTO getProductDetail(String prodCode);
 	// ----------------------------
 	List<String> getProdPictures(String prodCode);
-	String getBrandImgName(String prodBrand);
+	String getBrandImgName(String brand);
 }

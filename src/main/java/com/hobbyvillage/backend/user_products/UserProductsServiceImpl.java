@@ -190,8 +190,8 @@ public class UserProductsServiceImpl implements UserProductsService {
 	}
 
 	@Override // 상품 브랜드 로고 파일명 조회 
-	public String getBrandImgName(String prodBrand) {
-		return mapper.getBrandImgName(prodBrand);
+	public String getBrandImgName(String brand) {
+		return mapper.getBrandImgName(brand);
 	}
 
 	

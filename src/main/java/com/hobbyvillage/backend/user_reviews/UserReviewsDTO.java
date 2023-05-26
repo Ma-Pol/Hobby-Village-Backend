@@ -23,4 +23,5 @@ public class UserReviewsDTO {
 	private Date revwRegiDate;
 	private Integer revwReport;
 	private String email;
+	private String profPicture; // 리뷰 작성자 프로필 사진 
 }

@@ -117,8 +117,8 @@ public class UserProductsController {
 	}
 	
 	@GetMapping("/getBrandImgName") // 브랜드 로고 파일명 조회 
-	public String getBrandImgName(@RequestParam(value="prodBrand") String prodBrand) {
-		return service.getBrandImgName(prodBrand);
+	public String getBrandImgName(@RequestParam(value="brand") String brand) {
+		return service.getBrandImgName(brand);
 	}
 	
 	// macOS 경로: //Uploaded//ProductsImage

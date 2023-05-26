@@ -109,8 +109,11 @@ public interface UserProductsMapper {
 	// -------------------------------------
 	
 	// 상품 상세 조회
-	@Select("SELECT prodCode, prodCategory, prodBrand, prodName, prodContent, prodPrice, prodHost, prodRegiDate, prodDibs, prodIsRental "
-			+ "FROM products WHERE prodCode=#{prodCode};")
+	@Select("SELECT p.prodCode, p.prodCategory, p.prodBrand, p.prodName, p.prodContent, p.prodPrice, "
+			+ "p.prodHost, p.prodRegiDate, p.prodDibs, p.prodIsRental, u.profPicture "
+			+ "FROM products p "
+			+ "INNER JOIN users u ON p.prodHost = u.nickname "
+			+ "WHERE p.prodCode=#{prodCode};")
 	UserProductsDTO getProductDetail(@Param("prodCode") String prodCode);
 	
 	// -------------------------------------
@@ -120,6 +123,6 @@ public interface UserProductsMapper {
 	List<String> getProdPictures(@Param("prodCode") String prodCode);
 
 	// 상품 브랜드 파일명 조회
-	@Select("SELECT COALESCE(brandLogo, 'default.jpg') AS brandLogo FROM brands WHERE brand=${prodBrand};")
-	String getBrandImgName(@Param("prodBrand") String prodBrand);
+	@Select("SELECT brandLogo FROM brands WHERE brand=#{brand};")
+	String getBrandImgName(@Param("brand") String brand);
 }
