@@ -18,11 +18,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
-import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.service.DefaultMessageService;
+import com.hobbyvillage.backend.Common;
 
 @EnableScheduling
 @Service
@@ -33,23 +29,11 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 	@Value("${import-base-url}")
 	private String import_baseURL;
 
-	@Value("${api-key}")
-	private String api_Key;
-
-	@Value("${api-secret-key}")
-	private String api_Secret;
-
 	@Value("${sweettracker-base-url}")
 	private String sweettracker_baseURL;
 
 	@Value("${sweettracker-api-key}")
 	private String sweettracker_api_Key;
-
-	@Value("${solapi-api-key}")
-	private String solapi_api_key;
-
-	@Value("${solapi-secret-key}")
-	private String solapi_secret_key;
 
 	public AdminOrdersServiceImpl(AdminOrdersMapper mapper) {
 		this.mapper = mapper;
@@ -85,60 +69,6 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		}
 
 		return filter;
-	}
-
-	@Override
-	public String getImportToken() throws IOException {
-		// 요청 URL 설정
-		URL url = new URL(import_baseURL + "/users/getToken");
-
-		// 요청(통신) 객체 생성
-		HttpsURLConnection con = null;
-
-		// 요청 URL, 요청 방식, 요청 데이터 타입(이곳 -> 아임포트), 응답 데이터 타입(아임포트 -> 이곳)
-		con = (HttpsURLConnection) url.openConnection(); // 요청 URL 설정
-		con.setRequestMethod("POST"); // 요청 방식 설정
-		con.setRequestProperty("Content-type", "application/json"); // 요청 데이터 타입(이곳 -> 아임포트) 설정
-		con.setRequestProperty("Accept", "application/json"); // 응답 데이터 타입(아임포트 -> 이곳) 설정
-		con.setDoOutput(true); // POST 방식으로 BODY에 데이터를 담아 보내도록 설정
-
-		// BODY에 담을 JSON 형식의 데이터를 만들기 위한 JSON 객체 생성
-		JsonObject json = new JsonObject();
-
-		// JSON 객체에 값 입력
-		json.addProperty("imp_key", api_Key);
-		json.addProperty("imp_secret", api_Secret);
-
-		// 데이터 전송 준비
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
-		// 전송할 데이터를 버퍼에 저장
-		bw.write(json.toString());
-		// 데이터 전송
-		bw.flush();
-		// 데이터 전송 객체 종료
-		bw.close();
-
-		// 아임포트의 응답 데이터를 버퍼에 저장
-		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
-
-		// 응답 데이터(JSON 형식)를 파싱하기 위한 GSON 객체 생성
-		Gson gson = new Gson();
-
-		// 버퍼에 저장된 응답 데이터를 Map 형식으로 불러온 뒤,
-		// .get("response")로 key가 response인 value를 받아오고,
-		// .toString()으로 해당 value를 String 타입으로 변환해 저장
-		String response = gson.fromJson(br.readLine(), Map.class).get("response").toString();
-
-		// 마찬가지의 과정으로 response 내에서 key가 access_token인 value를 받아와 String 타입으로 변환해 저장
-		String token = gson.fromJson(response, Map.class).get("access_token").toString();
-
-		// 응답 데이터 객체 종료
-
-		br.close();
-		// 요청 객체 종료
-		con.disconnect();
-
-		return token;
 	}
 
 	@Override // 미검색 상태에서 주문 개수 조회
@@ -201,7 +131,7 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 
 		return orderList;
 	}
-	
+
 	@Override
 	public int checkOdrNumber(String odrNumber) {
 		return mapper.checkOdrNumber(odrNumber);
@@ -482,10 +412,10 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 					String prodName = smsData.getProdName();
 					Date deadline = smsData.getDeadline();
 
-					String message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 이/가 배송지에 도착했음을 알립니다.\n\n["
-							+ prodName + "] 을/를 통해 즐거운 취미 생활을 즐기시기를 바랍니다.\n\n반납 기한: [" + deadline + "]";
+					String message = "안녕하세요, 취미빌리지입니다.\n\n고객님께서 주문하신 상품 [" + prodName + "] 이(가) 배송지에 도착했음을 알립니다.\n\n["
+							+ prodName + "] 을(를) 통해 즐거운 취미 생활을 즐기시기를 바랍니다.\n\n반납 기한: [" + deadline + "]";
 
-					sendMessage(message, phone);
+					Common.sendMessage(message, phone);
 				}
 
 			} catch (IOException e) {
@@ -507,26 +437,26 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 			String message = "";
 
 			if (data.getDatediff() == 7) {
-				message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 의 대여 기간이 만료되었습니다.\n\n[" + prodName
+				message = "안녕하세요, 취미빌리지입니다.\n\n고객님께서 주문하신 상품 [" + prodName + "] 의 대여 기간이 만료되었습니다.\n\n[" + prodName
 						+ "] 을/를 통해 즐거운 취미 생활을 즐기셨기를 바랍니다.\n\n반납 기한 내에 취미빌리지 사이트에서 해당 상품의 반납 신청을 완료해주시기 바랍니다."
 						+ "\n\n반납 신청 위치: 마이 페이지 > 주문 목록\n\n반납 기한: [" + deadline + "]";
-				sendMessage(message, phone);
+				Common.sendMessage(message, phone);
 
 			} else if (data.getDatediff() == 3) {
-				message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 의 반납 기한이 3일 남았습니다.\n\n"
+				message = "안녕하세요, 취미빌리지입니다.\n\n고객님께서 주문하신 상품 [" + prodName + "] 의 반납 기한이 3일 남았습니다.\n\n"
 						+ "반납 기한 내에 취미빌리지 사이트에서 해당 상품의 반납 신청을 완료해주시기 바랍니다.\n\n반납 신청 위치: 마이 페이지 > 주문 목록" + "\n\n반납 기한: ["
 						+ deadline + "]";
-				sendMessage(message, phone);
+				Common.sendMessage(message, phone);
 			} else if (data.getDatediff() == 1) {
-				message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 의 반납 기한이 하루 남았습니다.\n\n"
+				message = "안녕하세요, 취미빌리지입니다.\n\n고객님께서 주문하신 상품 [" + prodName + "] 의 반납 기한이 하루 남았습니다.\n\n"
 						+ "반납 기한 내에 취미빌리지 사이트에서 해당 상품의 반납 신청을 완료해주시기 바랍니다.\n\n반납 신청 위치: 마이 페이지 > 주문 목록" + "\n\n반납 기한: ["
 						+ deadline + "]";
-				sendMessage(message, phone);
+				Common.sendMessage(message, phone);
 			} else if (data.getDatediff() == 0) {
-				message = "안녕하세요, 취미빌리지입니다.\n고객님께서 주문하신 상품 [" + prodName + "] 의 반납 기한 당일입니다.\n\n"
+				message = "안녕하세요, 취미빌리지입니다.\n\n고객님께서 주문하신 상품 [" + prodName + "] 의 반납 기한 당일입니다.\n\n"
 						+ "취미빌리지 사이트에서 해당 상품의 반납 신청을 완료해주시기 바랍니다.\n\n반납 신청 위치: 마이 페이지 > 주문 목록\n\n반납 기한: [" + deadline
 						+ "]";
-				sendMessage(message, phone);
+				Common.sendMessage(message, phone);
 			}
 		}
 	}
@@ -558,7 +488,7 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		String code = (String) response.get("code");
 		if (code != null) {
 			String msg = (String) response.get("msg");
-			System.out.println(msg);
+			System.out.println(msg); // 배송 조회 실패 시 실패 메세지를 콘솔에 표시
 			return false;
 		}
 
@@ -568,27 +498,6 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		con.disconnect();
 
 		return complete;
-	}
-
-	@Override // 자동 문자 전송 메서드
-	public void sendMessage(String message, String phone) {
-		DefaultMessageService messageSender = NurigoApp.INSTANCE.initialize(solapi_api_key, solapi_secret_key,
-				"https://api.solapi.com");
-
-		System.out.println("테스트");
-		Message msg = new Message();
-		msg.setFrom("01026336485");
-		msg.setTo("01026336485");
-		msg.setText(message);
-
-		try {
-			messageSender.send(msg);
-		} catch (NurigoMessageNotReceivedException e) {
-			System.out.println(e.getFailedMessageList());
-			System.out.println(e.getMessage());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
 	}
 
 }

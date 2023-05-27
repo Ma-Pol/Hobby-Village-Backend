@@ -10,7 +10,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 @RestController
 @RequestMapping("/m/products")
@@ -57,7 +57,7 @@ public class AdminProductsController {
 		return productList;
 	}
 
-	@GetMapping("/check/{prodCode}")
+	@GetMapping("/check/{prodCode}") // 실재 상품인지 확인
 	public int checkProduct(@PathVariable(value = "prodCode", required = true) String prodCode) {
 		return adminProductsServiceImpl.checkProduct(prodCode);
 	}
@@ -77,7 +77,7 @@ public class AdminProductsController {
 	@GetMapping("/upload/{fileName}")
 	public ResponseEntity<byte[]> getReqeustFileData(
 			@PathVariable(value = "fileName", required = true) String fileName) {
-		File file = new File(UploadDir.uploadDir + "\\Uploaded\\ProductsImage", fileName);
+		File file = new File(Common.uploadDir + "\\Uploaded\\ProductsImage", fileName);
 		ResponseEntity<byte[]> result = null;
 		try {
 			HttpHeaders headers = new HttpHeaders();

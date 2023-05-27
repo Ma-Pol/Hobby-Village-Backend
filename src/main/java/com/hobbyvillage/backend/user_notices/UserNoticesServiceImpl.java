@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
@@ -22,7 +22,7 @@ public class UserNoticesServiceImpl implements UserNoticesService {
 		this.mapper = mapper;
 	}
 
-	private String uploadPath = UploadDir.uploadDir + "\\Uploaded\\NoticesFile\\";
+	private String uploadPath = Common.uploadDir + "\\Uploaded\\NoticesFile\\";
 
 	// 필터 조건에 따른 쿼리문 설정 메서드
 	private String filtering(String filter) {

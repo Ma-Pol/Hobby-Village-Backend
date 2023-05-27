@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 @RestController
 @RequestMapping("/requests")
@@ -35,7 +35,7 @@ public class UserRequestsController {
 	@PostMapping("/upload/img/{reqCode}")
 	public int imageUpload(@PathVariable(value = "reqCode", required = true) int reqCode,
 			@RequestParam(value = "uploadImg", required = true) MultipartFile[] uploadImg) throws IOException {
-		String uploadPath = UploadDir.uploadDir + "\\Uploaded\\RequestsFile";
+		String uploadPath = Common.uploadDir + "\\Uploaded\\RequestsFile";
 		int result = 0;
 
 		// 이미지 개수만큼 반복

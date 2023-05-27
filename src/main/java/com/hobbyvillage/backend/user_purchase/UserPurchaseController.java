@@ -9,7 +9,7 @@ import org.springframework.http.*;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 @RestController
 @RequestMapping("/purchase")
@@ -60,7 +60,7 @@ public class UserPurchaseController {
 	@GetMapping("/pictures/{prodPicture}")
 	public ResponseEntity<byte[]> getProductImgData(
 			@PathVariable(value = "prodPicture", required = true) String prodPicture) {
-		File file = new File(UploadDir.uploadDir + "\\Uploaded\\ProductsImage", prodPicture);
+		File file = new File(Common.uploadDir + "\\Uploaded\\ProductsImage", prodPicture);
 		ResponseEntity<byte[]> result = null;
 
 		try {
@@ -105,7 +105,7 @@ public class UserPurchaseController {
 		int result = 1;
 
 		try {
-			String token = userPurchaseServiceImpl.getImportToken();
+			String token = Common.getImportToken();
 			result = userPurchaseServiceImpl.paymentsPrepare(odrNumber, amount, token);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -131,7 +131,7 @@ public class UserPurchaseController {
 			System.out.println("1차 검증 성공");
 
 			// 2. DB 내 exactPrice와 import에 요청해서 받아온 실제 결제 금액을 비교해서 같은지 확인
-			String token = userPurchaseServiceImpl.getImportToken();
+			String token = Common.getImportToken();
 			result = userPurchaseServiceImpl.compareToImport(odrNumber, paid_amount, prevPage, imp_uid, token);
 
 		}
@@ -205,7 +205,7 @@ public class UserPurchaseController {
 		System.out.println("결제 실패. 실제 주문내역 삭제");
 		int result;
 
-		String token = userPurchaseServiceImpl.getImportToken();
+		String token = Common.getImportToken();
 		result = userPurchaseServiceImpl.cancelOrder(imp_uid, token);
 
 		return result;

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface UserPruchaseService {
-	String getImportToken() throws IOException;
 	int getProductState(String prodCode);
 	int checkProductInfo(String prodCode, int prodPrice, int prodShipping, String prodHost, int period);
 	UserPurchaseUserDTO getUserInfo(String email);

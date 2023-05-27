@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 @Transactional
 @Service
@@ -22,8 +22,8 @@ public class MemberServiceImpl {
 		this.mapper = mapper;
 	}
 
-	private String profUploadPath = UploadDir.uploadDir + "\\Uploaded\\UserProfileImage\\";
-	private String reviewUploadPath = UploadDir.uploadDir + "\\Uploaded\\ReviewsInage\\";
+	private String profUploadPath = Common.uploadDir + "\\Uploaded\\UserProfileImage\\";
+	private String reviewUploadPath = Common.uploadDir + "\\Uploaded\\ReviewsInage\\";
 
 	private void deletePicture(List<String> fileNames, String path) {
 

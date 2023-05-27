@@ -63,6 +63,19 @@ public class AdminQuestionsController {
 		return result;
 	}
 
+	@GetMapping("/modify/check/{qstCode}")
+	public int checkModifyQuestion(@PathVariable(value = "qstCode", required = true) String qstCode) {
+		int result = 0;
+
+		// qstCode가 숫자인지 확인
+		if (qstCode.matches("-?\\d+")) {
+			int qstCodeInt = Integer.parseInt(qstCode);
+			result = adminQuestionsServiceImpl.checkModifyQuestion(qstCodeInt);
+		}
+
+		return result;
+	}
+
 	@GetMapping("/{qstCode}")
 	public AdminQustionsDTO getQuestionDetail(@PathVariable(value = "qstCode", required = true) int qstCode) {
 		return adminQuestionsServiceImpl.getQuestionDetail(qstCode);

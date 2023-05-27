@@ -23,6 +23,7 @@ public class AdminProductsDTO {
 	private Integer prodPrice;
 	private String prodHost;
 	private Date prodRegiDate;
+	private Integer prodDeleted;
 	private Integer prodDibs;
 	private Integer rentalCount;
 	private Integer prodIsRental;

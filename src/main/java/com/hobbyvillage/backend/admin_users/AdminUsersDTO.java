@@ -18,5 +18,7 @@ public class AdminUsersDTO {
 	private String phone;
 	private String profPicture;
 	private Integer savedMoney;
-	private Integer deleted;
+	private Integer zipCode;
+	private String address1;
+	private String address2;
 }

@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 @RestController
 @RequestMapping("/m/requests")
@@ -90,7 +90,7 @@ public class AdminRequestsController {
 	@GetMapping("/upload/{fileName}")
 	public ResponseEntity<byte[]> getReqeustFileData(
 			@PathVariable(value = "fileName", required = true) String fileName) {
-		File file = new File(UploadDir.uploadDir + "\\Uploaded\\RequestsFile", fileName);
+		File file = new File(Common.uploadDir + "\\Uploaded\\RequestsFile", fileName);
 		ResponseEntity<byte[]> result = null;
 
 		try {
@@ -107,16 +107,18 @@ public class AdminRequestsController {
 	// 신청 진행 상황 업데이트
 	@PatchMapping("/updateProgress/{reqCode}")
 	public int updateRequestProgress(@PathVariable(value = "reqCode", required = true) int reqCode,
-			@RequestBody Map<String, String> previosProgress) {
-		String reqProgress = previosProgress.get("reqProgress");
+			@RequestBody Map<String, String> reqeustData) {
+		String reqProgress = reqeustData.get("reqProgress");
+		String reqTitle = reqeustData.get("reqTitle");
+		String reqPhone = reqeustData.get("reqPhone");
 
-		return adminRequestsServiceImpl.updateRequestProgress(reqCode, reqProgress);
+		return adminRequestsServiceImpl.updateRequestProgress(reqCode, reqProgress, reqTitle, reqPhone);
 	}
 
 	// 심사 탈락 처리
-	@PatchMapping("/rejectProgress/{reqCode}")
-	public int rejectRequestProgress(@PathVariable(value = "reqCode", required = true) int reqCode) {
-		return adminRequestsServiceImpl.rejectRequestProgress(reqCode);
+	@PatchMapping("/rejectProgress")
+	public int rejectRequestProgress(@RequestBody AdminRequestsRejectDTO rejectData) {
+		return adminRequestsServiceImpl.rejectRequestProgress(rejectData);
 	}
 
 	// 위탁 철회 요청 승인 처리

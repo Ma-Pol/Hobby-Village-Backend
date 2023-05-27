@@ -11,7 +11,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 @RestController
 public class MemberController {
@@ -32,7 +32,7 @@ public class MemberController {
 	@GetMapping("/profPicture/{profPicture}")
 	public ResponseEntity<byte[]> getReqeustFileData(
 			@PathVariable(value = "profPicture", required = true) String profPicture) {
-		File file = new File(UploadDir.uploadDir + "\\Uploaded\\UserProfileImage", profPicture);
+		File file = new File(Common.uploadDir + "\\Uploaded\\UserProfileImage", profPicture);
 		ResponseEntity<byte[]> result = null;
 
 		try {

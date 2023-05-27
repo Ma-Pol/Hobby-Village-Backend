@@ -2,36 +2,53 @@ package com.hobbyvillage.backend.admin_products;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface AdminProductsMapper {
 	// 미검색 상태에서 상품 개수 조회
-	@Select("SELECT COUNT(*) FROM products WHERE ${filter};")
+	@Select("SELECT COUNT(*) FROM products WHERE ${filter} AND prodDeleted = 0;")
 	int getProductCount(@Param("filter") String filter);
 
+	// 미검색 상태 + 삭제된 상품 개수 조회
+	@Select("SELECT COUNT(*) FROM products WHERE prodDeleted = 1;")
+	int getDeletedProductCount();
+
 	// 검색 상태에서 상품 개수 조회
-	@Select("SELECT COUNT(*) FROM products WHERE ${filter} AND ${condition} LIKE '%${keyword}%';")
+	@Select("SELECT COUNT(*) FROM products WHERE ${filter} AND ${condition} LIKE '%${keyword}%' AND prodDeleted = 0;")
 	int getSearchProductCount(@Param("filter") String filter, @Param("condition") String condition,
 			@Param("keyword") String keyword);
+
+	// 검색 상태 + 삭제된 상품 개수 조회
+	@Select("SELECT COUNT(*) FROM products WHERE ${condition} LIKE '%${keyword}%' AND prodDeleted = 1;")
+	int getSearchDeletedProductCount(@Param("condition") String condition, @Param("keyword") String keyword);
 
 	// 미검색 상태에서 상품 목록 조회
 	@Select("SELECT p.prodCode, p.prodName, p.prodHost, p.prodIsRental, u.userCode "
 			+ "FROM products p INNER JOIN users u ON p.prodHost = u.nickname WHERE ${filter} "
-			+ "ORDER BY ${sort} LIMIT #{pageNum}, 10;")
+			+ "AND prodDeleted = 0 ORDER BY ${sort} LIMIT #{pageNum}, 10;")
 	List<AdminProductsDTO> getProductList(@Param("filter") String filter, @Param("sort") String sort,
 			@Param("pageNum") int pageNum);
+
+	// 미검색 상태 + 삭제된 상품 목록 조회
+	@Select("SELECT p.prodCode, p.prodName, p.prodHost, p.prodIsRental, u.userCode "
+			+ "FROM products p INNER JOIN users u ON p.prodHost = u.nickname WHERE "
+			+ "prodDeleted = 1 ORDER BY ${sort} LIMIT #{pageNum}, 10;")
+	List<AdminProductsDTO> getDeletedProductList(@Param("sort") String sort, @Param("pageNum") int pageNum);
 
 	// 검색 상태에서 상품 목록 조회
 	@Select("SELECT p.prodCode, p.prodName, p.prodHost, p.prodIsRental, u.userCode "
 			+ "FROM products p INNER JOIN users u ON p.prodHost = u.nickname "
-			+ "WHERE ${filter} AND ${condition} LIKE '%${keyword}%' ORDER BY ${sort} LIMIT #{pageNum}, 10;")
+			+ "WHERE ${filter} AND ${condition} LIKE '%${keyword}%' AND prodDeleted = 0 "
+			+ "ORDER BY ${sort} LIMIT #{pageNum}, 10;")
 	List<AdminProductsDTO> getSearchProductList(@Param("filter") String filter, @Param("condition") String condition,
+			@Param("keyword") String keyword, @Param("sort") String sort, @Param("pageNum") int pageNum);
+
+	// 검색 상태 + 삭제된 상품 목록 조회
+	@Select("SELECT p.prodCode, p.prodName, p.prodHost, p.prodIsRental, u.userCode "
+			+ "FROM products p INNER JOIN users u ON p.prodHost = u.nickname "
+			+ "WHERE ${condition} LIKE '%${keyword}%' AND prodDeleted = 1 " + "ORDER BY ${sort} LIMIT #{pageNum}, 10;")
+	List<AdminProductsDTO> getSearchDeletedProductList(@Param("condition") String condition,
 			@Param("keyword") String keyword, @Param("sort") String sort, @Param("pageNum") int pageNum);
 
 	// 실재 상품인지 체크
@@ -73,9 +90,26 @@ public interface AdminProductsMapper {
 	@Insert("INSERT INTO productTag (prodCode, prodTag) VALUES (#{prodCode}, #{tag});")
 	boolean addProductTags(@Param("prodCode") String prodCode, @Param("tag") String tag);
 
-	// 상품 삭제
-	@Delete("DELETE FROM products WHERE prodCode=#{prodCode};")
-	boolean deleteProduct(@Param("prodCode") String prodCode);
+	// 상품 삭제 1: 상품의 상태를 삭제된 상태로 변경
+	@Update("UPDATE products SET prodDeleted = 1 WHERE prodCode = #{prodCode};")
+	void deleteProduct(@Param("prodCode") String prodCode);
+
+	// 상품 삭제 2: 장바구니에서 상품 삭제
+	@Delete("DELETE FROM carts WHERE prodCode = #{prodCode};")
+	void deleteCart(@Param("prodCode") String prodCode);
+
+	// 상품 삭제 3: 찜 목록에서 상품 삭제
+	@Delete("DELETE FROM dibs WHERE prodCode = #{prodCode};")
+	void deleteDib(@Param("prodCode") String prodCode);
+
+	// 상품 삭제 4: 리뷰 이미지 파일 조회(삭제용)
+	@Select("SELECT rp.revwPicture FROM reviewPictures rp INNER JOIN reviews r "
+			+ "ON rp.revwCode = r.revwCode WHERE r.prodCode = #{prodCode};")
+	List<String> getReviewImage(@Param("prodCode") String prodCode);
+
+	// 상품 삭제 5: 리뷰 목록에서 상품 삭제
+	@Delete("DELETE FROM reviews WHERE prodCode = #{prodCode};")
+	void deleteReviews(@Param("prodCode") String prodCode);
 
 	// 상품 수정
 	@Update("UPDATE products SET prodBrand = #{prodBrand}, prodPrice = #{prodPrice}, prodCategory = #{prodCategory}, "

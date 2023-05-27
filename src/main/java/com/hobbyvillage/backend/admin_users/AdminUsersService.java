@@ -7,5 +7,9 @@ public interface AdminUsersService {
 	int getSearchUserCount(String condition, String keyword);
 	List<AdminUsersDTO> getUserList(String sort, int pageNum);
 	List<AdminUsersDTO> getSearchUserList(String condition, String keyword, String sort, int pageNum);
-	void deleteUser(int userCode);
+	int checkUser(int userCode);
+	AdminUsersDTO getUserDetail(int userCode);
+	int checkRequest(String email);
+	int checkOrderProduct(String email);
+	int deleteUser(String email, String nickname, String profPicture);
 }

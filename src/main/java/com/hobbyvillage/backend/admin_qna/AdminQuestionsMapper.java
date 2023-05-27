@@ -29,9 +29,13 @@ public interface AdminQuestionsMapper {
 	List<AdminQustionsDTO> getSearchQuestionList(@Param("filter") String filter, @Param("condition") String condition,
 			@Param("keyword") String keyword, @Param("sort") String sort, @Param("pageNum") int pageNum);
 
-	// 질문 상세 조회 1: 해당 질문코드의 존재 여부 확인
+	// 질문 상세 조회 1-1: 해당 질문코드의 존재 여부 확인
 	@Select("SELECT COUNT(*) FROM questions WHERE qstCode = #{qstCode};")
 	int checkQuestion(@Param("qstCode") int qstCode);
+
+	// 질문 상세 조회 1-2: 수정 가능한 질문코드 존재 여부 확인
+	@Select("SELECT COUNT(*) FROM questions WHERE qstCode = #{qstCode} AND qstState = 1;")
+	int checkModifyQuestion(@Param("qstCode") int qstCode);
 
 	// 질문 상세 조회 2: 질문 내용 조회
 	@Select("SELECT qstCategory, qstTitle, qstContent, qstState FROM questions WHERE qstCode = #{qstCode};")

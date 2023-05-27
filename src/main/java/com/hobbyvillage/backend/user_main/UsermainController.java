@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 @RestController
 @RequestMapping("/main")
@@ -52,7 +52,7 @@ public class UserMainController {
 
 		if (!imageName.equals("undefined")) {
 
-			File file = new File(UploadDir.uploadDir + "\\Uploaded\\ProductsImage", imageName);
+			File file = new File(Common.uploadDir + "\\Uploaded\\ProductsImage", imageName);
 			result = null;
 
 			try {

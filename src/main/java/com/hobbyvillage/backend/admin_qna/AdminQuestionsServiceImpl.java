@@ -75,6 +75,11 @@ public class AdminQuestionsServiceImpl implements AdminQuestionsService {
 	}
 
 	@Override
+	public int checkModifyQuestion(int qstCode) {
+		return mapper.checkModifyQuestion(qstCode);
+	}
+
+	@Override
 	public AdminQustionsDTO getQuestionDetail(int qstCode) {
 		return mapper.getQuestionDetail(qstCode);
 	}

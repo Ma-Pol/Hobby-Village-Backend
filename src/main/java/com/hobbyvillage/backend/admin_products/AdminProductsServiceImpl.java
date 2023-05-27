@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 @Service
 public class AdminProductsServiceImpl implements AdminProductsService {
@@ -21,7 +21,8 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 
 	// 윈도우 경로 : \\Uploaded\\ProductsImage
 	// mac 경로 : //Uploaded//ProductsImage
-	private String uploadPath = UploadDir.uploadDir + "\\Uploaded\\ProductsImage\\";
+	private String prodUploadPath = Common.uploadDir + "\\Uploaded\\ProductsImage\\";
+	private String revwUploadPath = Common.uploadDir + "\\Uploaded\\ReviewsImage\\";
 
 	// 필터 조건에 따른 쿼리문 설정 메서드
 	private String filtering(String filter) {
@@ -29,7 +30,7 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 			filter = "prodIsRental IS NOT NULL";
 		} else if (filter.equals("rented")) {
 			filter = "prodIsRental = 1";
-		} else {
+		} else if (filter.equals("no-rent")) {
 			filter = "prodIsRental = 0";
 		}
 
@@ -40,21 +41,36 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 	public int getProductCount(String filter) {
 		filter = filtering(filter);
 
-		return mapper.getProductCount(filter);
+		if (filter.equals("deleted")) {
+			return mapper.getDeletedProductCount();
+		} else {
+			return mapper.getProductCount(filter);
+		}
+
 	}
 
 	@Override // 검색 상태에서 상품 개수 조회
 	public int getSearchProductCount(String filter, String condition, String keyword) {
 		filter = filtering(filter);
 
-		return mapper.getSearchProductCount(filter, condition, keyword);
+		if (filter.equals("deleted")) {
+			return mapper.getSearchDeletedProductCount(condition, keyword);
+		} else {
+			return mapper.getSearchProductCount(filter, condition, keyword);
+		}
+
 	}
 
 	@Override // 미검색 상태에서 상품 목록 조회
 	public List<AdminProductsDTO> getProductList(String filter, String sort, int pageNum) {
 		filter = filtering(filter);
 
-		return mapper.getProductList(filter, sort, pageNum);
+		if (filter.equals("deleted")) {
+			return mapper.getDeletedProductList(sort, pageNum);
+		} else {
+			return mapper.getProductList(filter, sort, pageNum);
+		}
+
 	}
 
 	@Override // 검색 상태에서 상품 목록 조회
@@ -62,10 +78,15 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 			int pageNum) {
 		filter = filtering(filter);
 
-		return mapper.getSearchProductList(filter, condition, keyword, sort, pageNum);
+		if (filter.equals("deleted")) {
+			return mapper.getSearchDeletedProductList(condition, keyword, sort, pageNum);
+		} else {
+			return mapper.getSearchProductList(filter, condition, keyword, sort, pageNum);
+		}
+
 	}
 
-	@Override
+	@Override // 실재 상품인지 확인
 	public int checkProduct(String prodCode) {
 		return mapper.checkProductCount(prodCode);
 	}
@@ -119,7 +140,7 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 				String prodPicture = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
 
 				// 파일 저장 위치
-				File file = new File(uploadPath, prodPicture);
+				File file = new File(prodUploadPath, prodPicture);
 
 				// 여기서 실제 업로드가 이뤄집니다.
 				image.transferTo(file);
@@ -149,7 +170,7 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 		// 2. 상품 이미지 파일 삭제
 		if (prodPictures != null) {
 			for (String imageName : prodPictures) {
-				File filePath = new File(uploadPath + imageName);
+				File filePath = new File(prodUploadPath + imageName);
 
 				filePath.delete();
 			}
@@ -158,11 +179,29 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 
 	@Override // 상품 삭제
 	public void deleteProduct(String prodCode) {
-		deletePicture(prodCode);
-
-		// 3. 상품 데이터 삭제(+ 상품 이미지 파일명 삭제)
+		// 상품 삭제 처리
 		mapper.deleteProduct(prodCode);
 
+		// 장바구니에서 삭제
+		mapper.deleteCart(prodCode);
+
+		// 찜 목록에서 삭제
+		mapper.deleteDib(prodCode);
+
+		// 리뷰 이미지 목록 조회
+		List<String> reviewImages = mapper.getReviewImage(prodCode);
+
+		// 리뷰 이미지 삭제
+		if (reviewImages != null) {
+			for (String reviewImage : reviewImages) {
+				File filePath = new File(revwUploadPath + reviewImage);
+
+				filePath.delete();
+			}
+		}
+
+		// 리뷰 삭제
+		mapper.deleteReviews(prodCode);
 	}
 
 	@Override // 상품 수정

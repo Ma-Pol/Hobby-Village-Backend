@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
-import com.hobbyvillage.backend.UploadDir;
+import com.hobbyvillage.backend.Common;
 
 @Service
 public class AdminNoticesServiceImpl implements AdminNoticesService {
@@ -26,7 +26,7 @@ public class AdminNoticesServiceImpl implements AdminNoticesService {
 		this.mapper = mapper;
 	}
 
-	private String uploadPath = UploadDir.uploadDir + "\\Uploaded\\NoticesFile\\";
+	private String uploadPath = Common.uploadDir + "\\Uploaded\\NoticesFile\\";
 
 	// 필터 조건에 따른 쿼리문 설정 메서드
 	private String filtering(String filter) {

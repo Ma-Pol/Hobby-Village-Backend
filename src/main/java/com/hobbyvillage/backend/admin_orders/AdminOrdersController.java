@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.hobbyvillage.backend.Common;
+
 @RestController
 @RequestMapping("/m/orders")
 public class AdminOrdersController {
@@ -105,7 +107,7 @@ public class AdminOrdersController {
 	// 주문 취소 처리 과정 2: 실제 주문 취소
 	@PostMapping("/cancelOrder")
 	public void cancelOrder(@RequestBody AdminOrdersCancelOrderDTO data) throws IOException {
-		String token = adminOrdersServiceImpl.getImportToken();
+		String token = Common.getImportToken();
 		adminOrdersServiceImpl.cancelOrder(data, token);
 	}
 

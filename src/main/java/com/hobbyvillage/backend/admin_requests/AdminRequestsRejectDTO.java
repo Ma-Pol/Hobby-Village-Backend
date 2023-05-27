@@ -7,14 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AdminRequestsDetailsDTO {
+public class AdminRequestsRejectDTO {
 	private Integer reqCode;
-	private String reqSort;
-	private String reqEmail;
-	private String reqCategory;
 	private String reqTitle;
-	private String reqContent;
-	private String reqProgress;
-	private String nickname;
+	private String reqPhone;
 	private String rejectReason;
 }
