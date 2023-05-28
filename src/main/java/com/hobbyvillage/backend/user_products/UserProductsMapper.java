@@ -27,7 +27,7 @@ public interface UserProductsMapper {
 	int getProductCount(@Param("category") String category, @Param("sort") String sort);
 
 	// 상품 개수 조회 - 검색o
-	@Select("SELECT COUNT(DISTINCT products.prodCode) FROM products p "
+	@Select("SELECT COUNT(DISTINCT P.prodCode) FROM products p "
 			+ "LEFT JOIN productTag pt ON p.prodCode = pt.prodCode WHERE ${category} AND ${sort} AND p.prodDeleted = 0 "
 			+ "AND (CONCAT_WS(' ', p.prodCategory, p.prodBrand, p.prodName, p.prodContent, p.prodHost) "
 			+ "LIKE '%${keyword}%' OR pt.prodTag LIKE '%${keyword}%');")
