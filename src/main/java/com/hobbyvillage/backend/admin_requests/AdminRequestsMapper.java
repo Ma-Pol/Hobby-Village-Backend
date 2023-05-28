@@ -48,13 +48,13 @@ public interface AdminRequestsMapper {
 	@Update("UPDATE requests SET reqProgress = #{reqProgress} WHERE reqCode = #{reqCode};")
 	int updateRequestProgress(@Param("reqCode") int reqCode, @Param("reqProgress") String reqProgress);
 
+	// 철회 승낙 시 해당 물품의 리뷰 삭제
+	@Delete("DELETE FROM reviews WHERE prodCode = (SELECT prodCode FROM products WHERE reqCode = #{reqCode});")
+	void deleteReviews(@Param("reqCode") int reqCode);
+
 	// 심사 탈락 처리
 	@Update("UPDATE requests SET reqProgress = '심사 탈락', rejectReason = #{rejectReason} WHERE reqCode = #{reqCode};")
 	int rejectRequestProgress(AdminRequestsRejectDTO rejectData);
-
-	// 위탁 철회 요청 승인 처리
-	@Update("UPDATE requests SET reqProgress = '철회 진행 중' WHERE reqCode = #{reqCode};")
-	int cancelRequestProgress(@Param("reqCode") int reqCode);
 
 	// 위탁 철회 요청 거부 처리
 	@Update("UPDATE requests SET reqProgress = '완료' WHERE reqCode = #{reqCode};")

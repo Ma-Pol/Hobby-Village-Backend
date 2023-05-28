@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.*;
 import org.springframework.util.FileCopyUtils;
@@ -74,10 +75,17 @@ public class AdminProductsController {
 
 	// 상품 상세 조회 - 이미지 출력 (macOS 경로: //Uploaded//ProductsImage)
 	// 윈도우 경로: \\Uploaded\\ProductsImage
-	@GetMapping("/upload/{fileName}")
-	public ResponseEntity<byte[]> getReqeustFileData(
+	@GetMapping("/upload/{path}/{fileName}")
+	public ResponseEntity<byte[]> getReqeustFileData(@PathVariable(value = "path", required = true) String path,
 			@PathVariable(value = "fileName", required = true) String fileName) {
-		File file = new File(Common.uploadDir + "\\Uploaded\\ProductsImage", fileName);
+		File file = null;
+
+		if (path.equals("product")) {
+			file = new File(Common.uploadDir + "\\Uploaded\\ProductsImage", fileName);
+		} else {
+			file = new File(Common.uploadDir + "\\Uploaded\\RequestsFile", fileName);
+		}
+
 		ResponseEntity<byte[]> result = null;
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -116,7 +124,17 @@ public class AdminProductsController {
 		return adminProductsServiceImpl.addProduct(products);
 	}
 
-	// 상품 등록 - 이미지 등록
+	// 상품 등록 - 이미지 등록 1 (기존 판매/위탁 신청 이미지 업로드)
+	@PostMapping("/upload/requestImg/{prodCode}")
+	public int requestImageUpload(@PathVariable(value = "prodCode", required = true) String prodCode,
+			@RequestBody Map<String, List<String>> requestImg) throws IOException {
+		// 이미지명 리스트 저장
+		List<String> requestImages = requestImg.get("requestImg");
+
+		return adminProductsServiceImpl.requestImageUpload(prodCode, requestImages);
+	}
+
+	// 상품 등록 - 이미지 등록 2 (새 이미지 등록)
 	@PostMapping("/upload/img/{prodCode}")
 	public int imageUpload(@PathVariable(value = "prodCode", required = true) String prodCode,
 			@RequestParam(value = "uploadImg", required = true) MultipartFile[] uploadImg) throws IOException {

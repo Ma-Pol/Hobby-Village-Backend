@@ -121,15 +121,13 @@ public class AdminRequestsController {
 		return adminRequestsServiceImpl.rejectRequestProgress(rejectData);
 	}
 
-	// 위탁 철회 요청 승인 처리
-	@PatchMapping("/cancelProgress/{reqCode}")
-	public int cancelRequestProgress(@PathVariable(value = "reqCode", required = true) int reqCode) {
-		return adminRequestsServiceImpl.cancelRequestProgress(reqCode);
-	}
-
 	// 위탁 철회 요청 거부 처리
 	@PatchMapping("/rejectCancelProgress/{reqCode}")
-	public int rejectCancelRequestProgress(@PathVariable(value = "reqCode", required = true) int reqCode) {
-		return adminRequestsServiceImpl.rejectCancelRequestProgress(reqCode);
+	public int rejectCancelRequestProgress(@PathVariable(value = "reqCode", required = true) int reqCode,
+			@RequestBody Map<String, String> reqeustData) {
+		String reqTitle = reqeustData.get("reqTitle");
+		String reqPhone = reqeustData.get("reqPhone");
+
+		return adminRequestsServiceImpl.rejectCancelRequestProgress(reqCode, reqTitle, reqPhone);
 	}
 }

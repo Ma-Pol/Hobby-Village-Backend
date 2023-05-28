@@ -12,6 +12,5 @@ public interface AdminRequestsService {
 	List<String> getRequestFileList(int reqCode);
 	int updateRequestProgress(int reqCode, String reqProgress, String reqTitle, String reqPhone);
 	int rejectRequestProgress(AdminRequestsRejectDTO rejectData);
-	int cancelRequestProgress(int reqCode);
-	int rejectCancelRequestProgress(int reqCode);
+	int rejectCancelRequestProgress(int reqCode, String reqTitle, String reqPhone);
 }

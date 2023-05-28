@@ -110,6 +110,23 @@ public interface AdminOrdersMapper {
 	@Update("UPDATE products SET prodIsRental = 0 WHERE prodCode = #{prodCode};")
 	void modifyRentalState(@Param("prodCode") String prodCode);
 
+	// 상품의 위탁 철회 요청 여부 확인
+	@Select("SELECT COUNT(*) FROM products p INNER JOIN requests r ON p.reqCode = r.reqCode "
+			+ "WHERE p.prodCode = #{prodCode} AND r.reqProgress = '위탁 철회 요청';")
+	boolean checkCancelRequest(@Param("prodCode") String prodCode);
+
+	// 상품의 위탁 철회 요청이 들어온 상태라면 임시로 삭제 처리
+	@Update("UPDATE products STE prodDeleted = 1 WHERE prodCode = #{prodCode};")
+	void setDeleteProduct(@Param("prodCode") String prodCode);
+
+	// + 찜목록에서 삭제
+	@Delete("DELETE FROM dibs WHERE prodCode = #{prodCode};")
+	void deleteDibs(@Param("prodCode") String prodCode);
+
+	// + 장바구니에서 삭제
+	@Delete("DELETE FROM carts WHERE prodCode = #{prodCode};")
+	void deleteCarts(@Param("prodCode") String prodCode);
+
 	// 주문 취소 처리 과정: 취소 금액과 사용 취소된 적립금을 조회
 	@Select("SELECT cancelPrice, cancelSavedMoney FROM orders WHERE odrNumber = #{odrNumber};")
 	AdminOrdersCancelPriceDTO getCanceledData(@Param("odrNumber") String odrNumber);

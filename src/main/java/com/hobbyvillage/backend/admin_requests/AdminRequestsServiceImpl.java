@@ -69,8 +69,7 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 
 		if (reqProgress.equals("1차 심사 중")) {
 			reqProgress = "2차 심사 대기";
-			message += "이(가) 1차 심사에 통과했습니다.\n\n2차 심사를 위해서 해당 물품을 아래 주소로 배송해주시기 바랍니다." + 
-			"\n\n[04524 서울특별시 중구 세종대로 110]";
+			message += "이(가) 1차 심사에 통과했습니다.\n\n2차 심사를 위해서 해당 물품을 아래 주소로 배송해주시기 바랍니다." + "\n\n[04524 서울특별시 중구 세종대로 110]";
 
 		} else if (reqProgress.equals("2차 심사 대기")) {
 			reqProgress = "2차 심사 중";
@@ -84,8 +83,7 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 		} else if (reqProgress.equals("위탁 철회 요청")) {
 			// 위탁 철회 요청 > 철회 처리 중 : 철회 요청을 수락하고, 물품을 배송보내기 전 단계
 			reqProgress = "철회 처리 중";
-			message += "의 위탁 철회 요청이 수락되어 고객님의 기본 배송지로 배송될 예정입니다. " + 
-			"\n\n지금까지 저희 취미빌리지에 소중한 물품을 맡겨주신 점 진심으로 감사드립니다.";
+			message += "의 위탁 철회 요청이 수락되어 고객님의 기본 배송지로 배송될 예정입니다. " + "\n\n지금까지 저희 취미빌리지에 소중한 물품을 맡겨주신 점 진심으로 감사드립니다.";
 
 		} else if (reqProgress.equals("철회 처리 중")) {
 			// 철회 처리 중 > 철회 완료 : 물품을 배송보낸 단계
@@ -157,6 +155,11 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 		int result;
 		reqProgress = setReqProgress(reqProgress, reqTitle, reqPhone);
 
+		// 철회 처리 중 상태가 되면 해당 상품의 리뷰를 삭제
+		if (reqProgress.equals("철회 처리 중")) {
+			mapper.deleteReviews(reqCode);
+		}
+
 		if (reqProgress.equals("완료")) {
 			mapper.updateRequestProgress(reqCode, reqProgress);
 			result = 100;
@@ -189,13 +192,16 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 		return mapper.rejectRequestProgress(rejectData);
 	}
 
-	@Override // 위탁 철회 요청 승인 처리
-	public int cancelRequestProgress(int reqCode) {
-		return mapper.cancelRequestProgress(reqCode);
-	}
-
 	@Override // 위탁 철회 요청 거부 처리
-	public int rejectCancelRequestProgress(int reqCode) {
+	public int rejectCancelRequestProgress(int reqCode, String reqTitle, String reqPhone) {
+		if (reqTitle.length() > 10) {
+			reqTitle = reqTitle.substring(0, 10) + "...";
+		}
+
+		String message = "안녕하세요. 취미빌리지입니다.\n\n고객님께서 철회 신청하신 물품 [" + reqTitle + "] 의 철회가 거부되었음을 알립니다.";
+
+		Common.sendMessage(message, reqPhone);
+
 		return mapper.rejectCancelRequestProgress(reqCode);
 	}
 

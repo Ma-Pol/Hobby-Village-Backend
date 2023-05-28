@@ -17,6 +17,7 @@ public interface AdminProductsService {
 	List<String> getBrandList();
 	List<String> getCategoryList();
 	boolean addProduct(AdminProductsDTO products);
+	int requestImageUpload(String prodCode, List<String> requestImages) throws IOException;
 	int imageUpload(String prodCode, MultipartFile[] uploadImg) throws IOException;
 	void addProductTags(AdminProductsDTO prodTags);
 	void deleteProduct(String prodCode);

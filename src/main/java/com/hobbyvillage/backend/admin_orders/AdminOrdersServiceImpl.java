@@ -381,6 +381,14 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		String odrState = mapper.checkOdrState(opCode);
 
 		if (odrState.equals("반납 중")) {
+
+			// 위탁 철회 요청이 들어온 상품의 경우, 임시로 삭제 처리(추가 주문이 들어오지 않도록 하기 위함)
+			if (mapper.checkCancelRequest(prodCode)) {
+				mapper.setDeleteProduct(prodCode);
+				mapper.deleteDibs(prodCode);
+				mapper.deleteCarts(prodCode);
+			}
+
 			mapper.modifyOdrState(opCode, nextStep);
 			mapper.modifyRentalState(prodCode);
 			result = mapper.giveSavedMoney(email, savedMoney);

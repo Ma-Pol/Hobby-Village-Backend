@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface UserPurchaseMapper {
 	// 상품의 대여 상태 체크
-	@Select("SELECT prodIsRental FROM products WHERE prodCode = #{prodCode};")
+	@Select("SELECT COUNT(*) FROM products WHERE prodCode = #{prodCode} AND prodIsRental = 0 AND prodDeleted = 0;")
 	int getProductState(@Param("prodCode") String prodCode);
 
 	// state에 저장된 상품 정보와 실제 상품 정보 비교

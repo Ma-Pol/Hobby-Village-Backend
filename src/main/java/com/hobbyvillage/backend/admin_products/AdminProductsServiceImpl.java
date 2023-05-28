@@ -2,6 +2,8 @@ package com.hobbyvillage.backend.admin_products;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +25,7 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 	// mac 경로 : //Uploaded//ProductsImage
 	private String prodUploadPath = Common.uploadDir + "\\Uploaded\\ProductsImage\\";
 	private String revwUploadPath = Common.uploadDir + "\\Uploaded\\ReviewsImage\\";
+	private String reqUploadPath = Common.uploadDir + "\\Uploaded\\RequestsFile\\";
 
 	// 필터 조건에 따른 쿼리문 설정 메서드
 	private String filtering(String filter) {
@@ -128,6 +131,25 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 		return mapper.addProduct(products);
 	}
 
+	@Override
+	public int requestImageUpload(String prodCode, List<String> requestImages) throws IOException {
+		int result = 0;
+
+		// 신청 이미지 폴더에 저장되어 있는 파일을 상품 이미지 폴더에 복사
+		for (String prodPicture : requestImages) {
+			File prevImg = new File(prodUploadPath, prodPicture);
+			File nextImg = new File(reqUploadPath, prodPicture);
+
+			Files.copy(nextImg.toPath(), prevImg.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			mapper.addPicture(prodCode, prodPicture);
+
+			result++;
+		}
+
+		return result;
+	}
+
 	@Override // 상품 등록 - 이미지 파일명
 	public int imageUpload(String prodCode, MultipartFile[] uploadImg) throws IOException {
 		int result = 0;
@@ -147,7 +169,7 @@ public class AdminProductsServiceImpl implements AdminProductsService {
 
 				// DB에 파일명을 저장할 경우 이곳에서 처리하기
 				mapper.addPicture(prodCode, prodPicture);
-				result += 1;
+				result++;
 			}
 		}
 
