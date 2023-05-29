@@ -1,17 +1,10 @@
 package com.hobbyvillage.backend.admin_reviews;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
-
-import com.hobbyvillage.backend.Common;
 
 @RestController
 @RequestMapping("/m/reviews")
@@ -75,21 +68,12 @@ public class AdminReviewsController {
 	public List<String> getReviewImage(@PathVariable(value = "revwCode", required = true) String revwCode) {
 		return adminReviewsServiceImpl.getReviewImage(revwCode);
 	}
-	
+
 	// 이미지 불러오기
 	@GetMapping("/images/{imageName}")
 	public ResponseEntity<byte[]> getReqeustFileData(
-			@PathVariable(value = "imageName", required = true) String imageName) {
-		File file = new File(Common.uploadDir + "//Uploaded//ReviewsImage", imageName);
-		ResponseEntity<byte[]> result = null;
-		try {
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Content-Type", Files.probeContentType(file.toPath()));
-			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return result;
+			@PathVariable(value = "imageName", required = true) String imageName) throws IOException {
+		return adminReviewsServiceImpl.getReqeustFileData(imageName);
 	}
 
 	// 리뷰 삭제

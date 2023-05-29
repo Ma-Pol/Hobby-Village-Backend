@@ -8,27 +8,42 @@ import org.apache.ibatis.annotations.*;
 public interface UserReviewsMapper {
 
 	// 리뷰 개수 조회
-	@Select("SELECT COUNT(*) FROM reviews WHERE revwWriter = #{revwWriter}")
-	int getReviewCount(@Param("revwWriter") String revwWriter);
+	@Select("SELECT COUNT(*) FROM reviews r INNER JOIN users u ON r.revwWriter = u.nickname WHERE u.email = #{email};")
+	int getReviewCount(@Param("email") String email);
 
 	// 리뷰 목록 조회
 	@Select("SELECT r.revwCode, r.revwRate, r.revwTitle, r.revwRegiDate, r.revwReport, p.prodCode, p.prodName "
-			+ "FROM reviews r INNER JOIN products p ON r.prodCode = p.prodCode WHERE revwWriter = #{revwWriter} "
-			+ "ORDER BY ${sort} LIMIT #{pageNum}, 10;")
-	List<UserReviewsListsDTO> getReviewList(@Param("revwWriter") String revwWriter, @Param("sort") String sort,
+			+ "FROM reviews r INNER JOIN products p ON r.prodCode = p.prodCode INNER JOIN users u ON r.revwWriter = u.nickname "
+			+ "WHERE u.email = #{email} ORDER BY ${sort} LIMIT #{pageNum}, 10;")
+	List<UserReviewsListsDTO> getReviewList(@Param("email") String email, @Param("sort") String sort,
 			@Param("pageNum") int pageNum);
 
 	// 실재 리뷰 확인
-	@Select("SELECT COUNT(*) FROM reviews WHERE revwCode = #{revwCode};")
-	int checkReviews(@Param("revwCode") String revwCode);
+	@Select("SELECT COUNT(*) FROM reviews r INNER JOIN users u ON r.revwWriter = u.nickname "
+			+ "WHERE r.revwCode = #{revwCode} AND u.email = #{email};")
+	int checkReviews(@Param("revwCode") String revwCode, @Param("email") String email);
 
-//	
-//	
-//	// 리뷰 상세 조회
-//	@Select("SELECT rv.revwCode, rv.revwRate, rv.revwTitle, rv.revwContent, rv.revwReport, pd.prodCode, pd.prodName, rvP.revwCode, rvP.revwPicture FROM reviews rv "
-//			+ "inner join " + "products pd on rv.prodCode = pd.prodCode " + "inner join "
-//			+ "reviewPictures rvP on rv.revwCode = rvP.revwCode " + "where rv.revwCode = #{revwCode};")
-//	public UserReviewsDTO getreviewsdetails(String revwCode);
+	// 리뷰 상세 조회
+	@Select("SELECT r.revwCode, r.revwWriter, r.revwTitle, r.revwContent, r.revwReport, r.revwRate, p.prodCode, p.prodName "
+			+ "FROM reviews r INNER JOIN products p ON r.prodCode = p.prodCode WHERE r.revwCode = #{revwCode};")
+	UserReviewsListsDTO getReviewsDetails(@Param("revwCode") String revwCode);
+
+	// 리뷰 이미지 조회
+	@Select("SELECT revwPicture FROM reviewPictures WHERE revwCode = #{revwCode};")
+	List<String> getReviewImageName(@Param("revwCode") String revwCode);
+
+	// 리뷰 수정 1: 리뷰 정보 수정
+	@Update("UPDATE reviews SET revwTitle = #{revwTitle}, revwContent = #{revwContent}, revwRate = #{revwRate} WHERE revwCode = #{revwCode};")
+	int modifyReview(UserReviewsListsDTO reviewData);
+
+	// 리뷰 수정 2: 리뷰 이미지 정보 삭제
+	@Delete("DELETE FROM reviewPictures WHERE revwCode = #{revwCode};")
+	void deleteReviewPictures(@Param("revwCode") String revwCode);
+
+	// 리뷰 이미지 정보 추가
+	@Insert("INSERT INTO reviewPictures(revwCode, revwPicture) VALUES(#{revwCode}, #{revwPicture});")
+	int insertReviewPictures(@Param("revwCode") String revwCode, @Param("revwPicture") String revwPicture);
+
 //
 //	// 리뷰 수정
 //	@Update("UPDATE reviews " + "SET revwTitle = #{revwTitle}, revwRate = #{revwRate}, revwContent = #{revwContent} "

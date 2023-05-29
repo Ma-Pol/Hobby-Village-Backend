@@ -1,8 +1,15 @@
 package com.hobbyvillage.backend.admin_reviews;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+
+import com.hobbyvillage.backend.Common;
 
 @Service
 public class AdminReviewsServiceImpl implements AdminReviewsService {
@@ -12,6 +19,8 @@ public class AdminReviewsServiceImpl implements AdminReviewsService {
 	public AdminReviewsServiceImpl(AdminreviewsMapper mapper) {
 		this.mapper = mapper;
 	}
+
+	private String revwUploadPath = Common.uploadDir + "\\Uploaded\\ReviewsImage\\";
 
 	// 필터 조건에 따른 쿼리문 설정 메서드
 	private String filtering(String filter) {
@@ -71,9 +80,34 @@ public class AdminReviewsServiceImpl implements AdminReviewsService {
 		return mapper.getReviewImage(revwCode);
 	}
 
+	// 이미지 불러오기
+	@Override
+	public ResponseEntity<byte[]> getReqeustFileData(String imageName) throws IOException {
+		File file = new File(revwUploadPath, imageName);
+		ResponseEntity<byte[]> result = null;
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", Files.probeContentType(file.toPath()));
+		result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+
+		return result;
+	}
+
 	// 리뷰 삭제
 	@Override
 	public int deleteReivew(String revwCode) {
+		// 리뷰 이미지 목록 조회
+		List<String> reviewImages = mapper.getReviewImage(revwCode);
+
+		// 리뷰 이미지 삭제
+		if (reviewImages != null) {
+			for (String reviewImage : reviewImages) {
+				File filePath = new File(revwUploadPath + reviewImage);
+
+				filePath.delete();
+			}
+		}
+
 		int res = mapper.deleteReivew(revwCode);
 		return res;
 	}
