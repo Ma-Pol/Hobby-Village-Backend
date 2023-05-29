@@ -36,10 +36,13 @@ public interface AdminreviewsMapper {
 	int checkReviews(@Param("revwCode") String revwCode);
 
 	// 리뷰 상세 조회
-	@Select("SELECT rv.revwRegiDate, rv.prodCode, rv.revwRate, rv.revwWriter, rv.revwTitle, rv.revwReport, "
-			+ "rv.revwContent, pd.prodCode, pd.prodName, rvP.revwCode, rvP.revwPicture FROM reviews rv "
-			+ "INNER JOIN products pd ON rv.prodCode = pd.prodCode WHERE rv.revwCode = #{revwCode};")
+	@Select("SELECT r.revwCode, r.revwRegiDate, p.prodCode, p.prodName, r.revwRate, r.revwWriter, r.revwTitle, r.revwReport, r.revwContent "
+			+ "FROM reviews r INNER JOIN products p ON r.prodCode = p.prodCode WHERE r.revwCode = #{revwCode};")
 	AdminReviewsDTO getReviewsDetails(@Param("revwCode") String revwCode);
+
+	// 리뷰 이미지 조회
+	@Select("SELECT revwPicture FROM reviewPictures WHERE revwCode = #{revwCode};")
+	List<String> getReviewImage(@Param("revwCode") String revwCode);
 
 	// 리뷰 삭제
 	@Delete("DELETE FROM reviews WHERE revwCode = #{revwCode};")

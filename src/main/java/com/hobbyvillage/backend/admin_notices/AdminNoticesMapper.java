@@ -3,7 +3,6 @@ package com.hobbyvillage.backend.admin_notices;
 import java.util.List;
 
 import org.apache.ibatis.annotations.*;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 @Mapper
 public interface AdminNoticesMapper {

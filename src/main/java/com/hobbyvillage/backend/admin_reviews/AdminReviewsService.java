@@ -10,5 +10,6 @@ public interface AdminReviewsService {
 			int pageNum);
 	int checkReviews(String revwCode);
 	AdminReviewsDTO getReviewsDetails(String revwCode);
+	List<String> getReviewImage(String revwCode);
 	int deleteReivew(String revwCode);
 }

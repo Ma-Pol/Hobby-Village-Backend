@@ -58,11 +58,17 @@ public class AdminReviewsServiceImpl implements AdminReviewsService {
 	public int checkReviews(String revwCode) {
 		return mapper.checkReviews(revwCode);
 	}
-	
+
 	// 리뷰 상세 조회
 	@Override
 	public AdminReviewsDTO getReviewsDetails(String revwCode) {
 		return mapper.getReviewsDetails(revwCode);
+	}
+
+	// 리뷰 이미지 조회
+	@Override
+	public List<String> getReviewImage(String revwCode) {
+		return mapper.getReviewImage(revwCode);
 	}
 
 	// 리뷰 삭제
