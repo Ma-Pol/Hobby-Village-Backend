@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Select;
 public interface UserProductsMapper {
 
 	// 카테고리 목록 조회
-	@Select("SELECT category FROM categories ORDER BY category ASC;")
+	@Select("SELECT category FROM categories ORDER BY categoryCode;")
 	List<String> getCategories();
 
 	// 브랜드 목록 조회
@@ -91,6 +91,6 @@ public interface UserProductsMapper {
 	// -------------------------------------
 
 	// 상품 이미지 파일명 조회 (개별 => 목록, 상세페이지 모두 활용가능)
-	@Select("SELECT prodPicture FROM productPictures WHERE prodCode=#{prodCode} ORDER BY prodPicture ASC;")
+	@Select("SELECT prodPicture FROM productPictures WHERE prodCode = #{prodCode} ORDER BY prodPicture LIMIT 1;")
 	List<String> getProdPictures(@Param("prodCode") String prodCode);
 }
