@@ -105,7 +105,7 @@ public class MemberServiceImpl {
 				String profPicture = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
 
 				// 파일 저장 위치
-				File file = new File(profUploadPath, profPicture);
+				File file = new File(profUploadPath + profPicture);
 
 				// 여기서 실제 업로드가 이뤄집니다.
 				image.transferTo(file);
