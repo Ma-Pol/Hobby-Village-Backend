@@ -109,26 +109,6 @@ public class UserProductsController {
 		return service.getProductDetail(prodCode);
 	}
 	
-	@GetMapping("/checkDibs")
-	public int checkDibs(@RequestParam(value="email") String email, @RequestParam(value="prodCode")String prodCode) {
-		return service.checkDibs(email, prodCode);
-	}
-	
-	@GetMapping("/updateDibs")
-	public void updateDibs(@RequestParam(value="email") String email, @RequestParam(value="prodCode")String prodCode) {
-		service.updateDibs(email, prodCode);
-	}
-	
-	@GetMapping("/checkCart")
-	public int checkCarts(@RequestParam(value="email") String email, @RequestParam(value="prodCode")String prodCode) {
-		return service.checkCarts(email, prodCode);
-	}
-	
-	@GetMapping("/addCart")
-	public void addCart(@RequestParam(value="email") String email, @RequestParam(value="prodCode")String prodCode, @RequestParam(value="period") String period) {
-		service.addCart(email, prodCode, period);
-	}
-	
 	// ----------------------------
 	
 	@GetMapping("/getProdPictures") // 이미지 파일명 조회 

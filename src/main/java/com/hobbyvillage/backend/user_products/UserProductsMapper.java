@@ -1,8 +1,6 @@
 package com.hobbyvillage.backend.user_products;
 
 import java.util.List;
-
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -117,22 +115,6 @@ public interface UserProductsMapper {
 			+ "INNER JOIN users u ON p.prodHost = u.nickname "
 			+ "WHERE p.prodCode=#{prodCode};")
 	UserProductsDTO getProductDetail(@Param("prodCode") String prodCode);
-	
-	// 찜 확인 
-	@Select("SELECT COUNT(*) FROM dibs WHERE email=#{email} AND prodCode=#{prodCode};")
-	int checkDibs(@Param("email") String email, @Param("prodCode") String prodCode);
-	
-	// 찜 등록 
-	@Insert("INSERT INTO dibs(email, prodCode) VALUES (#{email}, #{prodCode});")
-	void updateDibs(@Param("email") String email, @Param("prodCode") String prodCode);
-	
-	// 장바구니 확인
-	@Select("SELECT COUNT(*) FROM carts WHERE email=#{email} AND prodCode=#{prodCode};")
-	int checkCarts(@Param("email") String email, @Param("prodCode") String prodCode);
-	
-	// 장바구니 추가 
-	@Insert("INSERT INTO carts(email, prodCode, period) VALUES (#{email}, #{prodCode}, #{period});")
-	void addCart(@Param("email") String email, @Param("prodCode") String prodCode, @Param("period") String period);
 	
 	// -------------------------------------
 	

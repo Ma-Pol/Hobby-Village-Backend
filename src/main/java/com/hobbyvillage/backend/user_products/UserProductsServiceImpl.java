@@ -181,29 +181,9 @@ public class UserProductsServiceImpl implements UserProductsService {
 	public UserProductsDTO getProductDetail(String prodCode) {
 		return mapper.getProductDetail(prodCode);
 	}
-	
-	@Override
-	public int checkDibs(String email, String prodCode) {
-		return mapper.checkDibs(email, prodCode);
-	}
-	
-	@Override
-	public void updateDibs(String email, String prodCode) {
-		mapper.updateDibs(email, prodCode);
-	}
-	
-	@Override
-	public int checkCarts(String email, String prodCode) {
-		return mapper.checkCarts(email, prodCode);
-	}
-	
-	@Override
-	public void addCart(String email, String prodCode, String period) {
-		mapper.addCart(email, prodCode, period);
-	}
-	
+		
 	// ------------------------------------------
-
+	
 	@Override // 상품 이미지 파일명 조회 
 	public List<String> getProdPictures(String prodCode) {
 		return mapper.getProdPictures(prodCode);
