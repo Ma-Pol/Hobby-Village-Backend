@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 // 검색어(search) 유무 
 // 카테고리(category), 분류(sort)-전체/대여중/미대여,
@@ -125,6 +126,10 @@ public interface UserProductsMapper {
 	// 찜 등록 
 	@Insert("INSERT INTO dibs(email, prodCode) VALUES (#{email}, #{prodCode});")
 	void updateDibs(@Param("email") String email, @Param("prodCode") String prodCode);
+	
+	// 찜 갯수 추가
+	@Update("UPDATE products SET prodDibs=prodDibs+1 WHERE prodcode=#{prodCode};")
+	void updateDibCount(@Param("prodCode") String prodCode);
 	
 	// 장바구니 확인
 	@Select("SELECT COUNT(*) FROM carts WHERE email=#{email} AND prodCode=#{prodCode};")

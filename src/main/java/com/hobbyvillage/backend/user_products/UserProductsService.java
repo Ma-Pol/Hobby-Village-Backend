@@ -27,6 +27,7 @@ public interface UserProductsService {
 	UserProductsDTO getProductDetail(String prodCode);
 	int checkDibs(String email, String prodCode);
 	void updateDibs(String email, String prodCode);
+	void updateDibCount(String prodCode);
 	int checkCarts(String email, String prodCode);
 	void addCart(String email, String prodCode, String period);
 	// ----------------------------

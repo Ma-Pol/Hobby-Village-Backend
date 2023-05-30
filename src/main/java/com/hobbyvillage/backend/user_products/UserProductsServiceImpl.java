@@ -193,6 +193,11 @@ public class UserProductsServiceImpl implements UserProductsService {
 	}
 	
 	@Override
+	public void updateDibCount(String prodCode) {
+		mapper.updateDibCount(prodCode);
+	}
+
+	@Override
 	public int checkCarts(String email, String prodCode) {
 		return mapper.checkCarts(email, prodCode);
 	}

@@ -117,6 +117,7 @@ public class UserProductsController {
 	@GetMapping("/updateDibs")
 	public void updateDibs(@RequestParam(value="email") String email, @RequestParam(value="prodCode")String prodCode) {
 		service.updateDibs(email, prodCode);
+		service.updateDibCount(prodCode);
 	}
 	
 	@GetMapping("/checkCart")
