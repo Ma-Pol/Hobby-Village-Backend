@@ -44,19 +44,24 @@ public interface UserReviewsMapper {
 	@Insert("INSERT INTO reviewPictures(revwCode, revwPicture) VALUES(#{revwCode}, #{revwPicture});")
 	int insertReviewPictures(@Param("revwCode") String revwCode, @Param("revwPicture") String revwPicture);
 
-//
-//	// 리뷰 수정
-//	@Update("UPDATE reviews " + "SET revwTitle = #{revwTitle}, revwRate = #{revwRate}, revwContent = #{revwContent} "
-//			+ "where revwCode = #{revwCode}; ")
-//	int reviewsmodify(UserReviewsDTO userreviews);
-//
-//	// 리뷰 작성 상품명 조회
-//	@Select("SELECT prodCode, prodName FROM products " + "where prodCode = #{prodCode}")
-//	public UserReviewsDTO getreviewsproducts(String prodCode);
-//
-//	// 리뷰 작성
-//	@Insert("INSERT INTO reviews(prodCode, revwCode, revwTitle, revwRate, revwContent, revwWriter) "
-//			+ "VALUES(#{prodCode}, #{revwCode}, #{revwTitle}, #{revwRate}, #{revwContent}, #{revwWriter});")
-//	int reviewscreate(UserReviewsDTO userreviews);
+	// 리뷰 작성 전 주문 여부 확인
+	@Select("SELECT COUNT(*) FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber "
+			+ "WHERE o.odrEmail = #{email} AND op.prodCode = #{prodCode} AND "
+			+ "op.odrState NOT IN('결제 완료', '배송 준비 중', '배송 중');")
+	int checkOrders(@Param("email") String email, @Param("prodCode") String prodCode);
+
+	// 리뷰 작성 전 주문 여부 확인
+	@Select("SELECT COUNT(*) FROM reviews r INNER JOIN users u ON r.revwWriter = u.nickname "
+			+ "WHERE u.email = #{email} AND r.prodCode = #{prodCode};")
+	int checkReviewed(@Param("email") String email, @Param("prodCode") String prodCode);
+
+	// 리뷰 작성할 상품명 조회
+	@Select("SELECT prodName FROM products WHERE prodCode = #{prodCode};")
+	String getProdName(@Param("prodCode") String prodCode);
+
+	// 리뷰 작성 1: 리뷰 정보 저장
+	@Insert("INSERT INTO reviews(revwCode, prodCode, revwRate, revwTitle, revwContent, revwWriter) VALUES "
+			+ "(#{revwCode}, #{prodCode}, #{revwRate}, #{revwTitle}, #{revwContent}, #{revwWriter});")
+	int createReview(UserReviewsListsDTO reviewData);
 
 }

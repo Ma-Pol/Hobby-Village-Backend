@@ -72,23 +72,37 @@ public class UserReviewsController {
 		return userReviewsServiceImpl.modifyReviewPicture(revwCode, uploadImg);
 	}
 
-//
-//	// 리뷰 수정
-//	@PatchMapping("/reviews/modify")
-//	public int reviewsmodify(@RequestBody UserReviewsDTO userreviews) throws Exception {
-//		return userreviewsServiceImpl.reviewsmodify(userreviews);
-//	}
-//
-//	// 리뷰 작성 상품명 조회
-//	@GetMapping("/reviews/products/{prodCode}")
-//	public UserReviewsDTO getreviewsproducts(@PathVariable(value = "prodCode", required = true) String prodCode) {
-//		return userreviewsServiceImpl.getreviewsproducts(prodCode);
-//	}
-//
-//	// 리뷰 작성
-//	@PostMapping("/reviews/create/{prodCode}")
-//	public int reviewscreate(@RequestBody UserReviewsDTO userreviews) {
-//		return userreviewsServiceImpl.reviewscreate(userreviews);
-//	}
+	// 리뷰 작성 전 주문 여부 확인
+	@GetMapping("/checkOrders")
+	public int checkOrders(@RequestParam(value = "email", required = true) String email,
+			@RequestParam(value = "prodCode", required = true) String prodCode) {
+		return userReviewsServiceImpl.checkOrders(email, prodCode);
+	}
+	
+	// 리뷰 작성 전 리뷰 작성 여부 확인
+	@GetMapping("/checkReviewed")
+	public int checkReviewed(@RequestParam(value = "email", required = true) String email,
+			@RequestParam(value = "prodCode", required = true) String prodCode) {
+		return userReviewsServiceImpl.checkReviewed(email, prodCode);
+	}
+
+	// 상품명 조회
+	@GetMapping("/getProdName")
+	public String getProdName(@RequestParam(value = "prodCode", required = true) String prodCode) {
+		return userReviewsServiceImpl.getProdName(prodCode);
+	}
+
+	// 리뷰 작성 1: 리뷰 정보 저장
+	@PostMapping("/create")
+	public int createReview(@RequestBody UserReviewsListsDTO reviewData) {
+		return userReviewsServiceImpl.createReview(reviewData);
+	}
+
+	// 리뷰 작성 2: 리뷰 이미지 저장
+	@PostMapping("/upload/{revwCode}")
+	public int createReviewImages(@PathVariable(value = "revwCode", required = true) String revwCode,
+			@RequestParam(value = "uploadImg", required = true) MultipartFile[] uploadImg) throws IOException {
+		return userReviewsServiceImpl.createReviewImages(revwCode, uploadImg);
+	}
 
 }

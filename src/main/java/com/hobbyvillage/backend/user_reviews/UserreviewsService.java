@@ -15,7 +15,9 @@ public interface UserReviewsService {
 	ResponseEntity<byte[]> getReviewImage(String imageName) throws IOException;
 	int modifyReview(UserReviewsListsDTO reviewData);
 	int modifyReviewPicture(String revwCode, MultipartFile[] uploadImg) throws IOException;
-	
-//	UserReviewsDTO getreviewsproducts(String prodCode);
-//	int reviewscreate(UserReviewsDTO userreviews);
+	int checkOrders(String email, String prodCode);
+	int checkReviewed(String email, String prodCode);
+	String getProdName(String prodCode);
+	int createReview(UserReviewsListsDTO reviewData);
+	int createReviewImages(String revwCode, MultipartFile[] uploadImg) throws IOException;
 }

@@ -39,6 +39,32 @@ public class UserReviewsServiceImpl implements UserReviewsService {
 		mapper.deleteReviewPictures(revwCode);
 	}
 
+	// 리뷰 이미지 저장 메서드
+	private int createReviewPicture(String revwCode, MultipartFile[] uploadImg) throws IOException {
+		int result = 0;
+
+		// 이미지 개수만큼 반복
+		for (MultipartFile image : uploadImg) {
+			// 값이 없는 이미지가 아닌 경우(정상적인 이미지인 경우)
+			if (!image.isEmpty()) {
+				// 저장할 파일 명 설정(UUID를 사용해 파일명 중복을 피함)
+				String revwPicture = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+
+				// 파일 저장 위치
+				File file = new File(revwUploadPath, revwPicture);
+
+				// 여기서 실제 업로드가 이뤄집니다.
+				image.transferTo(file);
+
+				// DB에 파일명을 저장할 경우 이곳에서 처리하기
+				mapper.insertReviewPictures(revwCode, revwPicture);
+				result++;
+			}
+		}
+
+		return result;
+	}
+
 	// 리뷰 개수 조회
 	@Override
 	public int getReviewCount(String email) {
@@ -93,41 +119,41 @@ public class UserReviewsServiceImpl implements UserReviewsService {
 	public int modifyReviewPicture(String revwCode, MultipartFile[] uploadImg) throws IOException {
 		deleteReviewPicture(revwCode);
 
-		int result = 0;
-
-		// 이미지 개수만큼 반복
-		for (MultipartFile image : uploadImg) {
-			// 값이 없는 이미지가 아닌 경우(정상적인 이미지인 경우)
-			if (!image.isEmpty()) {
-				// 저장할 파일 명 설정(UUID를 사용해 파일명 중복을 피함)
-				String revwPicture = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-
-				// 파일 저장 위치
-				File file = new File(revwUploadPath, revwPicture);
-
-				// 여기서 실제 업로드가 이뤄집니다.
-				image.transferTo(file);
-
-				// DB에 파일명을 저장할 경우 이곳에서 처리하기
-				mapper.insertReviewPictures(revwCode, revwPicture);
-				result++;
-			}
-		}
+		int result = createReviewPicture(revwCode, uploadImg);
 
 		return result;
 	}
 
-//
-//	// 리뷰 작성 상품명 조회
-//	@Override
-//	public UserReviewsDTO getreviewsproducts(String prodCode) {
-//		return mapper.getreviewsproducts(prodCode);
-//	}
-//
-//	// 리뷰 작성
-//	@Override
-//	public int reviewscreate(UserReviewsDTO userreviews) {
-//		return mapper.reviewscreate(userreviews);
-//	}
+	// 리뷰 작성 전 주문 여부 확인
+	@Override
+	public int checkOrders(String email, String prodCode) {
+		return mapper.checkOrders(email, prodCode);
+	}
+	
+	// 리뷰 작성 전 리뷰 작성 여부 확인
+	@Override
+	public int checkReviewed(String email, String prodCode) {
+		return mapper.checkReviewed(email, prodCode);
+	}
+
+	// 상품명 조회
+	@Override
+	public String getProdName(String prodCode) {
+		return mapper.getProdName(prodCode);
+	}
+
+	// 리뷰 등록 1: 리뷰 정보 등록
+	@Override
+	public int createReview(UserReviewsListsDTO reviewData) {
+		return mapper.createReview(reviewData);
+	}
+
+	// 리뷰 등록 2: 리뷰 이미지 저장
+	@Override
+	public int createReviewImages(String revwCode, MultipartFile[] uploadImg) throws IOException {
+		int result = createReviewPicture(revwCode, uploadImg);
+
+		return result;
+	}
 
 }
