@@ -137,6 +137,12 @@ public class UserProductsController {
 		service.addCart(email, prodCode, period);
 	}
 
+	@GetMapping("/checkOrders")
+	public int checkOrders(@RequestParam(value = "email", required = true) String email,
+			@RequestParam(value = "prodCode", required = true) String prodCode) {
+		return service.checkOrders(email, prodCode);
+	}
+
 	// ----------------------------
 
 	@GetMapping("/getProdPicture") // 이미지 파일명 단일 조회

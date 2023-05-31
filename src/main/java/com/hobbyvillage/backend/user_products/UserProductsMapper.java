@@ -94,13 +94,13 @@ public interface UserProductsMapper {
 	// -------------------------------------
 
 	// 상품 실재 여부 확인
-	@Select("SELECT COUNT(*) FROM products WHERE prodCode = #{prodCode};")
+	@Select("SELECT COUNT(*) FROM products WHERE prodCode = #{prodCode} AND prodDeleted = 0;")
 	int checkProduct(@Param("prodCode") String prodCode);
 
 	// 상품 상세 조회
-	@Select("SELECT p.prodCode, p.prodCategory, p.prodBrand, p.prodName, p.prodContent, p.prodPrice, "
-			+ "p.prodHost, p.prodRegiDate, p.prodDibs, p.prodIsRental, u.profPicture " + "FROM products p "
-			+ "INNER JOIN users u ON p.prodHost = u.nickname " + "WHERE p.prodCode=#{prodCode};")
+	@Select("SELECT p.prodCode, p.prodCategory, p.prodBrand, p.prodName, p.prodContent, p.prodPrice, p.prodShipping, "
+			+ "p.prodHost, p.prodRegiDate, p.prodDibs, p.prodIsRental, u.profPicture FROM products p "
+			+ "INNER JOIN users u ON p.prodHost = u.nickname WHERE p.prodCode=#{prodCode};")
 	UserProductsDTO getProductDetail(@Param("prodCode") String prodCode);
 
 	// 찜 확인
@@ -123,12 +123,18 @@ public interface UserProductsMapper {
 	@Insert("INSERT INTO carts(email, prodCode, period) VALUES (#{email}, #{prodCode}, #{period});")
 	void addCart(@Param("email") String email, @Param("prodCode") String prodCode, @Param("period") String period);
 
+	// 결제 페이지 이동 전 기주문 여부 확인
+	@Select("SELECT COUNT(*) FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber "
+			+ "WHERE o.odrEmail = #{email} AND op.prodCode = #{prodCode} AND "
+			+ "op.odrState NOT IN ('반납 완료','취소 처리 완료');")
+	int checkOrders(@Param("email") String email, @Param("prodCode") String prodCode);
+
 	// -------------------------------------
 
 	// 상품 이미지 파일명 단일 조회
 	@Select("SELECT prodPicture FROM productPictures WHERE prodCode = #{prodCode} ORDER BY prodPicture LIMIT 1;")
 	String getProdPicture(@Param("prodCode") String prodCode);
-	
+
 	// 상품 이미지 파일명 전체 조회
 	@Select("SELECT prodPicture FROM productPictures WHERE prodCode = #{prodCode} ORDER BY prodPicture;")
 	List<String> getProdPictures(@Param("prodCode") String prodCode);

@@ -212,13 +212,18 @@ public class UserProductsServiceImpl implements UserProductsService {
 		mapper.addCart(email, prodCode, period);
 	}
 
+	@Override
+	public int checkOrders(String email, String prodCode) {
+		return mapper.checkOrders(email, prodCode);
+	}
+
 	// ------------------------------------------
 
 	@Override // 상품 이미지 파일명 단일 조회
 	public String getProdPicture(String prodCode) {
 		return mapper.getProdPicture(prodCode);
 	}
-	
+
 	@Override // 상품 이미지 파일명 전체 조회
 	public List<String> getProdPictures(String prodCode) {
 		return mapper.getProdPictures(prodCode);

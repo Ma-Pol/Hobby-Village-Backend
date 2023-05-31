@@ -31,6 +31,7 @@ public interface UserProductsService {
 	void updateDibCount(String prodCode);
 	int checkCarts(String email, String prodCode);
 	void addCart(String email, String prodCode, String period);
+	int checkOrders(String email, String prodCode);
 	// ----------------------------
 	String getProdPicture(String prodCode);
 	List<String> getProdPictures(String prodCode);
