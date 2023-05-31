@@ -23,5 +23,16 @@ public interface UserProductsService {
 	// 상품 목록 조회 - 검색o & not 평점순
 	List<UserProductsDTO> getProductListS(String category, String sort, String array, String keyword, int pageNum);
 	// ----------------------------
+	// 상품 상세 조회 
+	int checkProduct(String prodCode);
+	UserProductsDTO getProductDetail(String prodCode);
+	int checkDibs(String email, String prodCode);
+	void updateDibs(String email, String prodCode);
+	void updateDibCount(String prodCode);
+	int checkCarts(String email, String prodCode);
+	void addCart(String email, String prodCode, String period);
+	// ----------------------------
+	String getProdPicture(String prodCode);
 	List<String> getProdPictures(String prodCode);
+	String getBrandImgName(String prodCode);
 }

@@ -15,6 +15,7 @@ import com.hobbyvillage.backend.Common;
 @RestController
 @RequestMapping("/products/lists")
 public class UserProductsController {
+
 	private UserProductsServiceImpl service;
 
 	public UserProductsController(UserProductsServiceImpl service) {
@@ -82,6 +83,7 @@ public class UserProductsController {
 		}
 	}
 
+	// 상품 목록 조회 (브랜드관)
 	@GetMapping("/brandProdList")
 	public List<UserProductsDTO> getBrandProductList(@RequestParam(value = "brand", required = true) String brand,
 			@RequestParam(value = "sort", required = true) String sort,
@@ -97,19 +99,66 @@ public class UserProductsController {
 		}
 	}
 
+	// 상품 실재 여부 확인
+	@GetMapping("/checkProduct")
+	public int checkProduct(@RequestParam(value = "prodCode", required = true) String prodCode) {
+		return service.checkProduct(prodCode);
+	}
+
+	// 상품 상세 조회
+	@GetMapping("/getProductDetail")
+	public UserProductsDTO getProductDetail(@RequestParam(value = "prodCode", required = true) String prodCode) {
+		return service.getProductDetail(prodCode);
+	}
+
+	@GetMapping("/checkDibs")
+	public int checkDibs(@RequestParam(value = "email", required = true) String email,
+			@RequestParam(value = "prodCode") String prodCode) {
+		return service.checkDibs(email, prodCode);
+	}
+
+	@GetMapping("/updateDibs")
+	public void updateDibs(@RequestParam(value = "email", required = true) String email,
+			@RequestParam(value = "prodCode", required = true) String prodCode) {
+		service.updateDibs(email, prodCode);
+		service.updateDibCount(prodCode);
+	}
+
+	@GetMapping("/checkCart")
+	public int checkCarts(@RequestParam(value = "email", required = true) String email,
+			@RequestParam(value = "prodCode") String prodCode) {
+		return service.checkCarts(email, prodCode);
+	}
+
+	@GetMapping("/addCart")
+	public void addCart(@RequestParam(value = "email", required = true) String email,
+			@RequestParam(value = "prodCode", required = true) String prodCode,
+			@RequestParam(value = "period", required = true) String period) {
+		service.addCart(email, prodCode, period);
+	}
+
 	// ----------------------------
 
-	@GetMapping("/getProdPictures") // 이미지 파일명 조회
-	public List<String> getProdPictures(@RequestParam String prodCode) {
+	@GetMapping("/getProdPicture") // 이미지 파일명 단일 조회
+	public String getProdPicture(@RequestParam(value = "prodCode", required = true) String prodCode) {
+		return service.getProdPicture(prodCode);
+	}
+
+	@GetMapping("/getProdPictures") // 이미지 파일명 전체 조회
+	public List<String> getProdPictures(@RequestParam(value = "prodCode", required = true) String prodCode) {
 		return service.getProdPictures(prodCode);
+	}
+
+	@GetMapping("/getBrandImgName") // 브랜드 로고 파일명 조회
+	public String getBrandImgName(@RequestParam(value = "prodCode", required = true) String prodCode) {
+		return service.getBrandImgName(prodCode);
 	}
 
 	// macOS 경로: //Uploaded//ProductsImage
 	// 윈도우 경로: \\Uploaded\\ProductsImage
 	@GetMapping("/upload/{fileName}") // 이미지 불러오기
-	public ResponseEntity<byte[]> getReqeustFileData(
-			@PathVariable(value = "fileName", required = true) String fileName) {
-		File file = new File(Common.uploadDir + "//Uploaded//ProductsImage", fileName);
+	public ResponseEntity<byte[]> requestProdPics(@PathVariable(value = "fileName", required = true) String fileName) {
+		File file = new File(Common.uploadDir + "\\Uploaded\\ProductsImage", fileName);
 		ResponseEntity<byte[]> result = null;
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -120,4 +169,5 @@ public class UserProductsController {
 		}
 		return result;
 	}
+
 }

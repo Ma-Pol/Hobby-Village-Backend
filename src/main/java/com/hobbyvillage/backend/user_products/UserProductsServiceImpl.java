@@ -18,7 +18,7 @@ public class UserProductsServiceImpl implements UserProductsService {
 		if (category.equals("all")) {
 			category = "prodCategory IS NOT NULL";
 		} else {
-			category = "prodCategory=\"" + category + "\"";
+			category = "prodCategory = '" + category + "'";
 		}
 		return category;
 	}
@@ -28,7 +28,7 @@ public class UserProductsServiceImpl implements UserProductsService {
 		if (brand.equals("all")) {
 			brand = "prodBrand IS NOT NULL";
 		} else {
-			brand = "prodBrand=\"" + brand + "\"";
+			brand = "prodBrand = '" + brand + "'";
 		}
 		return brand;
 	}
@@ -50,7 +50,7 @@ public class UserProductsServiceImpl implements UserProductsService {
 		if (category.equals("all")) {
 			category = "p.prodCategory IS NOT NULL";
 		} else {
-			category = "p.prodCategory=\"" + category + "\"";
+			category = "p.prodCategory = '" + category + "'";
 		}
 		return category;
 	}
@@ -60,7 +60,7 @@ public class UserProductsServiceImpl implements UserProductsService {
 		if (brand.equals("all")) {
 			brand = "p.prodBrand IS NOT NULL";
 		} else {
-			brand = "p.prodBrand=\"" + brand + "\"";
+			brand = "p.prodBrand = '" + brand + "'";
 		}
 		return brand;
 	}
@@ -177,9 +177,56 @@ public class UserProductsServiceImpl implements UserProductsService {
 
 	// ------------------------------------------
 
-	@Override // 상품 이미지 파일명 조회
+	@Override
+	public int checkProduct(String prodCode) {
+		return mapper.checkProduct(prodCode);
+	}
+
+	@Override // 상품 상세 조회
+	public UserProductsDTO getProductDetail(String prodCode) {
+		return mapper.getProductDetail(prodCode);
+	}
+
+	@Override
+	public int checkDibs(String email, String prodCode) {
+		return mapper.checkDibs(email, prodCode);
+	}
+
+	@Override
+	public void updateDibs(String email, String prodCode) {
+		mapper.updateDibs(email, prodCode);
+	}
+
+	@Override
+	public void updateDibCount(String prodCode) {
+		mapper.updateDibCount(prodCode);
+	}
+
+	@Override
+	public int checkCarts(String email, String prodCode) {
+		return mapper.checkCarts(email, prodCode);
+	}
+
+	@Override
+	public void addCart(String email, String prodCode, String period) {
+		mapper.addCart(email, prodCode, period);
+	}
+
+	// ------------------------------------------
+
+	@Override // 상품 이미지 파일명 단일 조회
+	public String getProdPicture(String prodCode) {
+		return mapper.getProdPicture(prodCode);
+	}
+	
+	@Override // 상품 이미지 파일명 전체 조회
 	public List<String> getProdPictures(String prodCode) {
 		return mapper.getProdPictures(prodCode);
+	}
+
+	@Override // 상품 브랜드 로고 파일명 조회
+	public String getBrandImgName(String prodCode) {
+		return mapper.getBrandImgName(prodCode);
 	}
 
 }

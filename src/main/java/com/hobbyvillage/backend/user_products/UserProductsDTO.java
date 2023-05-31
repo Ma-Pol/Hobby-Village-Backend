@@ -29,8 +29,10 @@ public class UserProductsDTO {
 	private Integer prodShipping;
 	private Integer reqCode;
 	private Integer userCode;
+	private String profPicture; // 상품 호스트 프로필 사진 
 	private Float revwRate;
 	private List<String> prodTag;
 	private List<String> prodPicture;
 	private String brand;
+	private String brandLogo;
 }
