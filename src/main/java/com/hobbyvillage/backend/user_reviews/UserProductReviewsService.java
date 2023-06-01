@@ -8,6 +8,5 @@ public interface UserProductReviewsService {
 	int checkIsReported(String email, String revwCode);
 	void reportReview(String email, String revwCode);
 	List<String> getProdRevwPics(String revwCode);
-	String getProfPicture(String revwWriter);
 	void plusRevwReport(String revwCode);
 }

@@ -37,7 +37,4 @@ public interface UserProductReviewsMapper {
 	@Select("SELECT revwPicture FROM reviewPictures WHERE revwCode=#{revwCode} ORDER BY revwPicture ASC;")
 	List<String> getProdRevwPics(@Param("revwCode") String revwCode);
 
-	// 리뷰별 작성자 프로필 이미지 파일명 조회
-	@Select("SELECT profPicture FROM users WHERE nickname=#{revwWriter}")
-	String getProfPicture(@Param("revwWriter") String revwWriter);
 }

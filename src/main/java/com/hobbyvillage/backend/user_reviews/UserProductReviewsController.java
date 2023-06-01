@@ -60,12 +60,6 @@ public class UserProductReviewsController {
 		return userProductReviewsServiceImpl.getProdRevwPics(revwCode);
 	}
 
-	// 프로필 이미지 파일명 조회
-	@GetMapping("/profPic")
-	public String getProfPicture(@RequestParam(value = "revwWriter") String revwWriter) {
-		return userProductReviewsServiceImpl.getProfPicture(revwWriter);
-	}
-
 	// macOS 경로: //Uploaded//ReviewsImage
 	// 윈도우 경로: \\Uploaded\\ReviewsImage
 	@GetMapping("/upload/{fileName}") // 리뷰 이미지 불러오기

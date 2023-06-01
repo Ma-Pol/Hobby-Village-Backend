@@ -43,9 +43,4 @@ public class UserProductReviewsServiceImpl implements UserProductReviewsService 
 		return mapper.getProdRevwPics(revwCode);
 	}
 
-	@Override
-	public String getProfPicture(String revwWriter) {
-		return mapper.getProfPicture(revwWriter);
-	}
-
 }
