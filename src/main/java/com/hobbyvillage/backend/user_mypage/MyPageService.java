@@ -13,4 +13,12 @@ public interface MyPageService {
 	List<MyPageCouponsDTO> getCouponList(String email);
 	void deleteCoupon(String email, int couponCode);
 	String modifyProfPicture(String email, String profPicture, MultipartFile[] uploadImg) throws IOException;
+	int getRequestCountAll(String reqEmail);
+	List<MyPageRequestDTO> getRequestListAll(String reqEmail, int pageNum);
+	int getRequestCount(String reqEmail, String reqProgress);
+	List<MyPageRequestDTO> getRequestList(String reqEmail, String reqProgress, int pageNum);
+	List<String> getRequestPictures(String reqCode);
+	void withdrawRequest(String reqCode);
+	void updateAccount(String reqBank, String reqAccountNum, String reqCode);
 }
+

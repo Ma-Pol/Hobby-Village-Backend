@@ -81,9 +81,9 @@ public class AdminProductsController {
 		File file = null;
 
 		if (path.equals("product")) {
-			file = new File(Common.uploadDir + "\\Uploaded\\ProductsImage", fileName);
+			file = new File(Common.uploadDir + "//Uploaded//ProductsImage", fileName);
 		} else {
-			file = new File(Common.uploadDir + "\\Uploaded\\RequestsFile", fileName);
+			file = new File(Common.uploadDir + "//Uploaded//RequestsFile", fileName);
 		}
 
 		ResponseEntity<byte[]> result = null;

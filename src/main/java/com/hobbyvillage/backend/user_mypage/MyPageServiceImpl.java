@@ -22,7 +22,7 @@ public class MyPageServiceImpl implements MyPageService {
 		this.mapper = mapper;
 	}
 
-	private String profileUploadPath = Common.uploadDir + "\\Uploaded\\UserProfileImage\\";
+	private String profileUploadPath = Common.uploadDir + "//Uploaded//UserProfileImage//";
 
 	// 유저 프로필 사진 출력
 	@Override
@@ -89,5 +89,43 @@ public class MyPageServiceImpl implements MyPageService {
 
 		return profPicture;
 	}
+	
+	@Override
+	public int getRequestCountAll(String reqEmail) {
+		return mapper.getRequestCountAll(reqEmail);
+	}
+
+	@Override
+	public List<MyPageRequestDTO> getRequestListAll(String reqEmail, int pageNum) {
+		return mapper.getRequestListAll(reqEmail, pageNum);
+	}
+
+	@Override
+	public int getRequestCount(String reqEmail, String reqProgress) {
+		return mapper.getRequestCount(reqEmail, reqProgress);
+	}
+
+	@Override
+	public List<MyPageRequestDTO> getRequestList(String reqEmail, String reqProgress, int pageNum) {
+		return mapper.getRequestList(reqEmail, reqProgress, pageNum);
+	}
+
+	@Override
+	public List<String> getRequestPictures(String reqCode) {
+		return mapper.getRequestPictures(reqCode);
+	}
+
+	@Override
+	public void withdrawRequest(String reqCode) {
+		mapper.withdrawRequest(reqCode);
+	}
+
+	@Override
+	public void updateAccount(String reqBank, String reqAccountNum, String reqCode) {
+		mapper.updateAccount(reqBank, reqAccountNum, reqCode);
+	}
+	
+	
+	
 
 }

@@ -23,7 +23,7 @@ public class MyOrderServiceImpl implements MyOrderPageService {
 		this.mapper = mapper;
 	}
 
-	private String profileUploadPath = Common.uploadDir + "\\Uploaded\\ProductsImage\\";
+	private String profileUploadPath = Common.uploadDir + "//Uploaded//ProductsImage//";
 
 	private String odrStateFiltering(String odrState) {
 		if (odrState.equals("payment-completed")) {
