@@ -41,7 +41,7 @@ public interface AdminStatsMapper {
 			+ "(SELECT DATE_FORMAT(reqDate, '%Y-%m') AS month, COUNT(*) AS sellRequestCount FROM requests WHERE reqSort = '판매' GROUP BY month) s "
 			+ "LEFT JOIN "
 			+ "(SELECT DATE_FORMAT(reqDate, '%Y-%m') AS month, COUNT(*) AS consignRequestCount FROM requests WHERE reqSort = '위탁' GROUP BY month) c "
-			+ "ON s.month = c.month\r\n"
+			+ "ON s.month = c.month "
 			+ "UNION "
 			+ "SELECT s.month, IFNULL(s.sellRequestCount, 0) AS sellRequestCount, IFNULL(c.consignRequestCount, 0) AS consignRequestCount "
 			+ "FROM "
