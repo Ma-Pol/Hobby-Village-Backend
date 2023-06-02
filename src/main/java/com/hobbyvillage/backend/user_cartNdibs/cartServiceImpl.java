@@ -5,19 +5,25 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class cartNdibsServiceImpl implements cartNdibsService {
+public class cartServiceImpl implements cartService {
 	
-    private cartNdibsMapper mapper;
+    private cartMapper mapper;
     
-    public cartNdibsServiceImpl(cartNdibsMapper mapper) {
+    public cartServiceImpl(cartMapper mapper) {
         this.mapper = mapper;
     }
 
     // 장바구니 리스트 조회
 	@Override
-	public List<cartNdibsDTO> getcartlists(String email, String category) {
+	public List<cartDTO> getcartlists(String email, String category) {
 		category = category(category);
 		return mapper.getcartlists(email, category);
+	}
+	
+	// 장바구니 리스트 조회(카테고리 수량체크)
+	@Override
+	public List<cartDTO> getcategorylist(String email) {
+		return mapper.getcategorylist(email);
 	}
 	
 	// 상품 사진 조회
@@ -28,8 +34,20 @@ public class cartNdibsServiceImpl implements cartNdibsService {
 	
 	// 대여기간 변경
 	@Override
-	public int modifyperiod(int cartCode) {
-		return mapper.modifyperiod(cartCode);
+	public int modifyperiod(int cartCode, int period) {
+		return mapper.modifyperiod(cartCode, period);
+	}
+	
+	// 장바구니 삭제
+	@Override
+	public int deletecart(int cartCode) {
+		return mapper.deletecart(cartCode);
+	}
+	
+	// 장바구니 선택 품목 삭제
+	@Override
+	public List<cartDTO> deletecartlist(int cartCode) {
+		return mapper.deletecartlist(cartCode);
 	}
 	
 	// 카테고리 설정
@@ -43,5 +61,6 @@ public class cartNdibsServiceImpl implements cartNdibsService {
 		}
 	return category;
 	}
+	
 	
 }

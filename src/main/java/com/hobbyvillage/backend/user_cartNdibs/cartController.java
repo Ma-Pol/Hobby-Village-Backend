@@ -9,9 +9,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,33 +20,54 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hobbyvillage.backend.UploadDir;
 
 @RestController
-public class cartNdibsController {
+public class cartController {
 	
-    private cartNdibsServiceImpl cartNdibsServiceImpl;
+    private cartServiceImpl cartServiceImpl;
     
-    public cartNdibsController(cartNdibsServiceImpl cartNdibsServiceImpl) {
-        this.cartNdibsServiceImpl = cartNdibsServiceImpl;
+    public cartController(cartServiceImpl cartServiceImpl) {
+        this.cartServiceImpl = cartServiceImpl;
     }
     
     // 장바구니 리스트 조회
     @RequestMapping("/carts/{email}/lists")
-	public List<cartNdibsDTO> getcartlists (
+	public List<cartDTO> getcartlists (
 			@PathVariable("email") String email,
 			@RequestParam(value = "category", required = true) String category) {
-		return cartNdibsServiceImpl.getcartlists(email, category);
+		return cartServiceImpl.getcartlists(email, category);
+	}
+	
+	// 장바구니 리스트 조회(카테고리 수량체크)
+	 @RequestMapping("/carts/{email}/lists/item")
+	public List<cartDTO> getcategorylist(
+			@PathVariable("email") String email) {
+		return cartServiceImpl.getcategorylist(email);
 	}
 	
 	// 상품 사진 조회
 	@RequestMapping("/carts/getPhoto")
 	public String getcartitems (
 			@RequestParam(value = "prodCode", required = true) String prodCode) {
-		return cartNdibsServiceImpl.getcartitems(prodCode);
+		return cartServiceImpl.getcartitems(prodCode);
 	}
 	
 	// 대여기간 변경
-	@PatchMapping("carts/period/modify/{cartCode}")
-	public int modifyperiod(@RequestParam(value = "cartCode", required = true) int cartCode) {
-		return cartNdibsServiceImpl.modifyperiod(cartCode);
+	@PostMapping("/carts/{period}/modify/{cartCode}")
+	public int modifyperiod(
+			@PathVariable("cartCode") int cartCode,
+			@PathVariable("period") int period) {
+		return cartServiceImpl.modifyperiod(cartCode, period);
+	}
+	
+	// 장바구니 삭제
+	@DeleteMapping("/carts/delete/{cartCode}")
+	public int deletecart(@PathVariable(value = "cartCode", required = true) int cartCode) {
+		return cartServiceImpl.deletecart(cartCode);
+	}
+	
+	// 장바구니 선택 품목 삭제
+	@DeleteMapping("/carts/delete/lists/{cartCode}")
+	public List<cartDTO> deletecartlist(@PathVariable(value = "cartCode", required = true) int cartCode) {
+		return cartServiceImpl.deletecartlist(cartCode);
 	}
     
     // 이미지 출력
