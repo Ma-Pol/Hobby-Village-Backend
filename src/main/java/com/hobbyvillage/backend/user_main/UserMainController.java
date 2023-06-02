@@ -52,7 +52,7 @@ public class UserMainController {
 
 		if (!imageName.equals("undefined")) {
 
-			File file = new File(Common.uploadDir + "\\Uploaded\\ProductsImage", imageName);
+			File file = new File(Common.uploadDir + "//Uploaded//ProductsImage", imageName);
 			result = null;
 
 			try {

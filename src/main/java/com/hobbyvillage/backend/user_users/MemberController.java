@@ -32,7 +32,7 @@ public class MemberController {
 	@GetMapping("/profPicture/{profPicture}")
 	public ResponseEntity<byte[]> getReqeustFileData(
 			@PathVariable(value = "profPicture", required = true) String profPicture) {
-		File file = new File(Common.uploadDir + "\\Uploaded\\UserProfileImage", profPicture);
+		File file = new File(Common.uploadDir + "//Uploaded//UserProfileImage", profPicture);
 		ResponseEntity<byte[]> result = null;
 
 		try {
