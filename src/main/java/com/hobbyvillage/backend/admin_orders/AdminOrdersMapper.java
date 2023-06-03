@@ -160,9 +160,9 @@ public interface AdminOrdersMapper {
 	int giveSavedMoney(@Param("email") String email, @Param("savedMoney") int savedMoney);
 
 	// Scheduled: 상품의 배송 상태 파악을 위해 courierCompany와 trackingNumber 목록 조회
-//	@Select("SELECT op.opCode, op.courierCompany, op.trackingNumber, o.odrPhone "
-//			+ "FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber " + "WHERE odrState = '배송 중';")
-//	List<AdminOrdersTrackingDTO> getTrackingData();
+	@Select("SELECT op.opCode, op.courierCompany, op.trackingNumber, o.odrPhone "
+			+ "FROM orderProducts op INNER JOIN orders o ON op.odrNumber = o.odrNumber " + "WHERE odrState = '배송 중';")
+	List<AdminOrdersTrackingDTO> getTrackingData();
 
 	// Scheduled: 상품이 배송 왼료되었을 때 odrState, deliDate, deadline 변경
 	@Update("UPDATE orderProducts SET odrState = '배송 준비 중', deliDate = now(), "

@@ -398,40 +398,40 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 	}
 
 	// 1시간 15분마다 상품의 배송 상태를 파악
-//	@Scheduled(fixedDelay = 4500000)
-//	private void deliveryTracking() {
-//		LocalDateTime now = LocalDateTime.now();
-//		List<AdminOrdersTrackingDTO> trackingList = mapper.getTrackingData();
-//
-//		System.out.println(now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초")));
-//		System.out.println("===================================================");
-//		for (AdminOrdersTrackingDTO trackingData : trackingList) {
-//			try {
-//				// true 가 출력되면 배송 완료
-//				boolean isComplete = trackingResult(trackingData);
-//
-//				if (isComplete) {
-//					// 주문 상태 및 deliDate, deadline 변경
-//					mapper.deliveryCompleted(trackingData.getOpCode());
-//
-//					// 여기서 문자메세지 발송 준비
-//					AdminOrdersTrackingDTO smsData = mapper.getProdNameAndDeadline(trackingData.getOpCode());
-//					String phone = trackingData.getOdrPhone();
-//					String prodName = smsData.getProdName();
-//					Date deadline = smsData.getDeadline();
-//
-//					String message = "안녕하세요, 취미빌리지입니다.\n\n고객님께서 주문하신 상품 [" + prodName + "] 이(가) 배송지에 도착했음을 알립니다.\n\n["
-//							+ prodName + "] 을(를) 통해 즐거운 취미 생활을 즐기시기를 바랍니다.\n\n반납 기한: [" + deadline + "]";
-//
-//					Common.sendMessage(message, phone);
-//				}
-//
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		System.out.println("===================================================\n");
-//	}
+	@Scheduled(fixedDelay = 4500000)
+	private void deliveryTracking() {
+		LocalDateTime now = LocalDateTime.now();
+		List<AdminOrdersTrackingDTO> trackingList = mapper.getTrackingData();
+
+		System.out.println(now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초")));
+		System.out.println("===================================================");
+		for (AdminOrdersTrackingDTO trackingData : trackingList) {
+			try {
+				// true 가 출력되면 배송 완료
+				boolean isComplete = trackingResult(trackingData);
+
+				if (isComplete) {
+					// 주문 상태 및 deliDate, deadline 변경
+					mapper.deliveryCompleted(trackingData.getOpCode());
+
+					// 여기서 문자메세지 발송 준비
+					AdminOrdersTrackingDTO smsData = mapper.getProdNameAndDeadline(trackingData.getOpCode());
+					String phone = trackingData.getOdrPhone();
+					String prodName = smsData.getProdName();
+					Date deadline = smsData.getDeadline();
+
+					String message = "안녕하세요, 취미빌리지입니다.\n\n고객님께서 주문하신 상품 [" + prodName + "] 이(가) 배송지에 도착했음을 알립니다.\n\n["
+							+ prodName + "] 을(를) 통해 즐거운 취미 생활을 즐기시기를 바랍니다.\n\n반납 기한: [" + deadline + "]";
+
+					Common.sendMessage(message, phone);
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("===================================================\n");
+	}
 
 	// 매일 오후 12시 30분마다 상품 반납일을 체크 후 자동 메세지 전송
 	@Scheduled(cron = "0 30 12 * * *")
