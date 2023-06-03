@@ -14,4 +14,3 @@ public interface MyPageService {
 	void deleteCoupon(String email, int couponCode);
 	String modifyProfPicture(String email, String profPicture, MultipartFile[] uploadImg) throws IOException;
 }
-
