@@ -22,7 +22,7 @@ public interface UserProductReviewsMapper {
 	List<UserProductReviewsDTO> getProdRevwList(@Param("prodCode") String prodCode);
 
 	// 리뷰 신고 여부 확인
-	@Select("SELECT COUNT(#{email}) FROM reviewReports WHERE revwCode=#{revwCode};")
+	@Select("SELECT COUNT(*) FROM reviewReports WHERE email=#{email} AND revwCode=#{revwCode};")
 	int checkIsReported(@Param("email") String email, @Param("revwCode") String revwCode);
 
 	// 리뷰 신고
