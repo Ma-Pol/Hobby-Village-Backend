@@ -8,4 +8,5 @@ public interface AdminStatsService {
 	List<MonthlyOrderDTO> getMonthlyOrders();
 	List<MonthlyRequestDTO> getMonthlyRequests();
 	List<MonthlyReviewDTO> getMonthlyReviews();
+	List<MonthlyUserDTO> getMonthlyUsers();
 }

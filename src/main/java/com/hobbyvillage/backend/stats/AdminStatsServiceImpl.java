@@ -55,4 +55,9 @@ public class AdminStatsServiceImpl implements AdminStatsService {
 		return mapper.getMonthlyReviews();
 	}
 
+	// 월별 가입/탈퇴 회원 수 현황 조회
+	@Override
+	public List<MonthlyUserDTO> getMonthlyUsers() {
+		return mapper.getMonthlyUsers();
+	}
 }

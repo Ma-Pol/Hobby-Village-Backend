@@ -23,7 +23,19 @@ public interface UserDibMapper {
 			+ "WHERE d.email = #{email} ${filter};")
 	List<UserDibDTO> getDibList(@Param("email") String email, @Param("filter") String filter);
 
-	// 찜 상품 삭제
+	// 찜 상품 삭제 1: 찜 횟수 감소
+	@Update("UPDATE products SET prodDibs = prodDibs - 1 WHERE prodCode = #{prodCode};")
+	void discountprodDibs(@Param("prodCode") String prodCode);
+
+	// 찜 상품 삭제 2: 찜 목록 삭제
 	@Delete("DELETE FROM dibs WHERE dibCode = #{dibCode};")
 	int deleteDib(@Param("dibCode") int dibCode);
+
+	// 찜 상품 장바구니 존재 여부 확인
+	@Select("SELECT COUNT(*) FROM carts WHERE email = #{email} AND prodCode = #{prodCode};")
+	boolean checkSelectedDib(@Param("email") String email, @Param("prodCode") String prodCode);
+
+	// 찜 상품 장바구니 추가
+	@Insert("INSERT INTO carts(email, prodCode, period) VALUES(#{email}, #{prodCode}, 7);")
+	int insertSelectedDib(@Param("email") String email, @Param("prodCode") String prodCode);
 }

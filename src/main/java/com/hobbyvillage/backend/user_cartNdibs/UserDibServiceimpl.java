@@ -52,7 +52,8 @@ public class UserDibServiceimpl implements UserDibService {
 
 	// 찜 단일 상품 삭제
 	@Override
-	public int deleteDib(int dibCode) {
+	public int deleteDib(int dibCode, String prodCode) {
+		mapper.discountprodDibs(prodCode);
 		return mapper.deleteDib(dibCode);
 	}
 
@@ -62,11 +63,28 @@ public class UserDibServiceimpl implements UserDibService {
 		int result = 0;
 
 		for (UserDibCodeDTO userDibCode : dibList) {
-			deleteDib(userDibCode.getDibCode());
+			deleteDib(userDibCode.getDibCode(), userDibCode.getProdCode());
 			result++;
 		}
 
 		return result;
 	}
 
+	// 찜 선택 상품 장바구니 추가
+	@Override
+	public int insertSelectedDib(String email, List<UserDibDTO> dibList) {
+		int result = 0;
+
+		for (UserDibDTO dibData : dibList) {
+			String prodCode = dibData.getProdCode();
+
+			if (!mapper.checkSelectedDib(email, prodCode)) {
+				mapper.insertSelectedDib(email, prodCode);
+				result++;
+			}
+
+		}
+
+		return result;
+	}
 }

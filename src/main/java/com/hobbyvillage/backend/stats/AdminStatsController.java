@@ -43,4 +43,10 @@ public class AdminStatsController {
 	public List<MonthlyReviewDTO> getMonthlyReviews() {
 		return adminStatsServiceImpl.getMonthlyReviews();
 	}
+
+	// 월별 가입/탈퇴 회원 수 현황 조회
+	@GetMapping("/monthly-user")
+	public List<MonthlyUserDTO> getMonthlyUsers() {
+		return adminStatsServiceImpl.getMonthlyUsers();
+	}
 }

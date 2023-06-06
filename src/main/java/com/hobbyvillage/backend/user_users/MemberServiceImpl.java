@@ -151,8 +151,9 @@ public class MemberServiceImpl {
 
 		List<String> reviewImages = mapper.getReviewPictures(nickname);
 		deletePicture(reviewImages, "REVIEW");
+		mapper.deleteUser(email);
 
-		return mapper.deleteUser(email);
+		return mapper.insertDeleteUserCount();
 	}
 
 }

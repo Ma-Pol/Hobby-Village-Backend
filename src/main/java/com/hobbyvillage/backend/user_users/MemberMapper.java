@@ -71,5 +71,9 @@ public interface MemberMapper {
 
 	// 회원 탈퇴 과정 4: 회원 삭제
 	@Delete("DELETE FROM users WHERE email = #{email};")
-	int deleteUser(@Param("email") String email);
+	void deleteUser(@Param("email") String email);
+
+	// 회원 탈퇴 과정 5: 회원 삭제 카운트 증가
+	@Insert("INSERT INTO deletedUserCount VALUE();")
+	int insertDeleteUserCount();
 }

@@ -8,4 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 public class UserDibCodeDTO {
 	private Integer dibCode;
+	private String prodCode;
 }
