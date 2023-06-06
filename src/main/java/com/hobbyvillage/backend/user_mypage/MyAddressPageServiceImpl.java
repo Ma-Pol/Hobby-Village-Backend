@@ -48,7 +48,8 @@ public class MyAddressPageServiceImpl implements MyAddressPageService {
 	@Override
 	public int createAddress(MyAddressPageDTO addressData) {
 		if (addressData.getIsDefault() == 1) {
-			mapper.deleteDefaultAddress(addressData.getEmail());
+			String email = addressData.getEmail();
+			mapper.deleteDefaultAddress(email);
 		}
 
 		return mapper.createAddress(addressData);
@@ -59,7 +60,6 @@ public class MyAddressPageServiceImpl implements MyAddressPageService {
 	public int modifyAddress(MyAddressPageDTO addressData) {
 		if (addressData.getIsDefault() == 1) {
 			String email = addressData.getEmail();
-			System.out.println(email);
 			mapper.deleteDefaultAddress(email);
 		}
 
