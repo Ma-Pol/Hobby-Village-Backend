@@ -26,7 +26,7 @@ public interface UserPurchaseMapper {
 
 	// 회원의 쿠폰 목록 조회
 	@Select("SELECT * FROM userCoupon uc INNER JOIN coupons c ON uc.couponCode = c.couponCode "
-			+ "WHERE uc.email = #{email} AND deadline > now();")
+			+ "WHERE uc.email = #{email} AND (deadline > NOW() OR deadline IS NULL);")
 	List<UserPurchaseCouponDTO> getCouponList(@Param("email") String email);
 
 	// 상품의 대여 상태 변경 (미대여 -> 대여)

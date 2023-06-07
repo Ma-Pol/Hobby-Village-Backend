@@ -113,12 +113,12 @@ public class AdminOrdersController {
 
 	// 반납 완료 처리 (반납 중 -> 반납 완료)
 	@PatchMapping("/returned")
-	public int returningToReturned(@RequestBody Map<String, String> data) {
-		int opCode = Integer.parseInt(data.get("opCode"));
-		String prodCode = data.get("prodCode");
-		int prodPrice = Integer.parseInt(data.get("prodPrice"));
-		int rentalPeriod = Integer.parseInt(data.get("rentalPeriod"));
-		String email = data.get("odrEmail");
+	public int returningToReturned(@RequestBody AdminOrderReturnDTO returnData) {
+		int opCode = returnData.getOpCode();
+		String prodCode = returnData.getProdCode();
+		int prodPrice = returnData.getProdPrice();
+		int rentalPeriod = returnData.getRentalPeriod();
+		String email = returnData.getOdrEmail();
 
 		return adminOrdersServiceImpl.returningToReturned(opCode, prodCode, prodPrice, rentalPeriod, email);
 	}

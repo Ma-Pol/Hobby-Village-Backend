@@ -379,7 +379,6 @@ public class AdminOrdersServiceImpl implements AdminOrdersService {
 		int savedMoney = (prodPrice * (rentalPeriod / 7)) * 5 / 100;
 		String nextStep = "반납 완료";
 		String odrState = mapper.checkOdrState(opCode);
-
 		if (odrState.equals("반납 중")) {
 
 			// 위탁 철회 요청이 들어온 상품의 경우, 임시로 삭제 처리(추가 주문이 들어오지 않도록 하기 위함)
