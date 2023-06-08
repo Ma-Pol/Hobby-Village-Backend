@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class HobbyvillageBackendApplicationTests {
 
 	@Test
-	void contextLoads() {
-	}
+	public void TestConnect() {
 
+	}
 }
