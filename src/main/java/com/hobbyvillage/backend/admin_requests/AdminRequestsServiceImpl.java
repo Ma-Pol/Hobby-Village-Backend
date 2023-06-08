@@ -1,5 +1,6 @@
 package com.hobbyvillage.backend.admin_requests;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 	public AdminRequestsServiceImpl(AdminRequestsMapper mapper) {
 		this.mapper = mapper;
 	}
+
+	private String revwUploadPath = Common.uploadDir + "\\Uploaded\\ReviewsImage\\";
 
 	// 필터 조건에 따른 쿼리문 설정 메서드
 	private String filtering(String filter) {
@@ -69,8 +72,7 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 
 		if (reqProgress.equals("1차 심사 중")) {
 			reqProgress = "2차 심사 대기";
-			message += "이(가) 1차 심사에 통과했습니다.\n\n2차 심사를 위해서 해당 물품을 아래 주소로 배송해주시기 바랍니다." 
-			+ "\n\n[04524 서울특별시 중구 세종대로 110]";
+			message += "이(가) 1차 심사에 통과했습니다.\n\n2차 심사를 위해서 해당 물품을 아래 주소로 배송해주시기 바랍니다." + "\n\n[04524 서울특별시 중구 세종대로 110]";
 
 		} else if (reqProgress.equals("2차 심사 대기")) {
 			reqProgress = "2차 심사 중";
@@ -82,13 +84,12 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 					+ "진심으로 감사드리며, 다시 한 번 2차 심사 통과에 축하드립니다.";
 
 		} else if (reqProgress.equals("위탁 철회 요청")) {
-			// 위탁 철회 요청 > 철회 처리 중 : 철회 요청을 수락하고, 물품을 배송보내기 전 단계
-			reqProgress = "철회 처리 중";
-			message += "의 위탁 철회 요청이 수락되어 고객님의 기본 배송지로 배송될 예정입니다. " 
-			+ "\n\n지금까지 저희 취미빌리지에 소중한 물품을 맡겨주신 점 진심으로 감사드립니다.";
+			// 위탁 철회 요청 > 철회 진행 중 : 철회 요청을 수락하고, 물품을 배송보내기 전 단계
+			reqProgress = "철회 진행 중";
+			message += "의 위탁 철회 요청이 수락되어 고객님의 기본 배송지로 배송될 예정입니다. " + "\n\n지금까지 저희 취미빌리지에 소중한 물품을 맡겨주신 점 진심으로 감사드립니다.";
 
-		} else if (reqProgress.equals("철회 처리 중")) {
-			// 철회 처리 중 > 철회 완료 : 물품을 배송보낸 단계
+		} else if (reqProgress.equals("철회 진행 중")) {
+			// 철회 진행 중 > 철회 완료 : 물품을 배송보낸 단계
 			reqProgress = "철회 완료";
 			message = "안녕하세요. 취미빌리지입니다.\n\n고객님께서 철회 신청하신 물품 [" + reqTitle + "] 의 배송이 "
 					+ "시작되었습니다.\n\n앞으로도 저희 취미빌리지 서비스를 애용해주시면 감사하겠습니다.";
@@ -152,14 +153,48 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 		return mapper.getRequestFileList(reqCode);
 	}
 
+	// 상품 삭제
+	private void deleteProduct(String prodCode) {
+		// 상품 삭제 처리
+		mapper.deleteProduct(prodCode);
+
+		// 장바구니에서 삭제
+		mapper.deleteCart(prodCode);
+
+		// 찜 목록에서 삭제
+		mapper.deleteDib(prodCode);
+
+		// 리뷰 이미지 목록 조회
+		List<String> reviewImages = mapper.getReviewImage(prodCode);
+
+		// 리뷰 이미지 삭제
+		if (reviewImages != null) {
+			for (String reviewImage : reviewImages) {
+				File filePath = new File(revwUploadPath + reviewImage);
+
+				filePath.delete();
+			}
+		}
+
+		// 리뷰 삭제
+		mapper.deleteReviews(prodCode);
+	}
+
 	@Override // 신청 진행 상황 업데이트
 	public int updateRequestProgress(int reqCode, String reqProgress, String reqTitle, String reqPhone) {
 		int result;
 		reqProgress = setReqProgress(reqProgress, reqTitle, reqPhone);
 
-		// 철회 처리 중 상태가 되면 해당 상품의 리뷰를 삭제
-		if (reqProgress.equals("철회 처리 중")) {
-			mapper.deleteReviews(reqCode);
+		// 철회 진행중이 되었을 때 상품이 미대여 중이면 삭제 기능 수행
+		if (reqProgress.equals("철회 진행 중")) {
+			String prodCode = mapper.checkIsRental(reqCode);
+
+			if (prodCode != null) {
+				deleteProduct(prodCode);
+
+			}
+			result = 1;
+
 		}
 
 		if (reqProgress.equals("완료")) {
@@ -186,8 +221,7 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 			reqTitle = rejectData.getReqTitle();
 		}
 
-		String message = "안녕하세요, 취미빌리지입니다.\n\n고객님께서 판매/위탁 신청하신 물품 [" + reqTitle + 
-				"] 이(가) 심사 탈락되었음을 알립니다."
+		String message = "안녕하세요, 취미빌리지입니다.\n\n고객님께서 판매/위탁 신청하신 물품 [" + reqTitle + "] 이(가) 심사 탈락되었음을 알립니다."
 				+ "\n\n탈락 사유: " + rejectData.getRejectReason();
 		// 탈락 메세지 전송
 		Common.sendMessage(message, rejectData.getReqPhone());
@@ -201,8 +235,7 @@ public class AdminRequestsServiceImpl implements AdminRequestsService {
 			reqTitle = reqTitle.substring(0, 10) + "...";
 		}
 
-		String message = "안녕하세요. 취미빌리지입니다.\n\n고객님께서 철회 신청하신 물품 [" + reqTitle + 
-				"] 의 철회가 거부되었음을 알립니다.";
+		String message = "안녕하세요. 취미빌리지입니다.\n\n고객님께서 철회 신청하신 물품 [" + reqTitle + "] 의 철회가 거부되었음을 알립니다.";
 
 		Common.sendMessage(message, reqPhone);
 

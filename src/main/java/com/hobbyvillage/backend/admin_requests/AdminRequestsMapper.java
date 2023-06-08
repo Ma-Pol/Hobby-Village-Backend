@@ -48,9 +48,31 @@ public interface AdminRequestsMapper {
 	@Update("UPDATE requests SET reqProgress = #{reqProgress} WHERE reqCode = #{reqCode};")
 	int updateRequestProgress(@Param("reqCode") int reqCode, @Param("reqProgress") String reqProgress);
 
-	// 철회 승낙 시 해당 물품의 리뷰 삭제
-	@Delete("DELETE FROM reviews WHERE prodCode = (SELECT prodCode FROM products WHERE reqCode = #{reqCode});")
-	void deleteReviews(@Param("reqCode") int reqCode);
+	// 물품의 대여 여부 확인
+	@Select("SELECT p.prodCode FROM requests r INNER JOIN products p ON r.reqCode = p.reqCode WHERE r.reqCode = #{reqCode} AND p.prodIsRental = 0;")
+	String checkIsRental(@Param("reqCode") int reqCode);
+
+	// 미대여 상태일 때 상품 삭제 처리
+	// 상품 삭제 1: 상품의 상태를 삭제된 상태로 변경
+	@Update("UPDATE products SET prodDeleted = 1 WHERE prodCode = #{prodCode};")
+	void deleteProduct(@Param("prodCode") String prodCode);
+
+	// 상품 삭제 2: 장바구니에서 상품 삭제
+	@Delete("DELETE FROM carts WHERE prodCode = #{prodCode};")
+	void deleteCart(@Param("prodCode") String prodCode);
+
+	// 상품 삭제 3: 찜 목록에서 상품 삭제
+	@Delete("DELETE FROM dibs WHERE prodCode = #{prodCode};")
+	void deleteDib(@Param("prodCode") String prodCode);
+
+	// 상품 삭제 4: 리뷰 이미지 파일 조회(삭제용)
+	@Select("SELECT rp.revwPicture FROM reviewPictures rp INNER JOIN reviews r "
+			+ "ON rp.revwCode = r.revwCode WHERE r.prodCode = #{prodCode};")
+	List<String> getReviewImage(@Param("prodCode") String prodCode);
+
+	// 상품 삭제 5: 리뷰 목록에서 상품 삭제
+	@Delete("DELETE FROM reviews WHERE prodCode = #{prodCode};")
+	void deleteReviews(@Param("prodCode") String prodCode);
 
 	// 심사 탈락 처리
 	@Update("UPDATE requests SET reqProgress = '심사 탈락', rejectReason = #{rejectReason} WHERE reqCode = #{reqCode};")

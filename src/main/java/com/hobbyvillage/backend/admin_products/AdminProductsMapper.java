@@ -78,8 +78,8 @@ public interface AdminProductsMapper {
 
 	// 상품 등록
 	@Insert("INSERT INTO products (prodCode, prodBrand, prodPrice, prodCategory, prodShipping, "
-			+ "prodName, prodContent, prodHost) VALUES (#{prodCode}, #{prodBrand}, #{prodPrice}, #{prodCategory}, "
-			+ "#{prodShipping}, #{prodName}, #{prodContent}, #{prodHost});")
+			+ "prodName, prodContent, prodHost, reqCode) VALUES (#{prodCode}, #{prodBrand}, #{prodPrice}, #{prodCategory}, "
+			+ "#{prodShipping}, #{prodName}, #{prodContent}, #{prodHost}, #{reqCode});")
 	boolean addProduct(AdminProductsDTO products);
 
 	// 상품 등록 - 이미지 파일명 저장

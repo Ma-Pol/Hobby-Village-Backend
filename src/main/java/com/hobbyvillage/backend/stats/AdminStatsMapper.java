@@ -8,14 +8,12 @@ import org.apache.ibatis.annotations.*;
 public interface AdminStatsMapper {
 	// 오늘 총 주문 금액 조회
 	@Select("SELECT SUM(odr.exactPrice) AS todayOrderPrice FROM (SELECT exactPrice, odrDate FROM orders UNION ALL "
-			+ "SELECT exactPrice, odrDate FROM exOrders) odr WHERE DATE_FORMAT(odr.odrDate, '%Y-%m-%d') = CURDATE() "
-			+ "GROUP BY odr.exactPrice;")
+			+ "SELECT exactPrice, odrDate FROM exOrders) odr WHERE DATE_FORMAT(odr.odrDate, '%Y-%m-%d') = CURDATE();")
 	Integer getTodayOrderPrice();
 
 	// 오늘 총 주문 건수 조회
 	@Select("SELECT COUNT(*) AS todayOrderCount FROM (SELECT exactPrice, odrDate FROM orders UNION ALL "
-			+ "SELECT exactPrice, odrDate FROM exOrders) odr WHERE DATE_FORMAT(odr.odrDate, '%Y-%m-%d') = CURDATE() "
-			+ "GROUP BY odr.exactPrice;")
+			+ "SELECT exactPrice, odrDate FROM exOrders) odr WHERE DATE_FORMAT(odr.odrDate, '%Y-%m-%d') = CURDATE();")
 	Integer getTodayOrderCount();
 
 	// 월별 일반 + 추가 주문 현황 조회
